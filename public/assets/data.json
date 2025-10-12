@@ -1,0 +1,194 @@
+{
+  "site": {
+    "name": "ORI 369",
+    "tagline": "Vaš most med znanostjo in energijo",
+    "description": "V ORI 369 združujemo vrhunske terapevtske pristope, najnovejše tehnologije in globoko razumevanje frekvenc 3-6-9, da vam pomagamo doseči ravnovesje telesa, uma in duha.",
+    "email": "Info@ori369.com",
+    "phone": ["+386 41 458 931", "051 302 206"],
+    "address": "Šola Maksimilijana Držečnika 11, Maribor, Slovenija, 2000",
+    "hours": {
+      "weekdays": "Pon–Pet: 07.00–14.00 in 16.00–21.00",
+      "saturday": "Sobota: 08.00–14.00"
+    },
+    "social": {
+      "facebook": "https://www.facebook.com/profile.php?id=61569699862375",
+      "instagram": "https://www.instagram.com/ori_backtolife"
+    }
+  },
+  "therapies": [
+    {
+      "id": "elektrostimulacija",
+      "name": "Elektrostimulacija",
+      "shortDescription": "Elektrostimulacija aktivira mišično tkivo, izboljšuje krvni obtok in lajša bolečine.",
+      "fullDescription": "Elektrostimulacijska terapija je vrsta fizikalne terapije, ki s pomočjo električnega toka in električnih impulzov zmanjšuje bolečine, pospešuje celični metabolizem in hitrejše celjenje.",
+      "duration": 20,
+      "price": 20
+    },
+    {
+      "id": "manualna-terapija",
+      "name": "Manualna Terapija",
+      "shortDescription": "Z nežnimi ročnimi tehnikami terapevt sprošča napetosti in izboljšuje gibljivost.",
+      "fullDescription": "Manualna terapija je dobila ime iz besede manus=roka, ki nakazuje na uporabo terapevtovih rok, kot glavnega orodja zdravljenja. Je ena izmed najbolj priljubljenih oblik zdravljenja.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "tecar-terapija",
+      "name": "Tecar Terapija",
+      "shortDescription": "Napredna terapija s pomočjo radiofrekvenčne energije.",
+      "fullDescription": "Napredna terapija, ki s pomočjo radiofrekvenčne energije pospešuje regeneracijo tkiv, lajša bolečine in izboljšuje cirkulacijo ter presnovo celic.",
+      "duration": 30,
+      "price": 40
+    },
+    {
+      "id": "magnetna-terapija",
+      "name": "Magnetna Terapija",
+      "shortDescription": "Uporaba magnetnih polj za stimulacijo telesa in regeneracijo.",
+      "fullDescription": "Uporaba magnetnih polj za stimulacijo telesa, izboljšanje krvnega obtoka in regeneracijo. Pomaga pri celjenju poškodb in kroničnih bolečinah.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "mis",
+      "name": "MIS (Magnetna indukcijska stimulacija)",
+      "shortDescription": "Magnetna indukcijska stimulacija - revolucionarna terapija.",
+      "fullDescription": "Magnetna indukcijska stimulacija (MIS) je revolucionarna terapija, ki z inovativnim pristopom zagotavlja izjemne rezultate.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "laserska-terapija",
+      "name": "Laserska Terapija",
+      "shortDescription": "Neinvazivna metoda z laserskimi svetlobnimi žarki.",
+      "fullDescription": "Laserska terapija je neinvazivna metoda zdravljenja, ki s pomočjo laserskih svetlobnih žarkov stimulira človeško tkivo z namenom pospešitve celjenja.",
+      "duration": 10,
+      "price": 10
+    },
+    {
+      "id": "media-taping",
+      "name": "Media Taping",
+      "shortDescription": "Metoda z elastičnimi traki za odpravo bolečin in otekline.",
+      "fullDescription": "Medi taping je metoda zdravljenja, ki z aplikacijo samolepilnih elastičnih trakov na kožo odpravlja bolečine, otekline in druge simptome poškodb.",
+      "duration": 10,
+      "price": 10
+    },
+    {
+      "id": "cupping",
+      "name": "Cupping (Ventuze)",
+      "shortDescription": "Terapija z ventuzami za celjenje in regeneracijo.",
+      "fullDescription": "Terapija z ventuzami (cupping), je manualna tehnika, ki s pomočjo majhnih skodelic (ventuz) pospešuje celjenje, regeneracijo in lajša bolečine.",
+      "duration": 30,
+      "price": 30
+    },
+    {
+      "id": "dryneedeling",
+      "name": "Dry Needling",
+      "shortDescription": "Invazivna fizioterapevtska metoda s suhim iglanjem.",
+      "fullDescription": "Dry needeling (terapija s suhim iglanjem), je invazivna fizioterapevtska metoda, ki s penetracijo tankih igel skozi kožo stimulira tkivo in sproža proces celjenja.",
+      "duration": 30,
+      "price": 30
+    },
+    {
+      "id": "iteracare",
+      "name": "Iteracare",
+      "shortDescription": "Terapija z iteracare tehnologijo.",
+      "fullDescription": "Iteracare je napredna terapevtska metoda za regeneracijo in celjenje.",
+      "duration": 20,
+      "price": 20
+    },
+    {
+      "id": "ao-scan",
+      "name": "AO Scan",
+      "shortDescription": "Napredno skeniranje za oceno stanja organizma.",
+      "fullDescription": "AO Scan omogoča pregled celotnega organizma in identifikacijo energijskih neravnovesij.",
+      "duration": 30,
+      "price": 50
+    },
+    {
+      "id": "trakcijska-miza",
+      "name": "Trakcijska miza",
+      "shortDescription": "Terapija za razbremenitev hrbtenice.",
+      "fullDescription": "Trakcijska miza omogoča nežno raztezanje in razbremenitev hrbtenice.",
+      "duration": 30,
+      "price": 40
+    },
+    {
+      "id": "skalarni-valovi",
+      "name": "Skalarni valovi (čakre)",
+      "shortDescription": "Uravnovešanje čaker s skalarnimi valovi.",
+      "fullDescription": "Skalarni valovi pomagajo pri uravnovešanju energijskih centrov - čaker.",
+      "duration": 30,
+      "price": 35
+    },
+    {
+      "id": "vodeno-dihanje",
+      "name": "Individualno vodeno dihanje",
+      "shortDescription": "Terapija z vodenim dihanjem.",
+      "fullDescription": "Individualno vodeno dihanje za sprostitev in optimizacijo dihanja.",
+      "duration": 30,
+      "price": 30
+    }
+  ],
+  "packages": [
+    {
+      "id": "prebudi-telo",
+      "name": "Prebudi Telo",
+      "description": "3x Elektrostimulacija, 3x Tacer terapija, 3x Iteracare in masaža, 3x Manualna - Storm terapija, 1x Končna obravnava",
+      "benefits": ["Hormonsko ravnovesje", "Aktivacija mišic", "Izboljšanje živčnega sistema", "Odprava bolečin"],
+      "sessions": 13,
+      "regularPrice": 335,
+      "price": 196
+    },
+    {
+      "id": "osvescanje-telesa",
+      "name": "Osveščanje Telesa",
+      "description": "6x Elektrostimulacija, 6x Iteracare in masaža, 6x Laser, 6x Tacer terapija, 6x Manualna - Storm terapija, 1x Končna obravnava",
+      "benefits": ["Energetska prenova", "Psihološka stabilnost", "Izboljšana gibljivost", "Zmanjšanje bolečin"],
+      "sessions": 31,
+      "regularPrice": 690,
+      "price": 396
+    },
+    {
+      "id": "univerzum",
+      "name": "Univerzum",
+      "description": "9x Elektrostimulacija, 9x Tacer terapija in masaža, 9x Trakcijska miza, 9x Manualna - Storm terapija, 9x MIS Magnetna indukcijska stimulacija, 9x Skalarni valovi - uravnovešanje čaker, 3x AO Scan, 1x Moti-physio Scan",
+      "benefits": ["Globoka regeneracija", "Optimizacija telesnih funkcij", "Dolgotrajne zdravstvene koristi"],
+      "sessions": 58,
+      "regularPrice": 1835,
+      "price": 796
+    },
+    {
+      "id": "aktivacija",
+      "name": "Aktivacija",
+      "description": "MIS, vodeno dihanje, vibracije, skalarni valovi, ledeni tretmaji. Fokus: celična aktivacija, hormonska optimizacija, izboljšanje mišično-skeletnega sistema",
+      "benefits": ["Celična aktivacija", "Hormonska optimizacija", "Izboljšanje mišično-skeletnega sistema"],
+      "sessions": 0,
+      "price": null
+    },
+    {
+      "id": "ravnotezje",
+      "name": "Ravnotežje",
+      "description": "Vibracije, MIS, iteracare, boben, uravnovešanje čaker. Fokus: mentalna in fizična stabilnost, sprostitev živčnega sistema, hormonsko ravnovesje",
+      "benefits": ["Mentalna in fizična stabilnost", "Sprostitev živčnega sistema", "Hormonsko ravnovesje", "Celostna revitalizacija"],
+      "sessions": 0,
+      "price": null
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Ana M.",
+      "text": "Terapije v ORI 369 so mi pomagale pri kroničnih bolečinah. Zdaj se počutim energično in zdravo!",
+      "rating": 5
+    },
+    {
+      "name": "Marko K.",
+      "text": "Profesionalen pristop in izjemni rezultati. Priporočam vsem, ki iščejo celostno podporo.",
+      "rating": 5
+    },
+    {
+      "name": "Petra S.",
+      "text": "Paket Ravnotežje mi je pomagal najti notranjo harmonijo. Ekipa je izjemna!",
+      "rating": 5
+    }
+  ]
+}

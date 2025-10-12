@@ -1,0 +1,158 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { Menu, X } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { signOut } from '@/lib/auth';
+
+export default function Header() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  const navItems = [
+    { name: 'Domov', href: '/' },
+    { name: 'O nas', href: '/o-nas' },
+    { name: 'Terapije', href: '/terapije' },
+    { name: 'Paketi', href: '/paketi' },
+    { name: 'Rezervacija', href: '/rezervacija' },
+    { name: 'Kontakt', href: '/kontakt' },
+  ];
+
+  return (
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+      <nav className="container mx-auto px-4 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo - ORI 369 Brand Style */}
+          <Link href="/" className="flex items-center gap-2 group">
+            <Image 
+              src="/logo.png" 
+              alt="ORI 369" 
+              width={240}
+              height={100}
+              className="h-20 md:h-24 w-auto transition-opacity group-hover:opacity-90"
+              priority
+            />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm font-medium transition-colors ${
+                  pathname === item.href 
+                    ? 'text-[#00B5AD] border-b-2 border-[#00B5AD]' 
+                    : 'text-gray-700 hover:text-[#00B5AD]'
+                }`}
+              >
+                {item.name}
+              </Link>
+            ))}
+            
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <Link
+                  href="/dashboard"
+                  className="text-sm font-medium text-gray-700 hover:text-[#00B5AD]"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm font-medium text-gray-700 hover:text-[#00B5AD]"
+                >
+                  Odjava
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/prijava"
+                className="px-6 py-2 text-sm font-medium text-white bg-[#00B5AD] rounded-lg hover:bg-[#009891] transition-colors"
+              >
+                Prijava
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 text-gray-700 hover:text-[#00B5AD]"
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden pt-4 pb-2 border-t border-gray-200 mt-4">
+            <div className="flex flex-col space-y-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`text-base font-medium transition-colors ${
+                    pathname === item.href ? 'text-[#00B5AD]' : 'text-gray-700 hover:text-[#00B5AD]'
+                  }`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              
+              {user ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    onClick={() => setIsOpen(false)}
+                    className="text-base font-medium text-gray-700 hover:text-[#00B5AD]"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleSignOut();
+                      setIsOpen(false);
+                    }}
+                    className="text-left text-base font-medium text-gray-700 hover:text-[#00B5AD]"
+                  >
+                    Odjava
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/prijava"
+                  onClick={() => setIsOpen(false)}
+                  className="block px-6 py-2 text-base font-medium text-white bg-[#00B5AD] rounded-lg hover:bg-[#009891] text-center"
+                >
+                  Prijava
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
+      </nav>
+    </header>
+  );
+}
