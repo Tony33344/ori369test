@@ -41,10 +41,10 @@ export async function GET(request: NextRequest) {
 
     // Calculate summary stats
     const totalBookings = bookingStats?.length || 0;
-    const confirmedBookings = bookingStats?.filter(b => b.status === 'confirmed').length || 0;
+    const confirmedBookings = bookingStats?.filter((b: any) => b.status === 'confirmed').length || 0;
     const totalRevenue = bookingStats
-      ?.filter(b => b.status === 'confirmed')
-      .reduce((sum, b) => sum + (b.services?.price || 0), 0) || 0;
+      ?.filter((b: any) => b.status === 'confirmed')
+      .reduce((sum: number, b: any) => sum + (b.services?.price || 0), 0) || 0;
     const totalPageViews = pageViews?.length || 0;
 
     // Group bookings by date
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
     }, {});
 
     // Top services
-    const serviceBookings = bookingStats?.reduce((acc: any, booking) => {
+    const serviceBookings = bookingStats?.reduce((acc: any, booking: any) => {
       const serviceName = booking.services?.name || 'Unknown';
       if (!acc[serviceName]) {
         acc[serviceName] = 0;
