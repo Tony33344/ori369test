@@ -4,11 +4,13 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser } from '@/lib/auth';
+import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
 import { Calendar, Clock, User, Mail, Phone, MessageSquare } from 'lucide-react';
 import { format, addDays, startOfWeek } from 'date-fns';
 
 function BookingForm() {
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const packageId = searchParams.get('package');
   
@@ -95,13 +97,23 @@ function BookingForm() {
     e.preventDefault();
     
     if (!user) {
-      toast.error('Prosim, prijavite se za rezervacijo.');
+      toast.error(t('booking.loginRequired'));
       window.location.href = '/prijava?redirect=/rezervacija';
       return;
     }
 
-    if (!selectedService || !selectedDate || !selectedTime) {
-      toast.error('Prosim, izpolnite vsa obvezna polja.');
+    if (!selectedService) {
+      toast.error(t('booking.selectServiceFirst'));
+      return;
+    }
+    
+    if (!selectedDate) {
+      toast.error(t('booking.selectDateFirst'));
+      return;
+    }
+    
+    if (!selectedTime) {
+      toast.error(t('booking.selectDateFirst'));
       return;
     }
 
@@ -123,10 +135,10 @@ function BookingForm() {
     setLoading(false);
 
     if (error) {
-      toast.error('Napaka pri rezervaciji. Prosim, poskusite znova.');
+      toast.error(t('booking.error'));
       console.error(error);
     } else {
-      toast.success('Rezervacija uspešna! Kontaktirali vas bomo za potrditev.');
+      toast.success(t('booking.success'));
       // Reset form
       setSelectedService('');
       setSelectedDate('');
@@ -150,10 +162,10 @@ function BookingForm() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Rezervirajte termin
+              {t('booking.title')}
             </h1>
             <p className="text-xl text-gray-600">
-              Izpolnite obrazec in kontaktirali vas bomo za potrditev termina.
+              {t('booking.subtitle')}
             </p>
           </div>
 
@@ -161,7 +173,7 @@ function BookingForm() {
             {!user && (
               <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <p className="text-blue-800">
-                  Za rezervacijo se morate najprej <a href="/prijava?redirect=/rezervacija" className="font-semibold underline">prijaviti</a> ali <a href="/registracija?redirect=/rezervacija" className="font-semibold underline">registrirati</a>.
+                  {t('booking.loginRequired')}
                 </p>
               </div>
             )}
@@ -170,7 +182,7 @@ function BookingForm() {
               {/* Service Selection */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Izberite storitev / paket *
+                  {t('booking.selectService')} *
                 </label>
                 <select
                   value={selectedService}
@@ -178,9 +190,9 @@ function BookingForm() {
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="">-- Izberite --</option>
+                  <option value="">{t('booking.selectService')}</option>
                   {services.filter(s => !s.is_package).length > 0 && (
-                    <optgroup label="Terapije">
+                    <optgroup label={t('nav.therapies')}>
                       {services.filter(s => !s.is_package).map(service => (
                         <option key={service.id} value={service.id}>
                           {service.name} - €{service.price} ({service.duration} min)
@@ -189,10 +201,10 @@ function BookingForm() {
                     </optgroup>
                   )}
                   {services.filter(s => s.is_package).length > 0 && (
-                    <optgroup label="Paketi">
+                    <optgroup label={t('nav.packages')}>
                       {services.filter(s => s.is_package).map(service => (
                         <option key={service.id} value={service.id}>
-                          {service.name} - €{service.price} ({service.sessions} seans)
+                          {service.name} - €{service.price} ({service.sessions} {t('admin.services.sessions')})
                         </option>
                       ))}
                     </optgroup>
@@ -204,7 +216,7 @@ function BookingForm() {
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
                   <Calendar size={18} />
-                  <span>Izberite datum *</span>
+                  <span>{t('booking.selectDate')} *</span>
                 </label>
                 <select
                   value={selectedDate}
@@ -212,7 +224,7 @@ function BookingForm() {
                   required
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
-                  <option value="">-- Izberite datum --</option>
+                  <option value="">{t('booking.selectDate')}</option>
                   {dateOptions.map(option => (
                     <option key={option.value} value={option.value}>
                       {option.label}
@@ -226,7 +238,7 @@ function BookingForm() {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
                     <Clock size={18} />
-                    <span>Izberite čas *</span>
+                    <span>{t('booking.selectTime')} *</span>
                   </label>
                   {availableSlots.length > 0 ? (
                     <div className="grid grid-cols-4 gap-2">
@@ -246,7 +258,7 @@ function BookingForm() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-gray-500 italic">Ni razpoložljivih terminov za ta datum.</p>
+                    <p className="text-gray-500 italic">{t('booking.noSlotsAvailable')}</p>
                   )}
                 </div>
               )}
@@ -255,14 +267,14 @@ function BookingForm() {
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
                   <MessageSquare size={18} />
-                  <span>Opombe (neobvezno)</span>
+                  <span>{t('booking.additionalNotes')}</span>
                 </label>
                 <textarea
                   value={notes}
                   onChange={(e) => setNotes(e.target.value)}
                   rows={4}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Dodatne informacije ali posebne zahteve..."
+                  placeholder={t('booking.notesPlaceholder')}
                 />
               </div>
 
@@ -272,15 +284,15 @@ function BookingForm() {
                 disabled={loading || !user}
                 className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
-                {loading ? 'Rezerviram...' : 'Potrdi rezervacijo'}
+                {loading ? t('common.loading') : t('booking.submit')}
               </button>
             </form>
 
             <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-              <h3 className="font-semibold text-gray-900 mb-2">Delovni čas:</h3>
-              <p className="text-sm text-gray-600">Ponedeljek–Petek: 07.00–14.00 in 16.00–21.00</p>
-              <p className="text-sm text-gray-600">Sobota: 08.00–14.00</p>
-              <p className="text-sm text-gray-600 mt-2">Kontakt: +386 41 458 931 | 051 302 206</p>
+              <h3 className="font-semibold text-gray-900 mb-2">{t('contact.hours')}:</h3>
+              <p className="text-sm text-gray-600">{t('contact.weekdays')}: {t('site.hours.weekdays')}</p>
+              <p className="text-sm text-gray-600">{t('contact.saturday')}: {t('site.hours.saturday')}</p>
+              <p className="text-sm text-gray-600 mt-2">{t('contact.phone')}: {t('site.phone')[0]} | {t('site.phone')[1]}</p>
             </div>
           </div>
         </div>
@@ -295,7 +307,7 @@ export default function BookingPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center py-20">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Nalaganje...</p>
+          <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
     }>
