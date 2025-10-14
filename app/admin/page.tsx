@@ -5,8 +5,14 @@ import { supabase } from '@/lib/supabase';
 import { getCurrentUser, getUserProfile } from '@/lib/auth';
 import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
-import { Calendar as CalendarIcon, Users, Activity, CheckCircle, XCircle, Edit2, Trash2, ExternalLink, Package, DollarSign, Clock, Plus } from 'lucide-react';
+import { Calendar as CalendarIcon, Users, Activity, CheckCircle, XCircle, Edit2, Trash2, ExternalLink, Package, DollarSign, Clock, Plus, BarChart3 } from 'lucide-react';
 import { format } from 'date-fns';
+import dynamic from 'next/dynamic';
+
+const AnalyticsDashboard = dynamic(() => import('@/components/AnalyticsDashboard'), {
+  ssr: false,
+  loading: () => <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
+});
 
 interface Booking {
   id: string;
@@ -44,7 +50,7 @@ export default function AdminPage() {
   const { t } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<'bookings' | 'services'>('bookings');
+  const [activeTab, setActiveTab] = useState<'bookings' | 'services' | 'analytics'>('bookings');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [filter, setFilter] = useState<string>('all');
@@ -338,6 +344,17 @@ export default function AdminPage() {
               <Package size={20} />
               <span>{t('admin.tabs.services')}</span>
             </button>
+            <button
+              onClick={() => setActiveTab('analytics')}
+              className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
+                activeTab === 'analytics'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <BarChart3 size={20} />
+              <span>{t('admin.tabs.analytics')}</span>
+            </button>
           </div>
         </div>
 
@@ -606,6 +623,10 @@ export default function AdminPage() {
               </div>
             </div>
           </>
+        )}
+
+        {activeTab === 'analytics' && (
+          <AnalyticsDashboard />
         )}
 
         {/* Service Modal */}
