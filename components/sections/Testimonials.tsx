@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Star, Quote } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n';
 
 interface Testimonial {
   name: string;
@@ -10,6 +11,7 @@ interface Testimonial {
 }
 
 export default function Testimonials({ testimonials }: { testimonials: Testimonial[] }) {
+  const { t } = useLanguage();
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
@@ -21,10 +23,10 @@ export default function Testimonials({ testimonials }: { testimonials: Testimoni
           className="text-center mb-12"
         >
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Kaj pravijo naši klienti
+            {t('testimonials.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Zgodbe transformacije in ozdravitve naših klientov.
+            {t('testimonials.subtitle')}
           </p>
         </motion.div>
 

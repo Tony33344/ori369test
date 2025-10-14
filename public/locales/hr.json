@@ -1,0 +1,278 @@
+{
+  "nav": {
+    "home": "Početna",
+    "therapies": "Terapije",
+    "packages": "Paketi",
+    "about": "O nama",
+    "contact": "Kontakt",
+    "login": "Prijava",
+    "register": "Registracija",
+    "dashboard": "Nadzorna ploča",
+    "admin": "Admin",
+    "logout": "Odjava",
+    "booking": "Rezervacija"
+  },
+  "hero": {
+    "title": "Vaš most između znanosti i energije",
+    "tagline": "Vaš most između znanosti i energije",
+    "slogan": "Kvalitetan život",
+    "subtitle": "U ORI 369 kombiniramo vrhunske terapeutske pristupe, najnovije tehnologije i duboko razumijevanje frekvencija 3-6-9 kako bismo vam pomogli postići ravnotežu tijela, uma i duha.",
+    "cta": "Rezervirajte termin",
+    "exploreCta": "Istražite terapije"
+  },
+  "contact": {
+    "title": "Kontaktirajte nas",
+    "subtitle": "Kontaktirajte nas za sva pitanja ili rezervacije termina",
+    "email": "Email",
+    "phone": "Telefon",
+    "address": "Adresa",
+    "location": "Lokacija",
+    "hours": "Radno vrijeme",
+    "weekdays": "Pon–Pet",
+    "saturday": "Subota",
+    "openInMaps": "Otvori u Google Maps",
+    "bookNow": "Rezervirajte termin",
+    "bookMessage": "Želite rezervirati termin? Koristite naš online obrazac za brzu i jednostavnu rezervaciju."
+  },
+  "footer": {
+    "about": "O nama",
+    "tagline": "Holistički put do zdravlja i dobrobiti",
+    "quickLinks": "Brze poveznice",
+    "contactInfo": "Kontakt",
+    "followUs": "Pratite nas",
+    "rights": "Sva prava pridržana"
+  },
+  "auth": {
+    "login": {
+      "title": "Prijava",
+      "subtitle": "Pristup vašem računu",
+      "email": "E-mail adresa",
+      "password": "Lozinka",
+      "submit": "Prijavi se",
+      "noAccount": "Nemate račun?",
+      "signUp": "Registriraj se",
+      "forgotPassword": "Zaboravljena lozinka?",
+      "error": "Neispravna e-mail adresa ili lozinka"
+    },
+    "register": {
+      "title": "Kreiraj račun",
+      "subtitle": "Pridruži se ORI 369",
+      "fullName": "Puno ime",
+      "email": "E-mail adresa",
+      "phone": "Broj telefona",
+      "password": "Lozinka",
+      "confirmPassword": "Potvrdi lozinku",
+      "submit": "Kreiraj račun",
+      "haveAccount": "Već imate račun?",
+      "signIn": "Prijavi se",
+      "passwordMismatch": "Lozinke se ne podudaraju",
+      "success": "Račun uspješno kreiran!",
+      "error": "Greška pri kreiranju računa. Molimo pokušajte ponovo."
+    }
+  },
+  "booking": {
+    "title": "Rezervirajte termin",
+    "subtitle": "Odaberite uslugu i dostupan termin",
+    "selectService": "Odaberite uslugu",
+    "selectDate": "Odaberite datum",
+    "selectTime": "Odaberite termin",
+    "additionalNotes": "Dodatne napomene",
+    "notesPlaceholder": "Posebni zahtjevi ili informacije...",
+    "submit": "Potvrdi rezervaciju",
+    "loginRequired": "Molimo prijavite se za rezervaciju",
+    "selectServiceFirst": "Molimo prvo odaberite uslugu",
+    "selectDateFirst": "Molimo prvo odaberite datum",
+    "noSlotsAvailable": "Nema dostupnih termina za ovaj datum",
+    "success": "Rezervacija uspješno kreirana!",
+    "error": "Greška pri kreiranju rezervacije. Molimo pokušajte ponovo."
+  },
+  "dashboard": {
+    "welcome": "Dobrodošli",
+    "subtitle": "Upravljajte svojim rezervacijama i postavkama",
+    "adminAccess": "Imate administratorski pristup",
+    "goToAdmin": "Idi na administratorsku ploču",
+    "stats": {
+      "totalBookings": "Ukupno rezervacija",
+      "activeBookings": "Aktivne rezervacije",
+      "profile": "Profil"
+    },
+    "myBookings": "Moje rezervacije",
+    "newBooking": "Nova rezervacija",
+    "noBookings": "Još nemate rezervacija",
+    "createFirst": "Napravite svoju prvu rezervaciju",
+    "cancel": "Odustani",
+    "confirmCancel": "Jeste li sigurni da želite otkazati ovu rezervaciju?",
+    "status": {
+      "pending": "Na čekanju",
+      "confirmed": "Potvrđeno",
+      "completed": "Završeno",
+      "cancelled": "Otkazano"
+    }
+  },
+  "admin": {
+    "title": "Administratorska ploča",
+    "subtitle": "Upravljanje rezervacijama, uslugama i cijenama",
+    "tabs": {
+      "bookings": "Rezervacije",
+      "services": "Usluge & Cijene",
+      "analytics": "Analitika"
+    },
+    "stats": {
+      "total": "Ukupno rezervacija",
+      "pending": "Na čekanju",
+      "confirmed": "Potvrđeno",
+      "completed": "Završeno"
+    },
+    "bookings": {
+      "dateTime": "Datum i vrijeme",
+      "client": "Klijent",
+      "service": "Usluga",
+      "status": "Status",
+      "actions": "Akcije",
+      "noBookings": "Nema rezervacija",
+      "loading": "Učitavanje...",
+      "syncCalendar": "Sinkroniziraj s Google Calendrom",
+      "delete": "Obriši",
+      "confirmDelete": "Jeste li sigurni da želite obrisati ovu rezervaciju?"
+    },
+    "services": {
+      "manage": "Upravljanje uslugama",
+      "add": "Dodaj uslugu",
+      "edit": "Uredi uslugu",
+      "name": "Naziv usluge",
+      "slug": "Slug (URL)",
+      "description": "Opis",
+      "type": "Tip",
+      "duration": "Trajanje",
+      "price": "Cijena",
+      "status": "Status",
+      "active": "Aktivno",
+      "inactive": "Neaktivno",
+      "therapy": "Terapija",
+      "package": "Paket",
+      "sessions": "Sesije",
+      "save": "Spremi",
+      "cancel": "Odustani",
+      "confirmDelete": "Jeste li sigurni da želite obrisati ovu uslugu?"
+    },
+    "filters": {
+      "all": "Sve",
+      "pending": "Na čekanju",
+      "confirmed": "Potvrđeno",
+      "completed": "Završeno"
+    }
+  },
+  "settings": {
+    "title": "Postavke računa",
+    "subtitle": "Upravljajte svojim profilom i sigurnosnim postavkama",
+    "personalInfo": "Osobni podaci",
+    "changePassword": "Promijeni lozinku",
+    "newPassword": "Nova lozinka",
+    "confirmPassword": "Potvrdite novu lozinku",
+    "saveChanges": "Spremi promjene",
+    "saving": "Spremanje...",
+    "changing": "Promjena...",
+    "backToDashboard": "Natrag na nadzornu ploču"
+  },
+  "therapies": {
+    "title": "Naše terapije",
+    "subtitle": "Otkrijte naš potpuni raspon terapeutskih usluga za optimalno zdravlje i dobrobit",
+    "heading": "Kako možemo zajedno kreirati novu stvarnost?",
+    "description": "Otkrijte naše terapeutske usluge koje kombiniraju znanost, energiju i holistički pristup.",
+    "viewMore": "Više informacija",
+    "viewAll": "Sve terapije →",
+    "durationUnit": "min"
+  },
+  "packages": {
+    "title": "Holistički terapeutski paketi",
+    "subtitle": "Naši paketi su dizajnirani za dugoročne zdravstvene koristi i holističku transformaciju tijela, uma i duha",
+    "heading": "Holistički terapeutski paketi",
+    "description": "Naši paketi su dizajnirani za dugoročne zdravstvene koristi i holističku transformaciju.",
+    "viewMore": "Više informacija",
+    "sessionsUnit": "seansi",
+    "priceInquiry": "Cijena na upit",
+    "bookPackage": "Rezerviraj paket",
+    "regularPriceLabel": "Redovna cijena"
+  },
+  "testimonials": {
+    "title": "Što kažu naši klijenti",
+    "subtitle": "Priče transformacije i ozdravljenja naših klijenata."
+  },
+  "categories": {
+    "pathTitle": "HOLISTIČKI PUT DO ZDRAVLJA I DOBROBITI",
+    "symptoms": {
+      "burnout": "IZGARANJE",
+      "stress": "STRES",
+      "fear": "STRAH",
+      "anxiety": "ANKSIOZNOST",
+      "pain": "BOL",
+      "depression": "DEPRESIJA",
+      "distress": "TJESKOBA",
+      "panic": "PANIKA",
+      "insomnia": "NESANICA"
+    },
+    "methods": {
+      "breathing": "DISANJE",
+      "movement": "SVJESNO KRETANJE",
+      "medicine": "SVETA MEDICINA",
+      "manual": "MANUALNA TERAPIJA",
+      "tecar": "TECAR STIMULACIJA",
+      "laser": "LASER",
+      "magnetic": "MAGNETNA TERAPIJA",
+      "dryLight": "SUHA SVJETLOST",
+      "shockwave": "UDARNI VALOVI",
+      "traction": "TRAKCIJA",
+      "frequency": "FREKVENCIJSKA TERAPIJA",
+      "sound": "ZVUK"
+    },
+    "outcomes": {
+      "courage": "HRABROST",
+      "peace": "MIR",
+      "trust": "POVJERENJE",
+      "relaxation": "OPUŠTENOST",
+      "comfort": "UDOBNOST",
+      "joy": "RADOST",
+      "balance": "RAVNOTEŽA",
+      "stability": "STABILNOST",
+      "sleep": "SAN"
+    }
+  },
+  "common": {
+    "loading": "Učitavanje...",
+    "save": "Spremi",
+    "cancel": "Otkaži",
+    "delete": "Izbriši",
+    "edit": "Uredi",
+    "close": "Zatvori",
+    "confirm": "Potvrdi",
+    "back": "Natrag",
+    "next": "Dalje",
+    "submit": "Pošalji",
+    "search": "Pretraži",
+    "filter": "Filter",
+    "all": "Sve",
+    "yes": "Da",
+    "no": "Ne"
+  },
+  "site": {
+    "phone": ["+386 51 302 206", "+386 41 458 931"],
+    "address": "Ulica škofa Maksimilijana Držečnika 11, 2000 Maribor, Slovenia",
+    "hours": {
+      "weekdays": "07:00–14:00 i 16:00–21:00",
+      "saturday": "08:00–14:00"
+    }
+  },
+  "toast": {
+    "success": "Uspjeh!",
+    "error": "Greška!",
+    "bookingCreated": "Rezervacija uspješno kreirana!",
+    "bookingCancelled": "Rezervacija otkazana",
+    "bookingUpdated": "Rezervacija ažurirana",
+    "statusUpdated": "Status ažuriran",
+    "serviceAdded": "Usluga dodana",
+    "serviceUpdated": "Usluga ažurirana",
+    "serviceDeleted": "Usluga obrisana",
+    "syncSuccess": "Sinkronizirano s Google Calendrom",
+    "syncError": "Greška pri sinkronizaciji"
+  }
+}

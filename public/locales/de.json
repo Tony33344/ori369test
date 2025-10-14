@@ -1,0 +1,278 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "therapies": "Therapien",
+    "packages": "Pakete",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "logout": "Abmelden",
+    "booking": "Reservierung"
+  },
+  "hero": {
+    "title": "Ihre Brücke zwischen Wissenschaft und Energie",
+    "tagline": "Ihre Brücke zwischen Wissenschaft und Energie",
+    "slogan": "Qualitätsleben",
+    "subtitle": "Bei ORI 369 kombinieren wir erstklassige therapeutische Ansätze, neueste Technologien und ein tiefes Verständnis der 3-6-9 Frequenzen, um Ihnen zu helfen, das Gleichgewicht von Körper, Geist und Seele zu erreichen.",
+    "cta": "Termin buchen",
+    "exploreCta": "Therapien erkunden"
+  },
+  "contact": {
+    "title": "Kontaktieren Sie uns",
+    "subtitle": "Kontaktieren Sie uns für alle Fragen oder Terminbuchungen",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "location": "Standort",
+    "hours": "Öffnungszeiten",
+    "weekdays": "Mo–Fr",
+    "saturday": "Samstag",
+    "openInMaps": "In Google Maps öffnen",
+    "bookNow": "Termin buchen",
+    "bookMessage": "Möchten Sie einen Termin buchen? Nutzen Sie unser Online-Formular für eine schnelle und einfache Buchung."
+  },
+  "footer": {
+    "about": "Über uns",
+    "tagline": "Ganzheitlicher Weg zu Gesundheit und Wohlbefinden",
+    "quickLinks": "Schnelllinks",
+    "contactInfo": "Kontakt",
+    "followUs": "Folgen Sie uns",
+    "rights": "Alle Rechte vorbehalten"
+  },
+  "auth": {
+    "login": {
+      "title": "Anmelden",
+      "subtitle": "Zugriff auf Ihr Konto",
+      "email": "E-Mail-Adresse",
+      "password": "Passwort",
+      "submit": "Anmelden",
+      "noAccount": "Haben Sie kein Konto?",
+      "signUp": "Registrieren",
+      "forgotPassword": "Passwort vergessen?",
+      "error": "Ungültige E-Mail oder Passwort"
+    },
+    "register": {
+      "title": "Konto erstellen",
+      "subtitle": "Treten Sie ORI 369 bei",
+      "fullName": "Vollständiger Name",
+      "email": "E-Mail-Adresse",
+      "phone": "Telefonnummer",
+      "password": "Passwort",
+      "confirmPassword": "Passwort bestätigen",
+      "submit": "Konto erstellen",
+      "haveAccount": "Haben Sie bereits ein Konto?",
+      "signIn": "Anmelden",
+      "passwordMismatch": "Passwörter stimmen nicht überein",
+      "success": "Konto erfolgreich erstellt!",
+      "error": "Fehler beim Erstellen des Kontos. Bitte versuchen Sie es erneut."
+    }
+  },
+  "booking": {
+    "title": "Termin buchen",
+    "subtitle": "Wählen Sie eine Dienstleistung und einen verfügbaren Zeitraum",
+    "selectService": "Dienstleistung auswählen",
+    "selectDate": "Datum auswählen",
+    "selectTime": "Zeitfenster auswählen",
+    "additionalNotes": "Zusätzliche Notizen",
+    "notesPlaceholder": "Besondere Wünsche oder Informationen...",
+    "submit": "Buchung bestätigen",
+    "loginRequired": "Bitte melden Sie sich an, um zu buchen",
+    "selectServiceFirst": "Bitte wählen Sie zuerst eine Dienstleistung",
+    "selectDateFirst": "Bitte wählen Sie zuerst ein Datum",
+    "noSlotsAvailable": "Keine verfügbaren Zeitfenster für dieses Datum",
+    "success": "Buchung erfolgreich erstellt!",
+    "error": "Fehler beim Erstellen der Buchung. Bitte versuchen Sie es erneut."
+  },
+  "dashboard": {
+    "welcome": "Willkommen",
+    "subtitle": "Verwalten Sie Ihre Buchungen und Einstellungen",
+    "adminAccess": "Sie haben Administratorzugriff",
+    "goToAdmin": "Zum Admin-Dashboard",
+    "stats": {
+      "totalBookings": "Gesamtbuchungen",
+      "activeBookings": "Aktive Buchungen",
+      "profile": "Profil"
+    },
+    "myBookings": "Meine Buchungen",
+    "newBooking": "Neue Buchung",
+    "noBookings": "Sie haben noch keine Buchungen",
+    "createFirst": "Erstellen Sie Ihre erste Buchung",
+    "cancel": "Stornieren",
+    "confirmCancel": "Möchten Sie diese Buchung wirklich stornieren?",
+    "status": {
+      "pending": "Ausstehend",
+      "confirmed": "Bestätigt",
+      "completed": "Abgeschlossen",
+      "cancelled": "Storniert"
+    }
+  },
+  "admin": {
+    "title": "Administrations-Dashboard",
+    "subtitle": "Buchungen, Dienstleistungen und Preise verwalten",
+    "tabs": {
+      "bookings": "Buchungen",
+      "services": "Dienstleistungen & Preise",
+      "analytics": "Analytik"
+    },
+    "stats": {
+      "total": "Gesamtbuchungen",
+      "pending": "Ausstehend",
+      "confirmed": "Bestätigt",
+      "completed": "Abgeschlossen"
+    },
+    "bookings": {
+      "dateTime": "Datum & Uhrzeit",
+      "client": "Kunde",
+      "service": "Dienstleistung",
+      "status": "Status",
+      "actions": "Aktionen",
+      "noBookings": "Keine Buchungen gefunden",
+      "loading": "Laden...",
+      "syncCalendar": "Mit Google Calendar synchronisieren",
+      "delete": "Löschen",
+      "confirmDelete": "Möchten Sie diese Buchung wirklich löschen?"
+    },
+    "services": {
+      "manage": "Dienstleistungen verwalten",
+      "add": "Dienstleistung hinzufügen",
+      "edit": "Dienstleistung bearbeiten",
+      "name": "Dienstleistungsname",
+      "slug": "Slug (URL)",
+      "description": "Beschreibung",
+      "type": "Typ",
+      "duration": "Dauer",
+      "price": "Preis",
+      "status": "Status",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "therapy": "Therapie",
+      "package": "Paket",
+      "sessions": "Sitzungen",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "confirmDelete": "Möchten Sie diese Dienstleistung wirklich löschen?"
+    },
+    "filters": {
+      "all": "Alle",
+      "pending": "Ausstehend",
+      "confirmed": "Bestätigt",
+      "completed": "Abgeschlossen"
+    }
+  },
+  "settings": {
+    "title": "Kontoeinstellungen",
+    "subtitle": "Verwalten Sie Ihr Profil und Sicherheitseinstellungen",
+    "personalInfo": "Persönliche Informationen",
+    "changePassword": "Passwort ändern",
+    "newPassword": "Neues Passwort",
+    "confirmPassword": "Neues Passwort bestätigen",
+    "saveChanges": "Änderungen speichern",
+    "saving": "Speichern...",
+    "changing": "Ändern...",
+    "backToDashboard": "Zurück zum Dashboard"
+  },
+  "therapies": {
+    "title": "Unsere Therapien",
+    "subtitle": "Entdecken Sie unser komplettes Angebot an therapeutischen Dienstleistungen für optimale Gesundheit und Wohlbefinden",
+    "heading": "Wie können wir gemeinsam eine neue Realität schaffen?",
+    "description": "Entdecken Sie unsere therapeutischen Dienstleistungen, die Wissenschaft, Energie und einen ganzheitlichen Ansatz vereinen.",
+    "viewMore": "Mehr erfahren",
+    "viewAll": "Alle Therapien →",
+    "durationUnit": "Min"
+  },
+  "packages": {
+    "title": "Ganzheitliche Therapiepakete",
+    "subtitle": "Unsere Pakete sind für langfristige gesundheitliche Vorteile und ganzheitliche Transformation von Körper, Geist und Seele konzipiert",
+    "heading": "Ganzheitliche Therapiepakete",
+    "description": "Unsere Pakete sind für langfristige gesundheitliche Vorteile und ganzheitliche Transformation konzipiert.",
+    "viewMore": "Mehr erfahren",
+    "sessionsUnit": "Sitzungen",
+    "priceInquiry": "Preis auf Anfrage",
+    "bookPackage": "Paket buchen",
+    "regularPriceLabel": "Regulärer Preis"
+  },
+  "testimonials": {
+    "title": "Was unsere Klienten sagen",
+    "subtitle": "Geschichten der Transformation und Heilung unserer Klienten."
+  },
+  "categories": {
+    "pathTitle": "GANZHEITLICHER WEG ZU GESUNDHEIT UND WOHLBEFINDEN",
+    "symptoms": {
+      "burnout": "BURNOUT",
+      "stress": "STRESS",
+      "fear": "ANGST",
+      "anxiety": "ÄNGSTLICHKEIT",
+      "pain": "SCHMERZ",
+      "depression": "DEPRESSION",
+      "distress": "BEKLEMMUNG",
+      "panic": "PANIK",
+      "insomnia": "SCHLAFLOSIGKEIT"
+    },
+    "methods": {
+      "breathing": "ATMUNG",
+      "movement": "BEWUSSTE BEWEGUNG",
+      "medicine": "HEILIGE MEDIZIN",
+      "manual": "MANUELLE THERAPIE",
+      "tecar": "TECAR STIMULATION",
+      "laser": "LASER",
+      "magnetic": "MAGNETTHERAPIE",
+      "dryLight": "TROCKENLICHT",
+      "shockwave": "STOSSWELLEN",
+      "traction": "TRAKTION",
+      "frequency": "FREQUENZTHERAPIE",
+      "sound": "KLANG"
+    },
+    "outcomes": {
+      "courage": "MUT",
+      "peace": "FRIEDEN",
+      "trust": "VERTRAUEN",
+      "relaxation": "ENTSPANNUNG",
+      "comfort": "WOHLBEFINDEN",
+      "joy": "FREUDE",
+      "balance": "GLEICHGEWICHT",
+      "stability": "STABILITÄT",
+      "sleep": "SCHLAF"
+    }
+  },
+  "common": {
+    "loading": "Laden...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "submit": "Absenden",
+    "search": "Suchen",
+    "filter": "Filter",
+    "all": "Alle",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "site": {
+    "phone": ["+386 51 302 206", "+386 41 458 931"],
+    "address": "Ulica škofa Maksimilijana Držečnika 11, 2000 Maribor, Slovenia",
+    "hours": {
+      "weekdays": "07:00–14:00 und 16:00–21:00",
+      "saturday": "08:00–14:00"
+    }
+  },
+  "toast": {
+    "success": "Erfolg!",
+    "error": "Fehler!",
+    "bookingCreated": "Buchung erfolgreich erstellt!",
+    "bookingCancelled": "Buchung storniert",
+    "bookingUpdated": "Buchung aktualisiert",
+    "statusUpdated": "Status aktualisiert",
+    "serviceAdded": "Dienstleistung hinzugefügt",
+    "serviceUpdated": "Dienstleistung aktualisiert",
+    "serviceDeleted": "Dienstleistung gelöscht",
+    "syncSuccess": "Mit Google Calendar synchronisiert",
+    "syncError": "Fehler bei der Synchronisierung"
+  }
+}

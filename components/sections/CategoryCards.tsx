@@ -1,59 +1,63 @@
 'use client';
 
+import { useLanguage } from '@/lib/i18n';
+
 export default function CategoryCards() {
+  const { t } = useLanguage();
+  
   const categories = [
     {
-      title: "CELOSTNA POT DO ZDRAVJA IN DOBREGA POČUTJA",
+      titleKey: "categories.pathTitle",
       color: "black",
       bgColor: "bg-black",
       textColor: "text-white",
-      items: [
-        "IZGORELOST",
-        "STRES",
-        "STRAH",
-        "ANKSIOZNOST",
-        "BOLEČINA",
-        "DEPRESIJA",
-        "TESNOBA",
-        "PANIKA",
-        "NESPEČNOST"
+      itemKeys: [
+        "categories.symptoms.burnout",
+        "categories.symptoms.stress",
+        "categories.symptoms.fear",
+        "categories.symptoms.anxiety",
+        "categories.symptoms.pain",
+        "categories.symptoms.depression",
+        "categories.symptoms.distress",
+        "categories.symptoms.panic",
+        "categories.symptoms.insomnia"
       ]
     },
     {
-      title: "",
+      titleKey: "",
       color: "lime",
       bgColor: "bg-[#B8D52E]",
       textColor: "text-black",
-      items: [
-        "DIHANJE",
-        "ZAVESTNO GIBANJE",
-        "SVETA MEDICINA",
-        "MANUALNA TERAPIJA",
-        "TECAR STIMULACIJA",
-        "LASER",
-        "MAGNETNA TERAPIJA",
-        "SUHA SVETLOBA",
-        "UDARNI VALOVI",
-        "TRAKCIJA",
-        "FREKVENČNA TERAPIJA",
-        "ZVOK"
+      itemKeys: [
+        "categories.methods.breathing",
+        "categories.methods.movement",
+        "categories.methods.medicine",
+        "categories.methods.manual",
+        "categories.methods.tecar",
+        "categories.methods.laser",
+        "categories.methods.magnetic",
+        "categories.methods.dryLight",
+        "categories.methods.shockwave",
+        "categories.methods.traction",
+        "categories.methods.frequency",
+        "categories.methods.sound"
       ]
     },
     {
-      title: "",
+      titleKey: "",
       color: "turquoise",
       bgColor: "bg-[#00B5AD]",
       textColor: "text-white",
-      items: [
-        "POGUM",
-        "MIR",
-        "ZAUPANJE",
-        "SPROŠČENOST",
-        "UGODJE",
-        "VESELJE",
-        "RAVNOVESJE",
-        "STABILNOST",
-        "SPANEC"
+      itemKeys: [
+        "categories.outcomes.courage",
+        "categories.outcomes.peace",
+        "categories.outcomes.trust",
+        "categories.outcomes.relaxation",
+        "categories.outcomes.comfort",
+        "categories.outcomes.joy",
+        "categories.outcomes.balance",
+        "categories.outcomes.stability",
+        "categories.outcomes.sleep"
       ]
     }
   ];
@@ -67,15 +71,15 @@ export default function CategoryCards() {
               key={index}
               className={`${category.bgColor} ${category.textColor} p-8 rounded-lg shadow-lg`}
             >
-              {category.title && (
+              {category.titleKey && (
                 <h3 className="text-xl md:text-2xl font-bold mb-6 leading-tight">
-                  {category.title}
+                  {t(category.titleKey)}
                 </h3>
               )}
               <div className="space-y-2">
-                {category.items.map((item, idx) => (
+                {category.itemKeys.map((itemKey: string, idx: number) => (
                   <div key={idx} className="text-sm md:text-base font-medium">
-                    {item}
+                    {t(itemKey)}
                   </div>
                 ))}
               </div>

@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Zap, Clock, ArrowRight } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n';
 
 interface Service {
   id: string;
@@ -13,24 +14,10 @@ interface Service {
 }
 
 export default function Services({ services }: { services: Service[] }) {
+  const { t } = useLanguage();
   return (
     <section className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-black mb-4 tracking-wide">
-            Naše terapije
-          </h2>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-            Odkrijte celoten nabor naših terapevtskih storitev za optimalno zdravje in dobro počutje.
-          </p>
-        </motion.div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
             <motion.div
@@ -49,7 +36,7 @@ export default function Services({ services }: { services: Service[] }) {
               <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
                 <div className="flex items-center space-x-1">
                   <Clock size={16} />
-                  <span>{service.duration} min</span>
+                  <span>{service.duration} {t('therapies.durationUnit')}</span>
                 </div>
                 <div className="text-[#00B5AD] font-bold text-lg">€{service.price}</div>
               </div>
@@ -57,7 +44,7 @@ export default function Services({ services }: { services: Service[] }) {
                 href={`/terapije/${service.id}`}
                 className="inline-flex items-center justify-center text-[#00B5AD] hover:text-[#009891] font-semibold transition-colors group"
               >
-                Več informacij
+                {t('therapies.viewMore')}
                 <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
               </Link>
             </motion.div>

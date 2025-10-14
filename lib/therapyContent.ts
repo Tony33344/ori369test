@@ -225,6 +225,66 @@ export const therapyContentData: Record<string, TherapyContent> = {
         }
       ]
     }
+  },
+  "mis": {
+    id: "mis",
+    name: "MIS (Magnetna indukcijska stimulacija)",
+    shortDescription: "Magnetna indukcijska stimulacija - revolucionarna terapija.",
+    duration: 20,
+    price: 30,
+    fullContent: {
+      introduction: "Magnetna indukcijska stimulacija (MIS) je revolucionarna terapija, ki z inovativnim pristopom zagotavlja izjemne rezultate.",
+      sections: [
+        {
+          title: "Kaj je Magnetna Indukcijska Stimulacija?",
+          content: "Nezdrave celice napolni in stimulira z izboljšano oksigenacijo in cirkulacijo ter jim povrne normalno delovanje. Izboljša tudi celično absorpcijo kisika in hranilnih snovi, hkrati pa odstrani toksine, zaradi česar se zmanjšajo vnetja in bolečine ter skrajša čas okrevanja."
+        },
+        {
+          title: "Glavni Učinki",
+          content: "S svojim edinstvenim ekscitativnim učinkom se MIS bistveno razlikuje od tradicionalnih terapij. Spodbuja nastajanje novih krvnih žil in s tem izboljša prekrvavitev na območju poškodbe. Fokusni udarni valovi so se izkazali za zelo učinkovite pri zdravljenju kroničnih bolečinskih stanj."
+        }
+      ]
+    }
+  },
+  "laserska-terapija": {
+    id: "laserska-terapija",
+    name: "Laserska Terapija",
+    shortDescription: "Neinvazivna metoda z laserskimi svetlobnimi žarki.",
+    duration: 10,
+    price: 10,
+    fullContent: {
+      introduction: "Laserska terapija je neinvazivna metoda zdravljenja, ki s pomočjo laserskih svetlobnih žarkov stimulira človeško tkivo z namenom zmanjšanja bolečine in pospešitve regeneracije.",
+      sections: [
+        {
+          title: "Kaj Je Laserska Terapija?",
+          content: "Beseda laser pomeni ojačanje svetlobe s stimulirano emisijo sevanja. Ta vrsta terapije ima zelo širok spekter uporabe in je primerna za lajšanje simptomov akutnih poškodb in bolezni, kot tudi za preprečevanje poslabšanja simptomov pri kroničnih bolečinah in boleznih."
+        },
+        {
+          title: "Glavni Učinki",
+          content: "Glavna učinka zdravljenja sta celjenje ran in kontrola bolečine. Pri celjenju ran prihaja do pospešene celične proliferacije, povečane sinteze kolagena in manjšanja brazgotinskega tkiva. Pri kontroli bolečine se zmanjša občutek bolečine zaradi sproščanja endorfinov in izboljšane mikrocirkulacije."
+        }
+      ]
+    }
+  },
+  "media-taping": {
+    id: "media-taping",
+    name: "Media Taping",
+    shortDescription: "Metoda z elastičnimi traki za odpravo bolečin in otekline.",
+    duration: 10,
+    price: 10,
+    fullContent: {
+      introduction: "Medi taping je metoda zdravljenja, ki z aplikacijo samolepilnih elastičnih trakov na kožo odpravlja bolečine, otekline in druge simptome poškodb.",
+      sections: [
+        {
+          title: "Kaj Je Media Taping?",
+          content: "Mediateping pomaga telesu ponovno vzpostaviti homeostazo. Terapija je primerna v akutni in subaktuni fazi, v kronični in rehabilitacijski fazi in celo kot preventiva pred poškodbami. Samolepilni elastični trakovi so izdelani iz bombažnih in elastičnih vlaken."
+        },
+        {
+          title: "Kako Delujejo Trakovi?",
+          content: "Trakovi preko kože delujejo na možgane in učinkujejo na vse fiziološke sisteme. Trak stimulira aktivacijo mehanoreceptorjev in nociceptorjev ter izzove reakcije telesa, ki se kažejo kot zmanjšan občutek bolečine, izboljšana cirkulacija in zmanjšanje vnetja."
+        }
+      ]
+    }
   }
 };
 

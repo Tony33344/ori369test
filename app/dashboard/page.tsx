@@ -4,11 +4,13 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser, getUserProfile, isAdmin } from '@/lib/auth';
+import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
 import { Calendar, Clock, Package, User, Settings } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function DashboardPage() {
+  const { t } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
@@ -53,7 +55,7 @@ export default function DashboardPage() {
   };
 
   const cancelBooking = async (bookingId: string) => {
-    if (!confirm('Ali ste prepričani, da želite preklicati to rezervacijo?')) return;
+    if (!confirm(t('dashboard.confirmCancel'))) return;
 
     const { error } = await supabase
       .from('bookings')
@@ -61,9 +63,9 @@ export default function DashboardPage() {
       .eq('id', bookingId);
 
     if (error) {
-      toast.error('Napaka pri preklicu rezervacije.');
+      toast.error(t('toast.error'));
     } else {
-      toast.success('Rezervacija preklicana!');
+      toast.success(t('toast.bookingCancelled'));
       loadUserData();
     }
   };
@@ -83,7 +85,7 @@ export default function DashboardPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Nalaganje...</p>
+          <p className="mt-4 text-gray-600">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -94,22 +96,22 @@ export default function DashboardPage() {
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Dobrodošli, {profile?.full_name || 'User'}!
+            {t('dashboard.welcome')}, {profile?.full_name || 'User'}!
           </h1>
-          <p className="text-gray-600">Upravljajte svoje rezervacije in nastavitve</p>
+          <p className="text-gray-600">{t('dashboard.subtitle')}</p>
         </div>
 
         {adminAccess && (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Settings className="text-blue-600" size={20} />
-              <span className="text-blue-800 font-medium">Imate administratorski dostop</span>
+              <span className="text-blue-800 font-medium">{t('dashboard.adminAccess')}</span>
             </div>
             <Link
               href="/admin"
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              Pojdi na Admin Dashboard
+              {t('dashboard.goToAdmin')}
             </Link>
           </div>
         )}
@@ -117,7 +119,7 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">Skupaj rezervacij</h3>
+              <h3 className="font-semibold text-gray-900">{t('dashboard.stats.totalBookings')}</h3>
               <Calendar className="text-blue-600" size={24} />
             </div>
             <p className="text-3xl font-bold text-gray-900">{bookings.length}</p>
@@ -125,7 +127,7 @@ export default function DashboardPage() {
 
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">Aktivne rezervacije</h3>
+              <h3 className="font-semibold text-gray-900">{t('dashboard.stats.activeBookings')}</h3>
               <Clock className="text-green-600" size={24} />
             </div>
             <p className="text-3xl font-bold text-gray-900">
@@ -135,22 +137,29 @@ export default function DashboardPage() {
 
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900">Profil</h3>
+              <h3 className="font-semibold text-gray-900">{t('dashboard.stats.profile')}</h3>
               <User className="text-purple-600" size={24} />
             </div>
-            <p className="text-sm text-gray-600">{profile?.email}</p>
+            <p className="text-sm text-gray-600 mb-3">{profile?.email}</p>
+            <Link
+              href="/nastavitve"
+              className="inline-flex items-center space-x-1 text-sm text-blue-600 hover:text-blue-700"
+            >
+              <Settings size={16} />
+              <span>{t('dashboard.stats.profile')}</span>
+            </Link>
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow">
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold text-gray-900">Moje rezervacije</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t('dashboard.myBookings')}</h2>
               <Link
                 href="/rezervacija"
                 className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all"
               >
-                Nova rezervacija
+                {t('dashboard.newBooking')}
               </Link>
             </div>
           </div>
@@ -159,12 +168,12 @@ export default function DashboardPage() {
             {bookings.length === 0 ? (
               <div className="p-12 text-center">
                 <Calendar className="mx-auto text-gray-400 mb-4" size={48} />
-                <p className="text-gray-600 mb-4">Še nimate nobene rezervacije</p>
+                <p className="text-gray-600 mb-4">{t('dashboard.noBookings')}</p>
                 <Link
                   href="/rezervacija"
                   className="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  Ustvari prvo rezervacijo
+                  {t('dashboard.createFirst')}
                 </Link>
               </div>
             ) : (
@@ -177,10 +186,10 @@ export default function DashboardPage() {
                           {booking.services.name}
                         </h3>
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
-                          {booking.status === 'pending' && 'Na čakanju'}
-                          {booking.status === 'confirmed' && 'Potrjeno'}
-                          {booking.status === 'completed' && 'Zaključeno'}
-                          {booking.status === 'cancelled' && 'Preklicano'}
+                          {booking.status === 'pending' && t('dashboard.status.pending')}
+                          {booking.status === 'confirmed' && t('dashboard.status.confirmed')}
+                          {booking.status === 'completed' && t('dashboard.status.completed')}
+                          {booking.status === 'cancelled' && t('dashboard.status.cancelled')}
                         </span>
                       </div>
                       <div className="flex items-center space-x-4 text-sm text-gray-600">
@@ -198,7 +207,7 @@ export default function DashboardPage() {
                         </div>
                       </div>
                       {booking.notes && (
-                        <p className="mt-2 text-sm text-gray-500 italic">Opomba: {booking.notes}</p>
+                        <p className="mt-2 text-sm text-gray-500 italic">{booking.notes}</p>
                       )}
                     </div>
                     {booking.status === 'pending' && (
@@ -206,7 +215,7 @@ export default function DashboardPage() {
                         onClick={() => cancelBooking(booking.id)}
                         className="ml-4 px-4 py-2 text-sm text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition-colors"
                       >
-                        Prekliči
+                        {t('dashboard.cancel')}
                       </button>
                     )}
                   </div>

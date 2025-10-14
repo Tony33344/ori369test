@@ -1,0 +1,278 @@
+{
+  "nav": {
+    "home": "Home",
+    "therapies": "Therapies",
+    "packages": "Packages",
+    "about": "About Us",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "admin": "Admin",
+    "logout": "Logout",
+    "booking": "Booking"
+  },
+  "hero": {
+    "title": "Your Bridge Between Science and Energy",
+    "tagline": "Your Bridge Between Science and Energy",
+    "slogan": "Quality Life",
+    "subtitle": "At ORI 369, we combine cutting-edge therapeutic approaches, the latest technologies, and a deep understanding of 3-6-9 frequencies to help you achieve balance of body, mind, and spirit.",
+    "cta": "Book Appointment",
+    "exploreCta": "Explore Therapies"
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Contact us for any questions or appointment bookings",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "location": "Location",
+    "hours": "Working Hours",
+    "weekdays": "Mon–Fri",
+    "saturday": "Saturday",
+    "openInMaps": "Open in Google Maps",
+    "bookNow": "Book Appointment",
+    "bookMessage": "Want to book an appointment? Use our online form for quick and easy booking."
+  },
+  "footer": {
+    "about": "About Us",
+    "tagline": "Holistic path to health and well-being",
+    "quickLinks": "Quick Links",
+    "contactInfo": "Contact",
+    "followUs": "Follow Us",
+    "rights": "All rights reserved"
+  },
+  "auth": {
+    "login": {
+      "title": "Log In",
+      "subtitle": "Access your account",
+      "email": "Email Address",
+      "password": "Password",
+      "submit": "Log In",
+      "noAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "forgotPassword": "Forgot password?",
+      "error": "Invalid email or password"
+    },
+    "register": {
+      "title": "Create Account",
+      "subtitle": "Join ORI 369",
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "submit": "Create Account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Log In",
+      "passwordMismatch": "Passwords do not match",
+      "success": "Account created successfully!",
+      "error": "Error creating account. Please try again."
+    }
+  },
+  "booking": {
+    "title": "Book an Appointment",
+    "subtitle": "Choose a service and available time slot",
+    "selectService": "Select Service",
+    "selectDate": "Select Date",
+    "selectTime": "Select Time Slot",
+    "additionalNotes": "Additional Notes",
+    "notesPlaceholder": "Any special requests or information...",
+    "submit": "Confirm Booking",
+    "loginRequired": "Please log in to make a booking",
+    "selectServiceFirst": "Please select a service first",
+    "selectDateFirst": "Please select a date first",
+    "noSlotsAvailable": "No available time slots for this date",
+    "success": "Booking created successfully!",
+    "error": "Error creating booking. Please try again."
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "subtitle": "Manage your bookings and settings",
+    "adminAccess": "You have administrator access",
+    "goToAdmin": "Go to Admin Dashboard",
+    "stats": {
+      "totalBookings": "Total Bookings",
+      "activeBookings": "Active Bookings",
+      "profile": "Profile"
+    },
+    "myBookings": "My Bookings",
+    "newBooking": "New Booking",
+    "noBookings": "You don't have any bookings yet",
+    "createFirst": "Create your first booking",
+    "cancel": "Cancel",
+    "confirmCancel": "Are you sure you want to cancel this booking?",
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "Manage bookings, services and prices",
+    "tabs": {
+      "bookings": "Bookings",
+      "services": "Services & Prices",
+      "analytics": "Analytics"
+    },
+    "stats": {
+      "total": "Total Bookings",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed"
+    },
+    "bookings": {
+      "dateTime": "Date & Time",
+      "client": "Client",
+      "service": "Service",
+      "status": "Status",
+      "actions": "Actions",
+      "noBookings": "No bookings found",
+      "loading": "Loading...",
+      "syncCalendar": "Sync to Google Calendar",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this booking?"
+    },
+    "services": {
+      "manage": "Manage Services",
+      "add": "Add Service",
+      "edit": "Edit Service",
+      "name": "Service Name",
+      "slug": "Slug (URL)",
+      "description": "Description",
+      "type": "Type",
+      "duration": "Duration",
+      "price": "Price",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "therapy": "Therapy",
+      "package": "Package",
+      "sessions": "Sessions",
+      "save": "Save",
+      "cancel": "Cancel",
+      "confirmDelete": "Are you sure you want to delete this service?"
+    },
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed"
+    }
+  },
+  "settings": {
+    "title": "Account Settings",
+    "subtitle": "Manage your profile and security settings",
+    "personalInfo": "Personal Information",
+    "changePassword": "Change Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm New Password",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "changing": "Changing...",
+    "backToDashboard": "Back to Dashboard"
+  },
+  "therapies": {
+    "title": "Our Therapies",
+    "subtitle": "Discover our complete range of therapeutic services for optimal health and well-being",
+    "heading": "How can we create a new reality together?",
+    "description": "Discover our therapeutic services that combine science, energy, and a holistic approach.",
+    "viewMore": "Learn more",
+    "viewAll": "All therapies →",
+    "durationUnit": "min"
+  },
+  "packages": {
+    "title": "Holistic Therapy Packages",
+    "subtitle": "Our packages are designed for long-term health benefits and holistic transformation of body, mind, and spirit",
+    "heading": "Holistic therapy packages",
+    "description": "Our packages are designed for long-term health benefits and holistic transformation.",
+    "viewMore": "Learn more",
+    "sessionsUnit": "sessions",
+    "priceInquiry": "Price on request",
+    "bookPackage": "Book package",
+    "regularPriceLabel": "Regular price"
+  },
+  "testimonials": {
+    "title": "What our clients say",
+    "subtitle": "Stories of transformation and healing from our clients."
+  },
+  "categories": {
+    "pathTitle": "HOLISTIC PATH TO HEALTH AND WELL-BEING",
+    "symptoms": {
+      "burnout": "BURNOUT",
+      "stress": "STRESS",
+      "fear": "FEAR",
+      "anxiety": "ANXIETY",
+      "pain": "PAIN",
+      "depression": "DEPRESSION",
+      "distress": "DISTRESS",
+      "panic": "PANIC",
+      "insomnia": "INSOMNIA"
+    },
+    "methods": {
+      "breathing": "BREATHING",
+      "movement": "CONSCIOUS MOVEMENT",
+      "medicine": "SACRED MEDICINE",
+      "manual": "MANUAL THERAPY",
+      "tecar": "TECAR STIMULATION",
+      "laser": "LASER",
+      "magnetic": "MAGNETIC THERAPY",
+      "dryLight": "DRY LIGHT",
+      "shockwave": "SHOCKWAVE",
+      "traction": "TRACTION",
+      "frequency": "FREQUENCY THERAPY",
+      "sound": "SOUND"
+    },
+    "outcomes": {
+      "courage": "COURAGE",
+      "peace": "PEACE",
+      "trust": "TRUST",
+      "relaxation": "RELAXATION",
+      "comfort": "COMFORT",
+      "joy": "JOY",
+      "balance": "BALANCE",
+      "stability": "STABILITY",
+      "sleep": "SLEEP"
+    }
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "site": {
+    "phone": ["+386 51 302 206", "+386 41 458 931"],
+    "address": "Ulica škofa Maksimilijana Držečnika 11, 2000 Maribor, Slovenia",
+    "hours": {
+      "weekdays": "07:00–14:00 and 16:00–21:00",
+      "saturday": "08:00–14:00"
+    }
+  },
+  "toast": {
+    "success": "Success!",
+    "error": "Error!",
+    "bookingCreated": "Booking created successfully!",
+    "bookingCancelled": "Booking cancelled",
+    "bookingUpdated": "Booking updated",
+    "statusUpdated": "Status updated",
+    "serviceAdded": "Service added",
+    "serviceUpdated": "Service updated",
+    "serviceDeleted": "Service deleted",
+    "syncSuccess": "Synced to Google Calendar",
+    "syncError": "Error syncing to Google Calendar"
+  }
+}

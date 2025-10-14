@@ -7,11 +7,14 @@ import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
+import { useLanguage } from '@/lib/i18n';
+import LanguageSelector from '@/components/LanguageSelector';
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -30,12 +33,12 @@ export default function Header() {
   };
 
   const navItems = [
-    { name: 'Domov', href: '/' },
-    { name: 'O nas', href: '/o-nas' },
-    { name: 'Terapije', href: '/terapije' },
-    { name: 'Paketi', href: '/paketi' },
-    { name: 'Rezervacija', href: '/rezervacija' },
-    { name: 'Kontakt', href: '/kontakt' },
+    { name: t('nav.home'), href: '/' },
+    { name: t('nav.about'), href: '/o-nas' },
+    { name: t('nav.therapies'), href: '/terapije' },
+    { name: t('nav.packages'), href: '/paketi' },
+    { name: t('nav.booking'), href: '/rezervacija' },
+    { name: t('nav.contact'), href: '/kontakt' },
   ];
 
   return (
@@ -55,7 +58,9 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-6">
+            {/* Language Selector */}
+            <LanguageSelector />
             {navItems.map((item) => (
               <Link
                 key={item.href}
@@ -76,13 +81,13 @@ export default function Header() {
                   href="/dashboard"
                   className="text-sm font-medium text-gray-700 hover:text-[#00B5AD]"
                 >
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Link>
                 <button
                   onClick={handleSignOut}
                   className="text-sm font-medium text-gray-700 hover:text-[#00B5AD]"
                 >
-                  Odjava
+                  {t('nav.logout')}
                 </button>
               </div>
             ) : (
@@ -90,7 +95,7 @@ export default function Header() {
                 href="/prijava"
                 className="px-6 py-2 text-sm font-medium text-white bg-[#00B5AD] rounded-lg hover:bg-[#009891] transition-colors"
               >
-                Prijava
+                {t('nav.login')}
               </Link>
             )}
           </div>
@@ -108,6 +113,10 @@ export default function Header() {
         {isOpen && (
           <div className="md:hidden pt-4 pb-2 border-t border-gray-200 mt-4">
             <div className="flex flex-col space-y-4">
+              {/* Mobile Language Selector */}
+              <div className="pb-2 border-b border-gray-200">
+                <LanguageSelector />
+              </div>
               {navItems.map((item) => (
                 <Link
                   key={item.href}
@@ -128,7 +137,7 @@ export default function Header() {
                     onClick={() => setIsOpen(false)}
                     className="text-base font-medium text-gray-700 hover:text-[#00B5AD]"
                   >
-                    Dashboard
+                    {t('nav.dashboard')}
                   </Link>
                   <button
                     onClick={() => {
@@ -137,7 +146,7 @@ export default function Header() {
                     }}
                     className="text-left text-base font-medium text-gray-700 hover:text-[#00B5AD]"
                   >
-                    Odjava
+                    {t('nav.logout')}
                   </button>
                 </>
               ) : (
@@ -146,7 +155,7 @@ export default function Header() {
                   onClick={() => setIsOpen(false)}
                   className="block px-6 py-2 text-base font-medium text-white bg-[#00B5AD] rounded-lg hover:bg-[#009891] text-center"
                 >
-                  Prijava
+                  {t('nav.login')}
                 </Link>
               )}
             </div>

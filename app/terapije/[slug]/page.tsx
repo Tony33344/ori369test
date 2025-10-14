@@ -1,7 +1,26 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Clock, Euro, Calendar } from 'lucide-react';
+import Image from 'next/image';
+import { ArrowLeft, Clock, Calendar } from 'lucide-react';
 import { getTherapyBySlug, getAllTherapySlugs } from '@/lib/therapyContent';
+
+// Map therapy slugs to their images
+const therapyImages: Record<string, string> = {
+  'elektrostimulacija': '/images/therapies/IMG_5926-768x513.webp',
+  'manualna-terapija': '/images/therapies/IMG_5929-768x513.webp',
+  'tecar-terapija': '/images/therapies/IMG_5931-768x513.webp',
+  'magnetna-terapija': '/images/therapies/IMG_5935-768x513.webp',
+  'mis': '/images/therapies/IMG_5938-768x513.webp',
+  'laserska-terapija': '/images/therapies/IMG_5947-768x513.webp',
+  'media-taping': '/images/therapies/IMG_5953-768x513.webp',
+  'cupping': '/images/therapies/IMG_5955-768x513.webp',
+  'dryneedeling': '/images/therapies/IMG_5991-768x513.webp',
+  'iteracare': '/images/therapies/IMG_5993-768x513.webp',
+  'ao-scan': '/images/therapies/IMG_5997-768x513.webp',
+  'trakcijska-miza': '/images/therapies/IMG_6004-768x513.webp',
+  'skalarni-valovi': '/images/therapies/IMG_6009-Copy-768x513.webp',
+  'vodeno-dihanje': '/images/therapies/IMG_5779-768x513.webp',
+};
 
 export async function generateStaticParams() {
   const slugs = getAllTherapySlugs();
@@ -17,11 +36,25 @@ export default function TherapyDetailPage({ params }: { params: { slug: string }
     notFound();
   }
 
+  const therapyImage = therapyImages[params.slug] || '/images/therapies/IMG_5779-768x513.webp';
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-gray-50 to-gray-100 py-16 md:py-24">
-        <div className="container mx-auto px-4">
+      {/* Hero Section with Image */}
+      <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 py-16 md:py-24 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src={therapyImage}
+            alt={therapy.name}
+            fill
+            className="object-cover opacity-30"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/80 to-white/95"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <Link 
             href="/terapije"
             className="inline-flex items-center text-[#00B5AD] hover:text-[#009891] mb-6 transition-colors"
@@ -42,10 +75,6 @@ export default function TherapyDetailPage({ params }: { params: { slug: string }
             <div className="flex items-center space-x-2 bg-white px-4 py-3 rounded-lg shadow-sm">
               <Clock className="text-[#00B5AD]" size={20} />
               <span className="text-gray-700"><strong>{therapy.duration} min</strong></span>
-            </div>
-            <div className="flex items-center space-x-2 bg-white px-4 py-3 rounded-lg shadow-sm">
-              <Euro className="text-[#00B5AD]" size={20} />
-              <span className="text-gray-700"><strong>€{therapy.price}</strong></span>
             </div>
           </div>
         </div>

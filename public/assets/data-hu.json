@@ -1,0 +1,194 @@
+{
+  "site": {
+    "name": "ORI 369",
+    "tagline": "Az Ön hídja a tudomány és az energia között",
+    "description": "Az ORI 369-ben kiváló terápiás megközelítéseket, a legmodernebb technológiákat és a 3-6-9 frekvenciák mély megértését kombináljuk, hogy segítsünk elérni a test, elme és lélek egyensúlyát.",
+    "email": "Info@ori369.com",
+    "phone": ["+386 51 302 206", "+386 41 458 931"],
+    "address": "Ulica škofa Maksimilijana Držečnika 11, 2000 Maribor, Szlovénia",
+    "hours": {
+      "weekdays": "H–P: 07:00–14:00 és 16:00–21:00",
+      "saturday": "Szombat: 08:00–14:00"
+    },
+    "social": {
+      "facebook": "https://www.facebook.com/profile.php?id=61569699862375",
+      "instagram": "https://www.instagram.com/ori_backtolife"
+    }
+  },
+  "therapies": [
+    {
+      "id": "elektrostimulacija",
+      "name": "Elektrostimuláció",
+      "shortDescription": "Az elektrostimuláció aktiválja az izomszövetet, javítja a vérkeringést és enyhíti a fájdalmat.",
+      "fullDescription": "Az elektrostimulációs terápia egyfajta fizikoterápia, amely elektromos áram és elektromos impulzusok segítségével csökkenti a fájdalmat, felgyorsítja a sejtanyagcserét és a gyorsabb gyógyulást.",
+      "duration": 20,
+      "price": 20
+    },
+    {
+      "id": "manualna-terapija",
+      "name": "Manuális terápia",
+      "shortDescription": "Gyengéd manuális technikákkal a terapeuta oldja a feszültségeket és javítja a mozgékonyságot.",
+      "fullDescription": "A manuális terápia nevét a manus=kéz szóból kapta, ami a terapeuta kezének használatára utal, mint a kezelés fő eszközére. Ez az egyik legnépszerűbb kezelési forma.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "tecar-terapija",
+      "name": "Tecar terápia",
+      "shortDescription": "Fejlett terápia rádiófrekvenciás energia segítségével.",
+      "fullDescription": "Fejlett terápia, amely rádiófrekvenciás energia segítségével felgyorsítja a szövetek regenerációját, enyhíti a fájdalmat és javítja a keringést, valamint a sejtek anyagcseréjét.",
+      "duration": 30,
+      "price": 40
+    },
+    {
+      "id": "magnetna-terapija",
+      "name": "Mágnesterápia",
+      "shortDescription": "Mágneses mezők használata a test stimulálására és regenerációra.",
+      "fullDescription": "Mágneses mezők használata a test stimulálására, a vérkeringés javítására és a regenerációra. Segít a sérülések gyógyulásában és krónikus fájdalmak esetén.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "mis",
+      "name": "MIS (Mágneses indukciós stimuláció)",
+      "shortDescription": "Mágneses indukciós stimuláció - forradalmi terápia.",
+      "fullDescription": "A mágneses indukciós stimuláció (MIS) egy forradalmi terápia, amely innovatív megközelítéssel kivételes eredményeket biztosít.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "laserska-terapija",
+      "name": "Lézerterápia",
+      "shortDescription": "Nem invazív módszer lézerfénysugarak használatával.",
+      "fullDescription": "A lézerterápia egy nem invazív kezelési módszer, amely lézerfénysugarak segítségével stimulálja az emberi szöveteket a gyógyulás felgyorsítása érdekében.",
+      "duration": 10,
+      "price": 10
+    },
+    {
+      "id": "media-taping",
+      "name": "Orvosi taping",
+      "shortDescription": "Módszer rugalmas szalagokkal a fájdalom és duzzanat megszüntetésére.",
+      "fullDescription": "Az orvosi taping egy kezelési módszer, amely öntapadós rugalmas szalagok alkalmazásával a bőrre megszünteti a fájdalmat, duzzanatot és egyéb sérülési tüneteket.",
+      "duration": 10,
+      "price": 10
+    },
+    {
+      "id": "cupping",
+      "name": "Köpölyözés terápia",
+      "shortDescription": "Köpölyözés terápia a gyógyuláshoz és regenerációhoz.",
+      "fullDescription": "A köpölyözés terápia (cupping) egy manuális technika, amely kis csészék (köpölyök) segítségével felgyorsítja a gyógyulást, regenerációt és enyhíti a fájdalmakat.",
+      "duration": 30,
+      "price": 30
+    },
+    {
+      "id": "dryneedeling",
+      "name": "Száraz tűzés",
+      "shortDescription": "Invazív fizioterápiás módszer száraz tűzéssel.",
+      "fullDescription": "A száraz tűzés (dry needling) egy invazív fizioterápiás módszer, amely vékony tűk bőrön keresztül történő behatolásával stimulálja a szövetet és elindítja a gyógyulási folyamatot.",
+      "duration": 30,
+      "price": 30
+    },
+    {
+      "id": "iteracare",
+      "name": "Iteracare",
+      "shortDescription": "Terápia iteracare technológiával.",
+      "fullDescription": "Az Iteracare egy fejlett terápiás módszer a regenerációhoz és gyógyuláshoz.",
+      "duration": 20,
+      "price": 20
+    },
+    {
+      "id": "ao-scan",
+      "name": "AO Scan",
+      "shortDescription": "Fejlett szkennelés a szervezet állapotának felmérésére.",
+      "fullDescription": "Az AO Scan lehetővé teszi a teljes szervezet átvizsgálását és az energetikai egyensúlyhiányok azonosítását.",
+      "duration": 30,
+      "price": 50
+    },
+    {
+      "id": "trakcijska-miza",
+      "name": "Trakciós asztal",
+      "shortDescription": "Terápia a gerinc tehermentesítésére.",
+      "fullDescription": "A trakciós asztal lehetővé teszi a gerinc gyengéd nyújtását és tehermentesítését.",
+      "duration": 30,
+      "price": 40
+    },
+    {
+      "id": "skalarni-valovi",
+      "name": "Skaláris hullámok (csakrák)",
+      "shortDescription": "Csakrák kiegyensúlyozása skaláris hullámokkal.",
+      "fullDescription": "A skaláris hullámok segítenek az energiacentrumok - csakrák - kiegyensúlyozásában.",
+      "duration": 30,
+      "price": 35
+    },
+    {
+      "id": "vodeno-dihanje",
+      "name": "Egyéni irányított légzés",
+      "shortDescription": "Terápia irányított légzéssel.",
+      "fullDescription": "Egyéni irányított légzés a relaxációhoz és a légzés optimalizálásához.",
+      "duration": 30,
+      "price": 30
+    }
+  ],
+  "packages": [
+    {
+      "id": "prebudi-telo",
+      "name": "Test ébresztése",
+      "description": "3x Elektrostimuláció, 3x Tecar terápia, 3x Iteracare és masszázs, 3x Manuális - Storm terápia, 1x Záró kezelés",
+      "benefits": ["Hormonális egyensúly", "Izomaktiváció", "Idegrendszer javítása", "Fájdalomcsillapítás"],
+      "sessions": 13,
+      "regularPrice": 335,
+      "price": 196
+    },
+    {
+      "id": "osvescanje-telesa",
+      "name": "Test tudatosítása",
+      "description": "6x Elektrostimuláció, 6x Iteracare és masszázs, 6x Lézer, 6x Tecar terápia, 6x Manuális - Storm terápia, 1x Záró kezelés",
+      "benefits": ["Energetikai megújulás", "Pszichológiai stabilitás", "Javított mozgékonyság", "Fájdalomcsökkentés"],
+      "sessions": 31,
+      "regularPrice": 690,
+      "price": 396
+    },
+    {
+      "id": "univerzum",
+      "name": "Univerzum",
+      "description": "9x Elektrostimuláció, 9x Tecar terápia és masszázs, 9x Trakciós asztal, 9x Manuális - Storm terápia, 9x MIS Mágneses indukciós stimuláció, 9x Skaláris hullámok - csakra kiegyensúlyozás, 3x AO Scan, 1x Moti-physio Scan",
+      "benefits": ["Mély regeneráció", "Testfunkciók optimalizálása", "Hosszú távú egészségügyi előnyök"],
+      "sessions": 58,
+      "regularPrice": 1835,
+      "price": 796
+    },
+    {
+      "id": "aktivacija",
+      "name": "Aktiválás",
+      "description": "MIS, irányított légzés, vibrációk, skaláris hullámok, jégkezelések. Fókusz: sejtes aktiválás, hormonális optimalizálás, izom-csontrendszer javítása",
+      "benefits": ["Sejtes aktiválás", "Hormonális optimalizálás", "Izom-csontrendszer javítása"],
+      "sessions": 0,
+      "price": null
+    },
+    {
+      "id": "ravnotezje",
+      "name": "Egyensúly",
+      "description": "Vibrációk, MIS, iteracare, dob, csakra kiegyensúlyozás. Fókusz: mentális és fizikai stabilitás, idegrendszer relaxációja, hormonális egyensúly",
+      "benefits": ["Mentális és fizikai stabilitás", "Idegrendszer relaxációja", "Hormonális egyensúly", "Holisztikus revitalizáció"],
+      "sessions": 0,
+      "price": null
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Ana M.",
+      "text": "Az ORI 369 terápiái segítettek a krónikus fájdalmaimban. Most energikusnak és egészségesnek érzem magam!",
+      "rating": 5
+    },
+    {
+      "name": "Marko K.",
+      "text": "Professzionális megközelítés és kivételes eredmények. Mindenkinek ajánlom, aki holisztikus támogatást keres.",
+      "rating": 5
+    },
+    {
+      "name": "Petra S.",
+      "text": "Az Egyensúly csomag segített megtalálni a belső harmóniát. A csapat kivételes!",
+      "rating": 5
+    }
+  ]
+}

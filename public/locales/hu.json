@@ -1,0 +1,278 @@
+{
+  "nav": {
+    "home": "Főoldal",
+    "therapies": "Terápiák",
+    "packages": "Csomagok",
+    "about": "Rólunk",
+    "contact": "Kapcsolat",
+    "login": "Bejelentkezés",
+    "register": "Regisztráció",
+    "dashboard": "Irányítópult",
+    "admin": "Admin",
+    "logout": "Kijelentkezés",
+    "booking": "Foglalás"
+  },
+  "hero": {
+    "title": "Az Ön hídja a tudomány és az energia között",
+    "tagline": "Az Ön hídja a tudomány és az energia között",
+    "slogan": "Minőségi élet",
+    "subtitle": "Az ORI 369-ben kiváló terápiás megközelítéseket, a legmodernebb technológiákat és a 3-6-9 frekvenciák mély megértését kombináljuk, hogy segítsünk elérni a test, elme és lélek egyensúlyát.",
+    "cta": "Időpont foglálás",
+    "exploreCta": "Terápiák felfedezése"
+  },
+  "contact": {
+    "title": "Lépjen kapcsolatba velünk",
+    "subtitle": "Forduljon hozzánk bármilyen kérdéssel vagy időpontfoglalással",
+    "email": "Email",
+    "phone": "Telefon",
+    "address": "Cím",
+    "location": "Helyszín",
+    "hours": "Nyitvatartás",
+    "weekdays": "H–P",
+    "saturday": "Szombat",
+    "openInMaps": "Megnyitás Google Maps-ben",
+    "bookNow": "Időpont foglálás",
+    "bookMessage": "Szeretne időpontot foglalni? Használja online űrlapunkat a gyors és egyszerű fogláláshoz."
+  },
+  "footer": {
+    "about": "Rólunk",
+    "tagline": "Holisztikus út az egészség és jólét felé",
+    "quickLinks": "Gyors linkek",
+    "contactInfo": "Kapcsolat",
+    "followUs": "Kövessen minket",
+    "rights": "Minden jog fenntartva"
+  },
+  "auth": {
+    "login": {
+      "title": "Bejelentkezés",
+      "subtitle": "Hozzáférés fiókjához",
+      "email": "E-mail cím",
+      "password": "Jelszó",
+      "submit": "Bejelentkezés",
+      "noAccount": "Nincs fiókja?",
+      "signUp": "Regisztráció",
+      "forgotPassword": "Elfelejtett jelszó?",
+      "error": "Érvénytelen e-mail cím vagy jelszó"
+    },
+    "register": {
+      "title": "Fiók létrehozása",
+      "subtitle": "Csatlakozzon az ORI 369-hez",
+      "fullName": "Teljes név",
+      "email": "E-mail cím",
+      "phone": "Telefonszám",
+      "password": "Jelszó",
+      "confirmPassword": "Jelszó megerősítése",
+      "submit": "Fiók létrehozása",
+      "haveAccount": "Már van fiókja?",
+      "signIn": "Bejelentkezés",
+      "passwordMismatch": "A jelszavak nem egyeznek",
+      "success": "Fiók sikeresen létrehozva!",
+      "error": "Hiba a fiók létrehozásakor. Kérjük, próbálja újra."
+    }
+  },
+  "booking": {
+    "title": "Időpont foglálása",
+    "subtitle": "Válasszon szolgáltatást és elérhető időpontot",
+    "selectService": "Válasszon szolgáltatást",
+    "selectDate": "Válasszon dátumot",
+    "selectTime": "Válasszon időpontot",
+    "additionalNotes": "További megjegyzések",
+    "notesPlaceholder": "Különleges kérések vagy információk...",
+    "submit": "Foglálás megerősítése",
+    "loginRequired": "Kérjük, jelentkezzen be a fogláláshoz",
+    "selectServiceFirst": "Kérjük, először válasszon szolgáltatást",
+    "selectDateFirst": "Kérjük, először válasszon dátumot",
+    "noSlotsAvailable": "Nincs elérhető időpont erre a dátumra",
+    "success": "Foglálás sikeresen létrehozva!",
+    "error": "Hiba a foglálás létrehozásakor. Kérjük, próbálja újra."
+  },
+  "dashboard": {
+    "welcome": "Üdvözöljük",
+    "subtitle": "Kezelje foglálásait és beállításait",
+    "adminAccess": "Rendszergazdai hozzáféréssel rendelkezik",
+    "goToAdmin": "Ugrás az adminisztrációs irányítópultra",
+    "stats": {
+      "totalBookings": "Összes foglálás",
+      "activeBookings": "Aktív foglálások",
+      "profile": "Profil"
+    },
+    "myBookings": "Foglálásaim",
+    "newBooking": "Új foglálás",
+    "noBookings": "Még nincs foglálása",
+    "createFirst": "Hozza létre első foglálását",
+    "cancel": "Lemondás",
+    "confirmCancel": "Biztosan lemondja ezt a foglálást?",
+    "status": {
+      "pending": "Függőben",
+      "confirmed": "Megerősítve",
+      "completed": "Befejezve",
+      "cancelled": "Lemondva"
+    }
+  },
+  "admin": {
+    "title": "Adminisztrációs irányítópult",
+    "subtitle": "Foglálások, szolgáltatások és árak kezelése",
+    "tabs": {
+      "bookings": "Foglálások",
+      "services": "Szolgáltatások és árak",
+      "analytics": "Analitika"
+    },
+    "stats": {
+      "total": "Összes foglálás",
+      "pending": "Függőben",
+      "confirmed": "Megerősítve",
+      "completed": "Befejezve"
+    },
+    "bookings": {
+      "dateTime": "Dátum és idő",
+      "client": "Ügyfél",
+      "service": "Szolgáltatás",
+      "status": "Állapot",
+      "actions": "Műveletek",
+      "noBookings": "Nincs foglálás",
+      "loading": "Betöltés...",
+      "syncCalendar": "Szinkronizálás Google Naptárral",
+      "delete": "Törlés",
+      "confirmDelete": "Biztosan törli ezt a foglálást?"
+    },
+    "services": {
+      "manage": "Szolgáltatások kezelése",
+      "add": "Szolgáltatás hozzáadása",
+      "edit": "Szolgáltatás szerkesztése",
+      "name": "Szolgáltatás neve",
+      "slug": "Slug (URL)",
+      "description": "Leírás",
+      "type": "Típus",
+      "duration": "Időtartam",
+      "price": "Ár",
+      "status": "Állapot",
+      "active": "Aktív",
+      "inactive": "Inaktív",
+      "therapy": "Terápia",
+      "package": "Csomag",
+      "sessions": "Alkalmak",
+      "save": "Mentés",
+      "cancel": "Mégse",
+      "confirmDelete": "Biztosan törli ezt a szolgáltatást?"
+    },
+    "filters": {
+      "all": "Összes",
+      "pending": "Függőben",
+      "confirmed": "Megerősítve",
+      "completed": "Befejezve"
+    }
+  },
+  "settings": {
+    "title": "Fiók beállítások",
+    "subtitle": "Kezelje profilját és biztonsági beállításait",
+    "personalInfo": "Személyes adatok",
+    "changePassword": "Jelszó módosítása",
+    "newPassword": "Új jelszó",
+    "confirmPassword": "Új jelszó megerősítése",
+    "saveChanges": "Változtatások mentése",
+    "saving": "Mentés...",
+    "changing": "Módosítás...",
+    "backToDashboard": "Vissza az irányítópulthoz"
+  },
+  "therapies": {
+    "title": "Terápiáink",
+    "subtitle": "Fedezze fel terápiás szolgáltatásaink teljes kínálatát az optimális egészség és jólét érdekében",
+    "heading": "Hogyan teremthetünk együtt új valóságot?",
+    "description": "Fedezze fel terápiás szolgáltatásainkat, amelyek ötvözik a tudományt, az energiát és a holisztikus megközelítést.",
+    "viewMore": "További információk",
+    "viewAll": "Minden terápia →",
+    "durationUnit": "perc"
+  },
+  "packages": {
+    "title": "Holisztikus terápiacsomagok",
+    "subtitle": "Csomagjaink hosszú távú egészségügyi előnyökre és a test, elme és lélek holisztikus átalakítására készültek",
+    "heading": "Holisztikus terápiacsomagok",
+    "description": "Csomagjaink hosszú távú egészségügyi előnyökre és holisztikus átalakításra készültek.",
+    "viewMore": "További információk",
+    "sessionsUnit": "alkalom",
+    "priceInquiry": "Ár ajánlatkérésre",
+    "bookPackage": "Csomag foglalása",
+    "regularPriceLabel": "Eredeti ár"
+  },
+  "testimonials": {
+    "title": "Mit mondanak ügyfeleink",
+    "subtitle": "Ügyfeleink átalakulásának és gyógyulásának történetei."
+  },
+  "categories": {
+    "pathTitle": "HOLISZTIKUS ÚT AZ EGÉSZSÉG ÉS JÓLÉT FELÉ",
+    "symptoms": {
+      "burnout": "KIÉGÉS",
+      "stress": "STRESSZ",
+      "fear": "FÉLELEM",
+      "anxiety": "SZORONGÁS",
+      "pain": "FÁJDALOM",
+      "depression": "DEPRESSZIÓ",
+      "distress": "SZORONGÁS",
+      "panic": "PÁNIK",
+      "insomnia": "ÁLMATLANSÁG"
+    },
+    "methods": {
+      "breathing": "LÉGZÉS",
+      "movement": "TUDATOS MOZGÁS",
+      "medicine": "SZENT GYÓGYÁSZAT",
+      "manual": "MANUÁLIS TERÁPIA",
+      "tecar": "TECAR STIMULÁCIÓ",
+      "laser": "LÉZER",
+      "magnetic": "MÁGNESTERÁPIA",
+      "dryLight": "SZÁRAZ FÉNY",
+      "shockwave": "LÖKÉSHULLÁM",
+      "traction": "TRAKCIÓ",
+      "frequency": "FREKVENCIATERÁPIA",
+      "sound": "HANG"
+    },
+    "outcomes": {
+      "courage": "BÁTORSÁG",
+      "peace": "BÉKE",
+      "trust": "BIZALOM",
+      "relaxation": "ELLAZULÁS",
+      "comfort": "KÉNYELEM",
+      "joy": "ÖRÖM",
+      "balance": "EGYENSÚLY",
+      "stability": "STABILITÁS",
+      "sleep": "ÁLOM"
+    }
+  },
+  "common": {
+    "loading": "Betöltés...",
+    "save": "Mentés",
+    "cancel": "Mégse",
+    "delete": "Törlés",
+    "edit": "Szerkesztés",
+    "close": "Bezárás",
+    "confirm": "Megerősítés",
+    "back": "Vissza",
+    "next": "Következő",
+    "submit": "Küldés",
+    "search": "Keresés",
+    "filter": "Szűrő",
+    "all": "Összes",
+    "yes": "Igen",
+    "no": "Nem"
+  },
+  "site": {
+    "phone": ["+386 51 302 206", "+386 41 458 931"],
+    "address": "Ulica škofa Maksimilijana Držečnika 11, 2000 Maribor, Slovenia",
+    "hours": {
+      "weekdays": "07:00–14:00 és 16:00–21:00",
+      "saturday": "08:00–14:00"
+    }
+  },
+  "toast": {
+    "success": "Siker!",
+    "error": "Hiba!",
+    "bookingCreated": "Foglálás sikeresen létrehozva!",
+    "bookingCancelled": "Foglálás lemondva",
+    "bookingUpdated": "Foglálás frissítve",
+    "statusUpdated": "Állapot frissítve",
+    "serviceAdded": "Szolgáltatás hozzáadva",
+    "serviceUpdated": "Szolgáltatás frissítve",
+    "serviceDeleted": "Szolgáltatás törölve",
+    "syncSuccess": "Szinkronizálva Google Naptárral",
+    "syncError": "Hiba a szinkronizálás során"
+  }
+}

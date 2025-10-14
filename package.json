@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "test:db": "node test-supabase.js",
+    "test:flow": "node test-full-flow.js",
+    "setup:db": "node setup-database.js",
+    "set-admin": "node set-admin.js"
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.19",
@@ -15,6 +19,7 @@
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.75.0",
     "date-fns": "^4.1.0",
+    "dotenv": "^17.2.3",
     "framer-motion": "^12.23.24",
     "googleapis": "^162.0.0",
     "lucide-react": "^0.545.0",
@@ -22,7 +27,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hot-toast": "^2.6.0",
-    "react-icons": "^5.5.0"
+    "react-icons": "^5.5.0",
+    "swiper": "^12.0.2"
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.13.5",

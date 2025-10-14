@@ -1,15 +1,21 @@
+'use client';
+
 import Hero from '@/components/sections/Hero';
 import ServicesPreview from '@/components/sections/ServicesPreview';
-import Packages from '@/components/sections/Packages';
+import PackagesPreview from '@/components/sections/PackagesPreview';
 import Testimonials from '@/components/sections/Testimonials';
-import data from '@/public/assets/data.json';
+import { useLanguage } from '@/lib/i18n';
+import { getDataForLanguage } from '@/lib/data-loader';
 
 export default function Home() {
+  const { language } = useLanguage();
+  const data = getDataForLanguage(language);
+  
   return (
     <>
       <Hero />
       <ServicesPreview services={data.therapies.slice(0, 6)} />
-      <Packages packages={data.packages.slice(0, 3)} />
+      <PackagesPreview packages={data.packages.slice(0, 3)} />
       <Testimonials testimonials={data.testimonials} />
     </>
   );

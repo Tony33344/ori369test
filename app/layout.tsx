@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "react-hot-toast";
+import { LanguageProvider } from "@/lib/i18n";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -24,10 +25,12 @@ export default function RootLayout({
   return (
     <html lang="sl">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <Toaster position="top-right" />
-        <Header />
-        <main className="pt-16">{children}</main>
-        <Footer />
+        <LanguageProvider>
+          <Toaster position="top-right" />
+          <Header />
+          <main className="pt-16">{children}</main>
+          <Footer />
+        </LanguageProvider>
       </body>
     </html>
   );

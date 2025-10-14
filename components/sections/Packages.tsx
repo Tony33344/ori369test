@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Check } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n';
 
 interface Package {
   id: string;
@@ -15,24 +16,10 @@ interface Package {
 }
 
 export default function Packages({ packages }: { packages: Package[] }) {
+  const { t } = useLanguage();
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold text-black mb-4 tracking-wide">
-            Celostni terapevtski paketi
-          </h2>
-          <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-            Naši paketi so zasnovani za dolgotrajne zdravstvene koristi in celostno transformacijo.
-          </p>
-        </motion.div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {packages.map((pkg, index) => (
             <motion.div
@@ -52,16 +39,16 @@ export default function Packages({ packages }: { packages: Package[] }) {
                     <div>
                       {pkg.regularPrice && (
                         <div className="text-sm text-gray-500 line-through mb-1">
-                          Redna cena: €{pkg.regularPrice}
+                          {t('packages.regularPriceLabel')}: €{pkg.regularPrice}
                         </div>
                       )}
                       <div className="flex items-baseline space-x-2 mb-2">
                         <span className="text-4xl font-bold text-[#00B5AD]">€{pkg.price}</span>
-                        {pkg.sessions > 0 && <span className="text-gray-600">/ {pkg.sessions} seans</span>}
+                        {pkg.sessions > 0 && <span className="text-gray-600">/ {pkg.sessions} {t('packages.sessionsUnit')}</span>}
                       </div>
                     </div>
                   ) : (
-                    <div className="text-gray-600 italic mb-2">Cena na poizvedbo</div>
+                    <div className="text-gray-600 italic mb-2">{t('packages.priceInquiry')}</div>
                   )}
                 </div>
 
@@ -78,7 +65,7 @@ export default function Packages({ packages }: { packages: Package[] }) {
                   href={`/rezervacija?package=${pkg.id}`}
                   className="block w-full py-3 bg-[#00B5AD] hover:bg-[#009891] text-white font-semibold rounded-lg text-center hover:shadow-lg transition-all duration-200"
                 >
-                  Rezerviraj paket
+                  {t('packages.bookPackage')}
                 </Link>
               </div>
             </motion.div>

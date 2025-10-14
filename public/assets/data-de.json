@@ -1,0 +1,194 @@
+{
+  "site": {
+    "name": "ORI 369",
+    "tagline": "Ihre Brücke zwischen Wissenschaft und Energie",
+    "description": "Bei ORI 369 kombinieren wir erstklassige therapeutische Ansätze, neueste Technologien und ein tiefes Verständnis der 3-6-9 Frequenzen, um Ihnen zu helfen, das Gleichgewicht von Körper, Geist und Seele zu erreichen.",
+    "email": "Info@ori369.com",
+    "phone": ["+386 51 302 206", "+386 41 458 931"],
+    "address": "Ulica škofa Maksimilijana Držečnika 11, 2000 Maribor, Slowenien",
+    "hours": {
+      "weekdays": "Mo–Fr: 07:00–14:00 und 16:00–21:00",
+      "saturday": "Samstag: 08:00–14:00"
+    },
+    "social": {
+      "facebook": "https://www.facebook.com/profile.php?id=61569699862375",
+      "instagram": "https://www.instagram.com/ori_backtolife"
+    }
+  },
+  "therapies": [
+    {
+      "id": "elektrostimulacija",
+      "name": "Elektrostimulation",
+      "shortDescription": "Elektrostimulation aktiviert Muskelgewebe, verbessert die Durchblutung und lindert Schmerzen.",
+      "fullDescription": "Die Elektrostimulationstherapie ist eine Art physikalische Therapie, die mit elektrischem Strom und elektrischen Impulsen Schmerzen reduziert, den Zellmetabolismus beschleunigt und eine schnellere Heilung fördert.",
+      "duration": 20,
+      "price": 20
+    },
+    {
+      "id": "manualna-terapija",
+      "name": "Manuelle Therapie",
+      "shortDescription": "Mit sanften manuellen Techniken löst der Therapeut Verspannungen und verbessert die Beweglichkeit.",
+      "fullDescription": "Die manuelle Therapie hat ihren Namen vom Wort manus=Hand, was auf die Verwendung der Hände des Therapeuten als Hauptbehandlungsinstrument hinweist. Sie ist eine der beliebtesten Behandlungsformen.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "tecar-terapija",
+      "name": "Tecar-Therapie",
+      "shortDescription": "Fortschrittliche Therapie mit Radiofrequenzenergie.",
+      "fullDescription": "Fortschrittliche Therapie, die mit Radiofrequenzenergie die Geweberegeneration beschleunigt, Schmerzen lindert und die Durchblutung sowie den Zellstoffwechsel verbessert.",
+      "duration": 30,
+      "price": 40
+    },
+    {
+      "id": "magnetna-terapija",
+      "name": "Magnetfeldtherapie",
+      "shortDescription": "Einsatz von Magnetfeldern zur Körperstimulation und Regeneration.",
+      "fullDescription": "Einsatz von Magnetfeldern zur Körperstimulation, Verbesserung der Durchblutung und Regeneration. Hilft bei der Heilung von Verletzungen und chronischen Schmerzen.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "mis",
+      "name": "MIS (Magnetische Induktionsstimulation)",
+      "shortDescription": "Magnetische Induktionsstimulation - revolutionäre Therapie.",
+      "fullDescription": "Die magnetische Induktionsstimulation (MIS) ist eine revolutionäre Therapie, die mit einem innovativen Ansatz außergewöhnliche Ergebnisse liefert.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "laserska-terapija",
+      "name": "Lasertherapie",
+      "shortDescription": "Nicht-invasive Methode mit Laserlicht strahlen.",
+      "fullDescription": "Die Lasertherapie ist eine nicht-invasive Behandlungsmethode, die mit Laserlicht strahlen menschliches Gewebe stimuliert, um die Heilung zu beschleunigen.",
+      "duration": 10,
+      "price": 10
+    },
+    {
+      "id": "media-taping",
+      "name": "Medical Taping",
+      "shortDescription": "Methode mit elastischen Bändern zur Schmerzlinderung und Schwellungsreduzierung.",
+      "fullDescription": "Medical Taping ist eine Behandlungsmethode, die durch das Aufbringen selbstklebender elastischer Bänder auf die Haut Schmerzen, Schwellungen und andere Verletzungssymptome beseitigt.",
+      "duration": 10,
+      "price": 10
+    },
+    {
+      "id": "cupping",
+      "name": "Schröpftherapie",
+      "shortDescription": "Schröpftherapie zur Heilung und Regeneration.",
+      "fullDescription": "Die Schröpftherapie ist eine manuelle Technik, die mit kleinen Gläsern (Schröpfgläsern) die Heilung, Regeneration beschleunigt und Schmerzen lindert.",
+      "duration": 30,
+      "price": 30
+    },
+    {
+      "id": "dryneedeling",
+      "name": "Dry Needling",
+      "shortDescription": "Invasive physiotherapeutische Methode mit Trockennadeln.",
+      "fullDescription": "Dry Needling ist eine invasive physiotherapeutische Methode, die durch das Eindringen dünner Nadeln durch die Haut Gewebe stimuliert und den Heilungsprozess auslöst.",
+      "duration": 30,
+      "price": 30
+    },
+    {
+      "id": "iteracare",
+      "name": "Iteracare",
+      "shortDescription": "Therapie mit Iteracare-Technologie.",
+      "fullDescription": "Iteracare ist eine fortschrittliche therapeutische Methode zur Regeneration und Heilung.",
+      "duration": 20,
+      "price": 20
+    },
+    {
+      "id": "ao-scan",
+      "name": "AO Scan",
+      "shortDescription": "Fortschrittliches Scannen zur Beurteilung des Organismus.",
+      "fullDescription": "AO Scan ermöglicht eine vollständige Überprüfung des Organismus und die Identifizierung von Energieungleichgewichten.",
+      "duration": 30,
+      "price": 50
+    },
+    {
+      "id": "trakcijska-miza",
+      "name": "Traktionstisch",
+      "shortDescription": "Therapie zur Wirbelsäulenentlastung.",
+      "fullDescription": "Der Traktionstisch ermöglicht sanftes Dehnen und Entlasten der Wirbelsäule.",
+      "duration": 30,
+      "price": 40
+    },
+    {
+      "id": "skalarni-valovi",
+      "name": "Skalarwellen (Chakren)",
+      "shortDescription": "Chakrenausgleich mit Skalarwellen.",
+      "fullDescription": "Skalarwellen helfen beim Ausgleich der Energiezentren - Chakren.",
+      "duration": 30,
+      "price": 35
+    },
+    {
+      "id": "vodeno-dihanje",
+      "name": "Geführte Atmung",
+      "shortDescription": "Therapie mit geführter Atmung.",
+      "fullDescription": "Individuell geführte Atmung zur Entspannung und Atemoptimierung.",
+      "duration": 30,
+      "price": 30
+    }
+  ],
+  "packages": [
+    {
+      "id": "prebudi-telo",
+      "name": "Körper erwecken",
+      "description": "3x Elektrostimulation, 3x Tecar-Therapie, 3x Iteracare und Massage, 3x Manuelle - Storm-Therapie, 1x Abschlussbehandlung",
+      "benefits": ["Hormonelles Gleichgewicht", "Muskelaktivierung", "Verbesserung des Nervensystems", "Schmerzbeseitigung"],
+      "sessions": 13,
+      "regularPrice": 335,
+      "price": 196
+    },
+    {
+      "id": "osvescanje-telesa",
+      "name": "Körperbewusstsein",
+      "description": "6x Elektrostimulation, 6x Iteracare und Massage, 6x Laser, 6x Tecar-Therapie, 6x Manuelle - Storm-Therapie, 1x Abschlussbehandlung",
+      "benefits": ["Energieerneuerung", "Psychische Stabilität", "Verbesserte Beweglichkeit", "Schmerzreduktion"],
+      "sessions": 31,
+      "regularPrice": 690,
+      "price": 396
+    },
+    {
+      "id": "univerzum",
+      "name": "Universum",
+      "description": "9x Elektrostimulation, 9x Tecar-Therapie und Massage, 9x Traktionstisch, 9x Manuelle - Storm-Therapie, 9x MIS Magnetische Induktionsstimulation, 9x Skalarwellen - Chakrenausgleich, 3x AO Scan, 1x Moti-physio Scan",
+      "benefits": ["Tiefe Regeneration", "Optimierung der Körperfunktionen", "Langfristige Gesundheitsvorteile"],
+      "sessions": 58,
+      "regularPrice": 1835,
+      "price": 796
+    },
+    {
+      "id": "aktivacija",
+      "name": "Aktivierung",
+      "description": "MIS, geführte Atmung, Vibrationen, Skalarwellen, Eisbehandlungen. Fokus: zelluläre Aktivierung, hormonelle Optimierung, Verbesserung des Muskel-Skelett-Systems",
+      "benefits": ["Zelluläre Aktivierung", "Hormonelle Optimierung", "Verbesserung des Muskel-Skelett-Systems"],
+      "sessions": 0,
+      "price": null
+    },
+    {
+      "id": "ravnotezje",
+      "name": "Gleichgewicht",
+      "description": "Vibrationen, MIS, Iteracare, Trommel, Chakrenausgleich. Fokus: mentale und physische Stabilität, Entspannung des Nervensystems, hormonelles Gleichgewicht",
+      "benefits": ["Mentale und physische Stabilität", "Entspannung des Nervensystems", "Hormonelles Gleichgewicht", "Ganzheitliche Revitalisierung"],
+      "sessions": 0,
+      "price": null
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Ana M.",
+      "text": "Die Therapien bei ORI 369 haben mir bei chronischen Schmerzen geholfen. Jetzt fühle ich mich energisch und gesund!",
+      "rating": 5
+    },
+    {
+      "name": "Marko K.",
+      "text": "Professioneller Ansatz und außergewöhnliche Ergebnisse. Ich empfehle es jedem, der ganzheitliche Unterstützung sucht.",
+      "rating": 5
+    },
+    {
+      "name": "Petra S.",
+      "text": "Das Gleichgewichtspaket hat mir geholfen, innere Harmonie zu finden. Das Team ist außergewöhnlich!",
+      "rating": 5
+    }
+  ]
+}

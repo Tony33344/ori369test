@@ -4,20 +4,67 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Sparkles } from 'lucide-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, EffectFade } from 'swiper/modules';
+import { useLanguage } from '@/lib/i18n';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+
+const heroImages = [
+  '/images/therapies/IMG_5779-768x513.webp',
+  '/images/therapies/IMG_5787-768x513.webp',
+  '/images/therapies/IMG_5867-768x513.webp',
+  '/images/therapies/IMG_5889-768x536.webp',
+  '/images/therapies/IMG_5926-768x513.webp',
+  '/images/therapies/IMG_5929-768x513.webp',
+  '/images/therapies/IMG_5931-768x513.webp',
+  '/images/therapies/IMG_5935-768x513.webp',
+  '/images/therapies/IMG_5938-768x513.webp',
+  '/images/therapies/IMG_5939-Copy-768x513.webp',
+  '/images/therapies/IMG_5947-768x513.webp',
+  '/images/therapies/IMG_5953-768x513.webp',
+  '/images/therapies/IMG_5955-768x513.webp',
+  '/images/therapies/IMG_5991-768x513.webp',
+  '/images/therapies/IMG_5993-768x513.webp',
+  '/images/therapies/IMG_5997-768x513.webp',
+  '/images/therapies/IMG_6004-768x513.webp',
+  '/images/therapies/IMG_6009-Copy-768x513.webp',
+];
 
 export default function Hero() {
+  const { t } = useLanguage();
+  
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
-      {/* Background Image */}
+      {/* Background Image Carousel */}
       <div className="absolute inset-0 overflow-hidden">
-        <Image
-          src="/images/therapies/IMG_5779-2048x1367.webp"
-          alt="ORI 369 Center"
-          fill
-          className="object-cover opacity-20"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white/90"></div>
+        <Swiper
+          modules={[Autoplay, EffectFade]}
+          effect="fade"
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: false,
+          }}
+          speed={1500}
+          loop={true}
+          className="w-full h-full"
+        >
+          {heroImages.map((image, index) => (
+            <SwiperSlide key={index} className="w-full h-full">
+              <div className="relative w-full h-full">
+                <Image
+                  src={image}
+                  alt={`ORI 369 Center ${index + 1}`}
+                  fill
+                  className="object-cover"
+                  priority={index === 0}
+                  sizes="100vw"
+                />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+        <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white/90 pointer-events-none z-10"></div>
       </div>
       
       {/* Animated background elements - ORI 369 Brand Colors */}
@@ -37,7 +84,7 @@ export default function Hero() {
           >
             <div className="inline-flex items-center space-x-2 px-4 py-2 bg-[#00B5AD]/10 backdrop-blur-sm rounded-full border border-[#00B5AD]/30">
               <Sparkles className="text-[#00B5AD]" size={20} />
-              <span className="text-sm font-medium text-[#00B5AD] tracking-wide">Vaš most med znanostjo in energijo</span>
+              <span className="text-sm font-medium text-[#00B5AD] tracking-wide">{t('hero.tagline')}</span>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold text-black leading-tight tracking-wider">
@@ -45,15 +92,11 @@ export default function Hero() {
             </h1>
             
             <div className="text-xl md:text-2xl font-medium text-[#00B5AD] tracking-[0.15em] uppercase">
-              Kakovostno življenje
+              {t('hero.slogan')}
             </div>
 
             <p className="text-xl md:text-2xl text-gray-700 max-w-2xl mx-auto">
-              V ORI 369 združujemo vrhunske terapevtske pristope, najnovejše tehnologije in globoko razumevanje frekvenc 3-6-9, da vam pomagamo doseči ravnovesje telesa, uma in duha.
-            </p>
-
-            <p className="text-lg text-gray-600 italic">
-              With compassion, expertise, and a focus on your unique needs, we're committed to helping you thrive—mind, body, and spirit.
+              {t('hero.subtitle')}
             </p>
 
             <motion.div
@@ -66,13 +109,13 @@ export default function Hero() {
                 href="/rezervacija"
                 className="px-8 py-4 bg-[#00B5AD] hover:bg-[#009891] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
-                Rezervirajte termin
+                {t('hero.cta')}
               </Link>
               <Link
                 href="/terapije"
                 className="px-8 py-4 bg-black hover:bg-gray-800 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
-                Raziščite terapije
+                {t('hero.exploreCta')}
               </Link>
             </motion.div>
           </motion.div>

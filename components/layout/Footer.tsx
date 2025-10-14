@@ -3,8 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Facebook, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n';
 
 export default function Footer() {
+  const { t, translations } = useLanguage();
+  
   return (
     <footer className="bg-white border-t border-gray-200">
       {/* Category Cards Section */}
@@ -13,32 +16,32 @@ export default function Footer() {
           {/* Black Card - Issues */}
           <div className="bg-black text-white p-6 rounded-lg">
             <div className="space-y-1 text-sm font-medium">
-              <div>IZGORELOST / STRES / STRAH</div>
-              <div>ANKSIOZNOST / BOLEČINA</div>
-              <div>DEPRESIJA / TESNOBA</div>
-              <div>PANIKA / NESPEČNOST</div>
+              <div>{t('categories.symptoms.burnout')} / {t('categories.symptoms.stress')} / {t('categories.symptoms.fear')}</div>
+              <div>{t('categories.symptoms.anxiety')} / {t('categories.symptoms.pain')}</div>
+              <div>{t('categories.symptoms.depression')} / {t('categories.symptoms.distress')}</div>
+              <div>{t('categories.symptoms.panic')} / {t('categories.symptoms.insomnia')}</div>
             </div>
           </div>
 
           {/* Lime Card - Therapies */}
           <div className="bg-[#B8D52E] text-black p-6 rounded-lg">
             <div className="space-y-1 text-sm font-medium">
-              <div>DIHANJE / ZAVESTNO GIBANJE</div>
-              <div>SVETA MEDICINA / MANUALNA TERAPIJA</div>
-              <div>TECAR STIMULACIJA / LASER</div>
-              <div>MAGNETNA TERAPIJA / SUHA SVETLOBA</div>
-              <div>UDARNI VALOVI / TRAKCIJA</div>
-              <div>FREKVENČNA TERAPIJA / ZVOK</div>
+              <div>{t('categories.methods.breathing')} / {t('categories.methods.movement')}</div>
+              <div>{t('categories.methods.medicine')} / {t('categories.methods.manual')}</div>
+              <div>{t('categories.methods.tecar')} / {t('categories.methods.laser')}</div>
+              <div>{t('categories.methods.magnetic')} / {t('categories.methods.dryLight')}</div>
+              <div>{t('categories.methods.shockwave')} / {t('categories.methods.traction')}</div>
+              <div>{t('categories.methods.frequency')} / {t('categories.methods.sound')}</div>
             </div>
           </div>
 
           {/* Turquoise Card - Benefits */}
           <div className="bg-[#00B5AD] text-white p-6 rounded-lg">
             <div className="space-y-1 text-sm font-medium">
-              <div>POGUM / MIR / ZAUPANJE</div>
-              <div>SPROŠČENOST / UGODJE</div>
-              <div>VESELJE / RAVNOVESJE</div>
-              <div>STABILNOST / SPANEC</div>
+              <div>{t('categories.outcomes.courage')} / {t('categories.outcomes.peace')} / {t('categories.outcomes.trust')}</div>
+              <div>{t('categories.outcomes.relaxation')} / {t('categories.outcomes.comfort')}</div>
+              <div>{t('categories.outcomes.joy')} / {t('categories.outcomes.balance')}</div>
+              <div>{t('categories.outcomes.stability')} / {t('categories.outcomes.sleep')}</div>
             </div>
           </div>
         </div>
@@ -58,13 +61,13 @@ export default function Footer() {
                 className="h-16 w-auto mb-4"
               />
               <p className="text-sm text-gray-600 mt-4">
-                Celostna pot do zdravja in dobrega počutja
+                {t('footer.tagline')}
               </p>
             </div>
 
             {/* Contact */}
             <div>
-              <h3 className="text-lg font-bold text-black mb-4">Kontakt</h3>
+              <h3 className="text-lg font-bold text-black mb-4">{t('footer.contactInfo')}</h3>
               <div className="space-y-2 text-sm text-gray-600">
                 <div className="flex items-center space-x-2">
                   <Mail size={16} className="text-[#00B5AD]" />
@@ -72,44 +75,46 @@ export default function Footer() {
                     Info@ori369.com
                   </a>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Phone size={16} className="text-[#00B5AD]" />
-                  <a href="tel:+38641458931" className="hover:text-[#00B5AD] transition-colors">
-                    +386 41 458 931
-                  </a>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Phone size={16} className="text-[#00B5AD]" />
-                  <a href="tel:051302206" className="hover:text-[#00B5AD] transition-colors">
-                    051 302 206
-                  </a>
-                </div>
+                {translations.site?.phone?.map((phone: string, idx: number) => (
+                  <div key={idx} className="flex items-center space-x-2">
+                    <Phone size={16} className="text-[#00B5AD]" />
+                    <a href={`tel:${phone.replace(/\s/g, '')}`} className="hover:text-[#00B5AD] transition-colors">
+                      {phone}
+                    </a>
+                  </div>
+                ))}
                 <div className="flex items-start space-x-2 mt-3">
                   <MapPin size={16} className="mt-1 text-[#00B5AD]" />
-                  <span>Šola Maksimilijana Držečnika 11<br />2000 Maribor, Slovenija</span>
+                  <a 
+                    href="https://www.google.com/maps/place/ORI+369+Only+right+information+therapy+center/@46.5598601,15.647895,793m/data=!3m2!1e3!4b1!4m6!3m5!1s0x476f770077b610ad:0x56dd118d4f3d3dca!8m2!3d46.5598564!4d15.6504699!16s%2Fg%2F11x3988330?entry=ttu&g_ep=EgoyMDI1MTAwOC4wIKXMDSoASAFQAw%3D%3D"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-[#00B5AD] transition-colors"
+                  >
+                    {translations.site?.address}
+                  </a>
                 </div>
               </div>
             </div>
 
             {/* Hours */}
             <div>
-              <h3 className="text-lg font-bold text-black mb-4">Delovni čas</h3>
+              <h3 className="text-lg font-bold text-black mb-4">{t('contact.hours')}</h3>
               <div className="space-y-2 text-sm text-gray-600">
                 <div>
-                  <p className="font-semibold text-black">Ponedeljek–Petek:</p>
-                  <p>07.00–14.00</p>
-                  <p>16.00–21.00</p>
+                  <p className="font-semibold text-black">{t('contact.weekdays')}:</p>
+                  <p>{translations.site?.hours?.weekdays}</p>
                 </div>
                 <div className="mt-3">
-                  <p className="font-semibold text-black">Sobota:</p>
-                  <p>08.00–14.00</p>
+                  <p className="font-semibold text-black">{t('contact.saturday')}:</p>
+                  <p>{translations.site?.hours?.saturday}</p>
                 </div>
               </div>
             </div>
 
             {/* Social & Quick Links */}
             <div>
-              <h3 className="text-lg font-bold text-black mb-4">Sledite nam</h3>
+              <h3 className="text-lg font-bold text-black mb-4">{t('footer.followUs')}</h3>
               <div className="flex space-x-3 mb-6">
                 <a
                   href="https://www.facebook.com/profile.php?id=61569699862375"
@@ -131,16 +136,16 @@ export default function Footer() {
               
               <div className="space-y-2 text-sm">
                 <Link href="/o-nas" className="block text-gray-600 hover:text-[#00B5AD] transition-colors">
-                  O nas
+                  {t('nav.about')}
                 </Link>
                 <Link href="/terapije" className="block text-gray-600 hover:text-[#00B5AD] transition-colors">
-                  Terapije
+                  {t('nav.therapies')}
                 </Link>
                 <Link href="/paketi" className="block text-gray-600 hover:text-[#00B5AD] transition-colors">
-                  Paketi
+                  {t('nav.packages')}
                 </Link>
                 <Link href="/kontakt" className="block text-gray-600 hover:text-[#00B5AD] transition-colors">
-                  Kontakt
+                  {t('nav.contact')}
                 </Link>
               </div>
             </div>
@@ -149,7 +154,7 @@ export default function Footer() {
           {/* Copyright */}
           <div className="mt-8 pt-6 border-t border-gray-200 text-center">
             <p className="text-sm text-gray-500">
-              &copy; {new Date().getFullYear()} ORI 369. Vse pravice pridržane.
+              &copy; {new Date().getFullYear()} ORI 369. {t('footer.rights')}.
             </p>
           </div>
         </div>

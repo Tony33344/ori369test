@@ -1,0 +1,56 @@
+
+> ori369test-clone@0.1.0 dev
+> next dev --turbopack
+
+ ⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /home/jack/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /home/jack/Documents/augment-projects/ori369/ori369test-clone/package-lock.json
+
+ ⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
+   ▲ Next.js 15.5.4 (Turbopack)
+   - Local:        http://localhost:3001
+   - Network:      http://10.58.15.165:3001
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1932ms
+ ○ Compiling / ...
+ ✓ Compiled / in 12.5s
+ GET / 200 in 13788ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 848ms
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 1240ms
+ ○ Compiling /prijava ...
+ ✓ Compiled /prijava in 748ms
+ GET /prijava 200 in 902ms
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 1102ms
+ GET /dashboard 200 in 1353ms
+ GET /prijava 200 in 125ms
+ GET / 200 in 109ms
+ ○ Compiling /terapije ...
+ ✓ Compiled /terapije in 1014ms
+ GET /terapije 200 in 1160ms
+ GET /prijava 200 in 131ms
+ GET /dashboard 200 in 230ms
+ ○ Compiling /rezervacija ...
+ ✓ Compiled /rezervacija in 661ms
+ GET /rezervacija 200 in 793ms
+ GET /dashboard 200 in 115ms
+ ○ Compiling /admin ...
+ ✓ Compiled /admin in 766ms
+ GET /admin 200 in 922ms
+ GET /dashboard 200 in 125ms
+ GET /admin 200 in 117ms
+ GET / 200 in 124ms
+ GET /terapije 200 in 126ms
+ GET /prijava 200 in 115ms
+ GET /dashboard 200 in 243ms
+ GET /rezervacija 200 in 133ms
+ GET /dashboard 200 in 163ms
+ GET /admin 200 in 132ms
+ GET /dashboard 200 in 120ms
+ ✓ Compiled in 599ms

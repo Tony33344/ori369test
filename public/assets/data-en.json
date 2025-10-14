@@ -1,0 +1,194 @@
+{
+  "site": {
+    "name": "ORI 369",
+    "tagline": "Your Bridge Between Science and Energy",
+    "description": "At ORI 369, we combine cutting-edge therapeutic approaches, the latest technologies, and a deep understanding of 3-6-9 frequencies to help you achieve balance of body, mind, and spirit.",
+    "email": "Info@ori369.com",
+    "phone": ["+386 51 302 206", "+386 41 458 931"],
+    "address": "Ulica škofa Maksimilijana Držečnika 11, 2000 Maribor, Slovenia",
+    "hours": {
+      "weekdays": "Mon–Fri: 07:00–14:00 and 16:00–21:00",
+      "saturday": "Saturday: 08:00–14:00"
+    },
+    "social": {
+      "facebook": "https://www.facebook.com/profile.php?id=61569699862375",
+      "instagram": "https://www.instagram.com/ori_backtolife"
+    }
+  },
+  "therapies": [
+    {
+      "id": "elektrostimulacija",
+      "name": "Electrostimulation",
+      "shortDescription": "Electrostimulation activates muscle tissue, improves blood circulation, and relieves pain.",
+      "fullDescription": "Electrostimulation therapy is a type of physical therapy that uses electrical current and impulses to reduce pain, accelerate cellular metabolism, and speed up healing.",
+      "duration": 20,
+      "price": 20
+    },
+    {
+      "id": "manualna-terapija",
+      "name": "Manual Therapy",
+      "shortDescription": "With gentle manual techniques, the therapist releases tension and improves mobility.",
+      "fullDescription": "Manual therapy gets its name from the word manus=hand, indicating the use of the therapist's hands as the main treatment tool. It is one of the most popular forms of treatment.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "tecar-terapija",
+      "name": "Tecar Therapy",
+      "shortDescription": "Advanced therapy using radiofrequency energy.",
+      "fullDescription": "Advanced therapy that uses radiofrequency energy to accelerate tissue regeneration, relieve pain, and improve circulation and cellular metabolism.",
+      "duration": 30,
+      "price": 40
+    },
+    {
+      "id": "magnetna-terapija",
+      "name": "Magnetic Therapy",
+      "shortDescription": "Use of magnetic fields for body stimulation and regeneration.",
+      "fullDescription": "Use of magnetic fields to stimulate the body, improve blood circulation, and promote regeneration. Helps with injury healing and chronic pain.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "mis",
+      "name": "MIS (Magnetic Induction Stimulation)",
+      "shortDescription": "Magnetic induction stimulation - revolutionary therapy.",
+      "fullDescription": "Magnetic Induction Stimulation (MIS) is a revolutionary therapy that provides exceptional results through an innovative approach.",
+      "duration": 20,
+      "price": 30
+    },
+    {
+      "id": "laserska-terapija",
+      "name": "Laser Therapy",
+      "shortDescription": "Non-invasive method using laser light beams.",
+      "fullDescription": "Laser therapy is a non-invasive treatment method that uses laser light beams to stimulate human tissue to accelerate healing.",
+      "duration": 10,
+      "price": 10
+    },
+    {
+      "id": "media-taping",
+      "name": "Medical Taping",
+      "shortDescription": "Method using elastic tapes to eliminate pain and swelling.",
+      "fullDescription": "Medical taping is a treatment method that applies self-adhesive elastic tapes to the skin to eliminate pain, swelling, and other injury symptoms.",
+      "duration": 10,
+      "price": 10
+    },
+    {
+      "id": "cupping",
+      "name": "Cupping Therapy",
+      "shortDescription": "Cupping therapy for healing and regeneration.",
+      "fullDescription": "Cupping therapy is a manual technique that uses small cups to accelerate healing, regeneration, and pain relief.",
+      "duration": 30,
+      "price": 30
+    },
+    {
+      "id": "dryneedeling",
+      "name": "Dry Needling",
+      "shortDescription": "Invasive physiotherapy method using dry needling.",
+      "fullDescription": "Dry needling is an invasive physiotherapy method that penetrates thin needles through the skin to stimulate tissue and trigger the healing process.",
+      "duration": 30,
+      "price": 30
+    },
+    {
+      "id": "iteracare",
+      "name": "Iteracare",
+      "shortDescription": "Therapy using iteracare technology.",
+      "fullDescription": "Iteracare is an advanced therapeutic method for regeneration and healing.",
+      "duration": 20,
+      "price": 20
+    },
+    {
+      "id": "ao-scan",
+      "name": "AO Scan",
+      "shortDescription": "Advanced scanning for organism assessment.",
+      "fullDescription": "AO Scan enables a complete organism review and identification of energy imbalances.",
+      "duration": 30,
+      "price": 50
+    },
+    {
+      "id": "trakcijska-miza",
+      "name": "Traction Table",
+      "shortDescription": "Therapy for spinal decompression.",
+      "fullDescription": "The traction table enables gentle stretching and spinal decompression.",
+      "duration": 30,
+      "price": 40
+    },
+    {
+      "id": "skalarni-valovi",
+      "name": "Scalar Waves (Chakras)",
+      "shortDescription": "Chakra balancing with scalar waves.",
+      "fullDescription": "Scalar waves help balance energy centers - chakras.",
+      "duration": 30,
+      "price": 35
+    },
+    {
+      "id": "vodeno-dihanje",
+      "name": "Guided Breathing",
+      "shortDescription": "Therapy with guided breathing.",
+      "fullDescription": "Individual guided breathing for relaxation and breathing optimization.",
+      "duration": 30,
+      "price": 30
+    }
+  ],
+  "packages": [
+    {
+      "id": "prebudi-telo",
+      "name": "Awaken the Body",
+      "description": "3x Electrostimulation, 3x Tecar therapy, 3x Iteracare and massage, 3x Manual - Storm therapy, 1x Final treatment",
+      "benefits": ["Hormonal balance", "Muscle activation", "Nervous system improvement", "Pain elimination"],
+      "sessions": 13,
+      "regularPrice": 335,
+      "price": 196
+    },
+    {
+      "id": "osvescanje-telesa",
+      "name": "Body Awareness",
+      "description": "6x Electrostimulation, 6x Iteracare and massage, 6x Laser, 6x Tecar therapy, 6x Manual - Storm therapy, 1x Final treatment",
+      "benefits": ["Energy renewal", "Psychological stability", "Improved mobility", "Pain reduction"],
+      "sessions": 31,
+      "regularPrice": 690,
+      "price": 396
+    },
+    {
+      "id": "univerzum",
+      "name": "Universe",
+      "description": "9x Electrostimulation, 9x Tecar therapy and massage, 9x Traction table, 9x Manual - Storm therapy, 9x MIS Magnetic induction stimulation, 9x Scalar waves - chakra balancing, 3x AO Scan, 1x Moti-physio Scan",
+      "benefits": ["Deep regeneration", "Body function optimization", "Long-term health benefits"],
+      "sessions": 58,
+      "regularPrice": 1835,
+      "price": 796
+    },
+    {
+      "id": "aktivacija",
+      "name": "Activation",
+      "description": "MIS, guided breathing, vibrations, scalar waves, ice treatments. Focus: cellular activation, hormonal optimization, musculoskeletal system improvement",
+      "benefits": ["Cellular activation", "Hormonal optimization", "Musculoskeletal system improvement"],
+      "sessions": 0,
+      "price": null
+    },
+    {
+      "id": "ravnotezje",
+      "name": "Balance",
+      "description": "Vibrations, MIS, iteracare, drum, chakra balancing. Focus: mental and physical stability, nervous system relaxation, hormonal balance",
+      "benefits": ["Mental and physical stability", "Nervous system relaxation", "Hormonal balance", "Holistic revitalization"],
+      "sessions": 0,
+      "price": null
+    }
+  ],
+  "testimonials": [
+    {
+      "name": "Ana M.",
+      "text": "Therapies at ORI 369 helped me with chronic pain. Now I feel energetic and healthy!",
+      "rating": 5
+    },
+    {
+      "name": "Marko K.",
+      "text": "Professional approach and exceptional results. I recommend it to everyone seeking holistic support.",
+      "rating": 5
+    },
+    {
+      "name": "Petra S.",
+      "text": "The Balance package helped me find inner harmony. The team is exceptional!",
+      "rating": 5
+    }
+  ]
+}

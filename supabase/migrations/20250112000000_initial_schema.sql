@@ -65,25 +65,9 @@ CREATE POLICY "Users can view their own profile" ON public.profiles
 CREATE POLICY "Users can update their own profile" ON public.profiles
   FOR UPDATE USING (auth.uid() = id);
 
-CREATE POLICY "Admins can view all profiles" ON public.profiles
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
-
 -- RLS Policies for services
 CREATE POLICY "Anyone can view active services" ON public.services
   FOR SELECT USING (active = TRUE);
-
-CREATE POLICY "Admins can manage services" ON public.services
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
 
 -- RLS Policies for bookings
 CREATE POLICY "Users can view their own bookings" ON public.bookings
@@ -95,33 +79,9 @@ CREATE POLICY "Users can create their own bookings" ON public.bookings
 CREATE POLICY "Users can update their own bookings" ON public.bookings
   FOR UPDATE USING (auth.uid() = user_id);
 
-CREATE POLICY "Admins can view all bookings" ON public.bookings
-  FOR SELECT USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
-
-CREATE POLICY "Admins can manage all bookings" ON public.bookings
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
-
 -- RLS Policies for availability_slots
 CREATE POLICY "Anyone can view availability slots" ON public.availability_slots
   FOR SELECT USING (active = TRUE);
-
-CREATE POLICY "Admins can manage availability slots" ON public.availability_slots
-  FOR ALL USING (
-    EXISTS (
-      SELECT 1 FROM public.profiles
-      WHERE id = auth.uid() AND role = 'admin'
-    )
-  );
 
 -- Function to create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
