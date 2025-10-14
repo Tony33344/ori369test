@@ -54,3 +54,4 @@
  GET /admin 200 in 132ms
  GET /dashboard 200 in 120ms
  ✓ Compiled in 599ms
+ ✓ Compiled in 1415ms

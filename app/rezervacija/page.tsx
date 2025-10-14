@@ -8,6 +8,12 @@ import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
 import { Calendar, Clock, User, Mail, Phone, MessageSquare } from 'lucide-react';
 import { format, addDays, startOfWeek } from 'date-fns';
+import dynamic from 'next/dynamic';
+
+const BookingCalendar = dynamic(() => import('@/components/BookingCalendar'), {
+  ssr: false,
+  loading: () => <div className="h-96 flex items-center justify-center"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
+});
 
 function BookingForm() {
   const { t } = useLanguage();
@@ -22,6 +28,7 @@ function BookingForm() {
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
+  const [useCalendarView, setUseCalendarView] = useState(true);
 
   useEffect(() => {
     loadUser();
@@ -214,23 +221,47 @@ function BookingForm() {
 
               {/* Date Selection */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
-                  <Calendar size={18} />
-                  <span>{t('booking.selectDate')} *</span>
-                </label>
-                <select
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">{t('booking.selectDate')}</option>
-                  {dateOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-sm font-semibold text-gray-700 flex items-center space-x-2">
+                    <Calendar size={18} />
+                    <span>{t('booking.selectDate')} *</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setUseCalendarView(!useCalendarView)}
+                    className="text-sm text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    {useCalendarView ? t('booking.useDropdown') : t('booking.useCalendar')}
+                  </button>
+                </div>
+                
+                {useCalendarView && selectedService ? (
+                  <div className="border border-gray-300 rounded-lg p-4">
+                    <BookingCalendar
+                      serviceId={selectedService}
+                      onDateSelect={(date, time) => {
+                        setSelectedDate(date);
+                        if (time) setSelectedTime(time);
+                      }}
+                      selectedDate={selectedDate}
+                      selectedTime={selectedTime}
+                    />
+                  </div>
+                ) : (
+                  <select
+                    value={selectedDate}
+                    onChange={(e) => setSelectedDate(e.target.value)}
+                    required
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  >
+                    <option value="">{t('booking.selectDate')}</option>
+                    {dateOptions.map(option => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               {/* Time Selection */}

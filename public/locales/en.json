@@ -84,7 +84,14 @@
     "selectDateFirst": "Please select a date first",
     "noSlotsAvailable": "No available time slots for this date",
     "success": "Booking created successfully!",
-    "error": "Error creating booking. Please try again."
+    "error": "Error creating booking. Please try again.",
+    "useCalendar": "Use Calendar View",
+    "useDropdown": "Use Dropdown",
+    "booked": "Booked",
+    "today": "Today",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day"
   },
   "dashboard": {
     "welcome": "Welcome",
@@ -239,20 +246,23 @@
   },
   "common": {
     "loading": "Loading...",
-    "save": "Save",
+    "error": "An error occurred",
+    "success": "Success!",
     "cancel": "Cancel",
+    "save": "Save",
     "delete": "Delete",
     "edit": "Edit",
     "close": "Close",
-    "confirm": "Confirm",
     "back": "Back",
     "next": "Next",
-    "submit": "Submit",
+    "previous": "Previous",
     "search": "Search",
     "filter": "Filter",
     "all": "All",
+    "none": "None",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "locale": "en"
   },
   "site": {
     "phone": ["+386 51 302 206", "+386 41 458 931"],

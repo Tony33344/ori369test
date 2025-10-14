@@ -84,7 +84,14 @@
     "selectDateFirst": "Prosim, najprej izberite datum",
     "noSlotsAvailable": "Ni razpoložljivih terminov za ta datum",
     "success": "Rezervacija uspešno ustvarjena!",
-    "error": "Napaka pri ustvarjanju rezervacije. Prosim poskusite znova."
+    "error": "Napaka pri ustvarjanju rezervacije. Prosim poskusite znova.",
+    "useCalendar": "Uporabi koledar",
+    "useDropdown": "Uporabi meni",
+    "booked": "Zasedeno",
+    "today": "Danes",
+    "month": "Mesec",
+    "week": "Teden",
+    "day": "Dan"
   },
   "dashboard": {
     "welcome": "Dobrodošli",
@@ -239,20 +246,23 @@
   },
   "common": {
     "loading": "Nalaganje...",
-    "save": "Shrani",
+    "error": "Prišlo je do napake",
+    "success": "Uspeh!",
     "cancel": "Prekliči",
+    "save": "Shrani",
     "delete": "Izbriši",
     "edit": "Uredi",
     "close": "Zapri",
-    "confirm": "Potrdi",
     "back": "Nazaj",
     "next": "Naprej",
-    "submit": "Pošlji",
+    "previous": "Prejšnji",
     "search": "Iskanje",
     "filter": "Filter",
     "all": "Vse",
+    "none": "Brez",
     "yes": "Da",
-    "no": "Ne"
+    "no": "Ne",
+    "locale": "sl"
   },
   "site": {
     "phone": ["051 302 206", "041 458 931"],
