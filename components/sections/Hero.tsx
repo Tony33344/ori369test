@@ -67,6 +67,13 @@ export default function Hero() {
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white/90 pointer-events-none z-10"></div>
       </div>
       
+      {/* Large "369" Brand Element */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -right-20 md:-right-32 top-1/2 -translate-y-1/2 text-[20rem] md:text-[30rem] font-bold text-[#00B5AD] opacity-[0.03] leading-none select-none">
+          369
+        </div>
+      </div>
+
       {/* Animated background elements - ORI 369 Brand Colors */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-96 h-96 bg-[#00B5AD]/20 rounded-full mix-blend-multiply filter blur-3xl opacity-40 animate-blob"></div>

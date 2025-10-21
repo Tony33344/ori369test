@@ -26,9 +26,9 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-xl">
+            <div className="bg-gradient-to-br from-[#00B5AD]/10 to-[#00B5AD]/5 p-8 rounded-xl border border-[#00B5AD]/20">
               <div className="flex items-center space-x-3 mb-4">
-                <Heart className="text-blue-600" size={32} />
+                <Heart className="text-[#00B5AD]" size={32} />
                 <h3 className="text-2xl font-bold text-gray-900">Naša misija</h3>
               </div>
               <p className="text-gray-700">
@@ -37,9 +37,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-xl">
+            <div className="bg-gradient-to-br from-[#B8D52E]/10 to-[#B8D52E]/5 p-8 rounded-xl border border-[#B8D52E]/20">
               <div className="flex items-center space-x-3 mb-4">
-                <Target className="text-purple-600" size={32} />
+                <Target className="text-[#B8D52E]" size={32} />
                 <h3 className="text-2xl font-bold text-gray-900">Naša vizija</h3>
               </div>
               <p className="text-gray-700">
@@ -48,9 +48,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-pink-50 to-blue-50 p-8 rounded-xl">
+            <div className="bg-gradient-to-br from-[#00B5AD]/10 to-[#B8D52E]/10 p-8 rounded-xl border border-[#00B5AD]/20">
               <div className="flex items-center space-x-3 mb-4">
-                <Sparkles className="text-pink-600" size={32} />
+                <Sparkles className="text-[#00B5AD]" size={32} />
                 <h3 className="text-2xl font-bold text-gray-900">Naše vrednote</h3>
               </div>
               <p className="text-gray-700">
@@ -58,9 +58,9 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-50 to-pink-50 p-8 rounded-xl">
+            <div className="bg-gradient-to-br from-[#B8D52E]/10 to-[#00B5AD]/10 p-8 rounded-xl border border-[#B8D52E]/20">
               <div className="flex items-center space-x-3 mb-4">
-                <Users className="text-blue-600" size={32} />
+                <Users className="text-[#B8D52E]" size={32} />
                 <h3 className="text-2xl font-bold text-gray-900">Naša ekipa</h3>
               </div>
               <p className="text-gray-700">
@@ -70,7 +70,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 rounded-2xl text-center">
+          <div className="bg-gradient-to-r from-[#00B5AD] to-[#00B5AD]/80 text-white p-8 rounded-2xl text-center shadow-xl">
             <h3 className="text-2xl font-bold mb-4">Frekvence 3-6-9</h3>
             <p className="text-lg leading-relaxed">
               Naše delo temelji na razumevanju univerzalnih frekvenc 3-6-9, ki jih je raziskoval Nikola Tesla. 

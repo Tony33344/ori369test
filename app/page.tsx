@@ -1,6 +1,7 @@
 'use client';
 
 import Hero from '@/components/sections/Hero';
+import TransformationJourney from '@/components/sections/TransformationJourney';
 import ServicesPreview from '@/components/sections/ServicesPreview';
 import PackagesPreview from '@/components/sections/PackagesPreview';
 import Testimonials from '@/components/sections/Testimonials';
@@ -14,6 +15,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <TransformationJourney />
       <ServicesPreview services={data.therapies.slice(0, 6)} />
       <PackagesPreview packages={data.packages.slice(0, 3)} />
       <Testimonials testimonials={data.testimonials} />
