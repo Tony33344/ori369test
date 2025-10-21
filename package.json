@@ -9,7 +9,11 @@
     "test:db": "node test-supabase.js",
     "test:flow": "node test-full-flow.js",
     "setup:db": "node setup-database.js",
-    "set-admin": "node set-admin.js"
+    "set-admin": "node set-admin.js",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^6.1.19",
@@ -32,8 +36,9 @@
   },
   "devDependencies": {
     "@netlify/plugin-nextjs": "^5.13.5",
+    "@playwright/test": "^1.56.0",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^20.19.21",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "tailwindcss": "^4",
