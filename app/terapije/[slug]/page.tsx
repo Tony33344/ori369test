@@ -3,6 +3,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, Clock, Calendar } from 'lucide-react';
 import { getTherapyBySlug, getAllTherapySlugs } from '@/lib/therapyContent';
+import { createClient } from '@/lib/supabase';
+import BuyButton from '@/components/BuyButton';
 
 // Map therapy slugs to their images
 const therapyImages: Record<string, string> = {
@@ -29,12 +31,20 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function TherapyDetailPage({ params }: { params: { slug: string } }) {
+export default async function TherapyDetailPage({ params }: { params: { slug: string } }) {
   const therapy = getTherapyBySlug(params.slug);
 
   if (!therapy) {
     notFound();
   }
+
+  const supabase = createClient();
+  const { data: service } = await supabase
+    .from('services')
+    .select('id, price')
+    .eq('slug', params.slug)
+    .eq('active', true)
+    .single();
 
   const therapyImage = therapyImages[params.slug] || '/images/therapies/IMG_5779-768x513.webp';
 
@@ -137,6 +147,13 @@ export default function TherapyDetailPage({ params }: { params: { slug: string }
                 Rezervirajte svoj termin še danes in začnite svojo pot do boljšega počutja.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                {service && (
+                  <BuyButton
+                    serviceId={service.id}
+                    serviceName={therapy.name}
+                    price={service.price}
+                  />
+                )}
                 <Link
                   href="/rezervacija"
                   className="inline-flex items-center justify-center px-8 py-4 bg-white text-[#00B5AD] font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"

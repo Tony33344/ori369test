@@ -35,7 +35,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+*.env*
 !.env.example
+ori369-calendar-*.json
 
 # vercel
 .vercel
@@ -46,3 +48,6 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# Supabase temp
+supabase/.temp

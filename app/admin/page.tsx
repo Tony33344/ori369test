@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser, getUserProfile } from '@/lib/auth';
 import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
-import { Calendar as CalendarIcon, Users, Activity, CheckCircle, XCircle, Edit2, Trash2, ExternalLink, Package, DollarSign, Clock, Plus, BarChart3 } from 'lucide-react';
+import { Calendar as CalendarIcon, Users, Activity, CheckCircle, XCircle, Edit2, Trash2, ExternalLink, Package, DollarSign, Clock, Plus, BarChart3, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import dynamic from 'next/dynamic';
 
@@ -46,11 +47,36 @@ interface Service {
   created_at: string;
 }
 
+interface Order {
+  id: string;
+  user_id: string;
+  stripe_session_id: string;
+  stripe_payment_intent_id: string | null;
+  total_amount: number;
+  currency: string;
+  status: string;
+  metadata: any;
+  created_at: string;
+  profiles: {
+    full_name: string;
+    email: string;
+  };
+  order_items: {
+    id: string;
+    quantity: number;
+    unit_price: number;
+    total_price: number;
+    services: {
+      name: string;
+    };
+  }[];
+}
+
 export default function AdminPage() {
   const { t } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<'bookings' | 'services' | 'analytics'>('bookings');
+  const [activeTab, setActiveTab] = useState<'bookings' | 'services' | 'analytics' | 'content' | 'orders'>('bookings');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [filter, setFilter] = useState<string>('all');
@@ -64,6 +90,13 @@ export default function AdminPage() {
     confirmed: 0,
     completed: 0
   });
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [orderStats, setOrderStats] = useState({
+    totalRevenue: 0,
+    totalOrders: 0,
+    paidOrders: 0,
+    pendingOrders: 0
+  });
 
   useEffect(() => {
     checkAdmin();
@@ -73,6 +106,7 @@ export default function AdminPage() {
     if (isAdmin) {
       loadBookings();
       loadServices();
+      loadOrders();
       subscribeToBookings();
     }
   }, [isAdmin]);
@@ -190,6 +224,41 @@ export default function AdminPage() {
 
     if (data) {
       setServices(data);
+    }
+  };
+
+  const loadOrders = async () => {
+    const { data, error } = await supabase
+      .from('orders')
+      .select(`
+        *,
+        profiles (full_name, email),
+        order_items (
+          id,
+          quantity,
+          unit_price,
+          total_price,
+          services (name)
+        )
+      `)
+      .order('created_at', { ascending: false });
+
+    if (data) {
+      setOrders(data as any);
+      
+      const totalRevenue = data.reduce((sum, order) => 
+        order.status === 'paid' ? sum + parseFloat(order.total_amount.toString()) : sum, 
+        0
+      );
+      const paidOrders = data.filter(order => order.status === 'paid').length;
+      const pendingOrders = data.filter(order => order.status === 'pending').length;
+      
+      setOrderStats({
+        totalRevenue,
+        totalOrders: data.length,
+        paidOrders,
+        pendingOrders
+      });
     }
   };
 
@@ -354,6 +423,28 @@ export default function AdminPage() {
             >
               <BarChart3 size={20} />
               <span>{t('admin.tabs.analytics')}</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('content')}
+              className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
+                activeTab === 'content'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <FileText size={20} />
+              <span>Content</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
+                activeTab === 'orders'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <DollarSign size={20} />
+              <span>Orders</span>
             </button>
           </div>
         </div>
@@ -627,6 +718,124 @@ export default function AdminPage() {
 
         {activeTab === 'analytics' && (
           <AnalyticsDashboard />
+        )}
+
+        {activeTab === 'content' && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Content Management</h2>
+            <p className="text-gray-600 mb-6">
+              Manage website pages and sections with WordPress-like flexibility.
+            </p>
+            <Link
+              href="/admin/content"
+              className="inline-flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <FileText size={20} />
+              <span>Manage Pages & Sections</span>
+            </Link>
+          </div>
+        )}
+
+        {activeTab === 'orders' && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total Revenue</p>
+                    <p className="text-3xl font-bold text-green-600">€{orderStats.totalRevenue.toFixed(2)}</p>
+                  </div>
+                  <DollarSign className="text-green-600" size={32} />
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Total Orders</p>
+                    <p className="text-3xl font-bold text-gray-900">{orderStats.totalOrders}</p>
+                  </div>
+                  <Package className="text-gray-900" size={32} />
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Paid Orders</p>
+                    <p className="text-3xl font-bold text-green-600">{orderStats.paidOrders}</p>
+                  </div>
+                  <CheckCircle className="text-green-600" size={32} />
+                </div>
+              </div>
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Pending Orders</p>
+                    <p className="text-3xl font-bold text-yellow-600">{orderStats.pendingOrders}</p>
+                  </div>
+                  <Clock className="text-yellow-600" size={32} />
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {orders.map((order) => (
+                      <tr key={order.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {order.id.substring(0, 8)}...
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900">{order.profiles.full_name}</div>
+                          <div className="text-sm text-gray-500">{order.profiles.email}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {order.order_items.map(item => item.services.name).join(', ') || 
+                             (order.metadata?.serviceName || 'N/A')}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          €{order.total_amount.toFixed(2)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            order.status === 'paid' ? 'bg-green-100 text-green-800' :
+                            order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                            order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {order.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {format(new Date(order.created_at), 'dd.MM.yyyy HH:mm')}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {orders.length === 0 && (
+                <div className="text-center py-12">
+                  <DollarSign className="mx-auto h-12 w-12 text-gray-400" />
+                  <h3 className="mt-2 text-sm font-medium text-gray-900">No orders</h3>
+                  <p className="mt-1 text-sm text-gray-500">No orders have been placed yet.</p>
+                </div>
+              )}
+            </div>
+          </>
         )}
 
         {/* Service Modal */}

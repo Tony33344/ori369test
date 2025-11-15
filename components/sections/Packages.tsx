@@ -1,9 +1,13 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Check } from 'lucide-react';
+import { Check, ShoppingCart } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { createClient } from '@/lib/supabase';
 
 interface Package {
   id: string;
@@ -17,6 +21,76 @@ interface Package {
 
 export default function Packages({ packages }: { packages: Package[] }) {
   const { t } = useLanguage();
+  const router = useRouter();
+  const [loadingStates, setLoadingStates] = useState<Record<string, boolean>>({});
+  const [serviceIds, setServiceIds] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    const fetchServiceIds = async () => {
+      const supabase = createClient();
+      const slugs = packages.map(pkg => pkg.id);
+      
+      const { data: services } = await supabase
+        .from('services')
+        .select('id, slug')
+        .in('slug', slugs)
+        .eq('active', true);
+
+      if (services) {
+        const idMap: Record<string, string> = {};
+        services.forEach((service: any) => {
+          idMap[service.slug] = service.id;
+        });
+        setServiceIds(idMap);
+      }
+    };
+
+    fetchServiceIds();
+  }, [packages]);
+
+  const handleBuyNow = async (packageSlug: string, packageName: string) => {
+    const serviceId = serviceIds[packageSlug];
+    if (!serviceId) {
+      toast.error('Storitev ni na voljo');
+      return;
+    }
+
+    try {
+      setLoadingStates(prev => ({ ...prev, [packageSlug]: true }));
+
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          serviceId,
+          language: 'sl',
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          toast.error('Za nakup se morate najprej prijaviti');
+          router.push('/prijava');
+          return;
+        }
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Napaka pri ustvarjanju naročila. Poskusite znova.');
+    } finally {
+      setLoadingStates(prev => ({ ...prev, [packageSlug]: false }));
+    }
+  };
+
   return (
     <section className="py-20 bg-white">
       <div className="container mx-auto px-4">
@@ -61,12 +135,24 @@ export default function Packages({ packages }: { packages: Package[] }) {
                   ))}
                 </div>
 
-                <Link
-                  href={`/rezervacija?package=${pkg.id}`}
-                  className="block w-full py-3 bg-[#00B5AD] hover:bg-[#009891] text-white font-semibold rounded-lg text-center hover:shadow-lg transition-all duration-200"
-                >
-                  {t('packages.bookPackage')}
-                </Link>
+                <div className="space-y-3">
+                  {pkg.price && serviceIds[pkg.id] && (
+                    <button
+                      onClick={() => handleBuyNow(pkg.id, pkg.name)}
+                      disabled={loadingStates[pkg.id]}
+                      className="flex items-center justify-center w-full py-3 bg-[#00B5AD] hover:bg-[#009891] text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <ShoppingCart size={18} className="mr-2" />
+                      {loadingStates[pkg.id] ? 'Preusmerjanje...' : t('packages.buyNow')}
+                    </button>
+                  )}
+                  <Link
+                    href={`/rezervacija?package=${pkg.id}`}
+                    className="block w-full py-3 bg-white border-2 border-[#00B5AD] text-[#00B5AD] hover:bg-[#00B5AD] hover:text-white font-semibold rounded-lg text-center transition-all duration-200"
+                  >
+                    {t('packages.bookPackage')}
+                  </Link>
+                </div>
               </div>
             </motion.div>
           ))}
