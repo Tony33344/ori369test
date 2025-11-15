@@ -71,38 +71,36 @@ function BookingForm() {
   };
 
   const loadAvailableSlots = async (date: string) => {
+    if (!selectedService) return;
+    
     const dayOfWeek = new Date(date).getDay();
     
-    // Get availability for this day
-    const { data: slots } = await supabase
-      .from('availability_slots')
+    // Get schedules for this service and day
+    const { data: schedules } = await supabase
+      .from('schedules')
       .select('*')
       .eq('day_of_week', dayOfWeek)
-      .eq('active', true);
+      .eq('service_id', selectedService);
 
-    if (!slots) return;
+    if (!schedules || schedules.length === 0) {
+      setAvailableSlots([]);
+      return;
+    }
 
-    // Get existing bookings for this date
+    // Get existing bookings for this date and service
     const { data: bookings } = await supabase
       .from('bookings')
       .select('time_slot')
-      .eq('date', date);
+      .eq('date', date)
+      .eq('service_id', selectedService);
 
     const bookedTimes = bookings?.map(b => b.time_slot) || [];
 
-    // Generate time slots
-    const allSlots: string[] = [];
-    slots.forEach(slot => {
-      const start = parseInt(slot.start_time.split(':')[0]);
-      const end = parseInt(slot.end_time.split(':')[0]);
-      
-      for (let hour = start; hour < end; hour++) {
-        const timeSlot = `${hour.toString().padStart(2, '0')}:00`;
-        if (!bookedTimes.includes(timeSlot)) {
-          allSlots.push(timeSlot);
-        }
-      }
-    });
+    // Extract available time slots from schedules
+    const allSlots: string[] = schedules
+      .map(schedule => schedule.time)
+      .filter(time => !bookedTimes.includes(time))
+      .sort();
 
     setAvailableSlots(allSlots);
   };
