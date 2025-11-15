@@ -34,11 +34,16 @@ export default function BookingCalendar({
   }, [serviceId]);
 
   const loadBookings = async () => {
-    const { data: bookings } = await supabase
+    const { data: bookings, error } = await supabase
       .from('bookings')
       .select('date, time_slot, status')
       .eq('service_id', serviceId)
-      .in('status', ['pending', 'confirmed']);
+      .or('status.eq.pending,status.eq.confirmed');
+
+    if (error) {
+      console.error('Error loading bookings:', error);
+      return;
+    }
 
     if (bookings) {
       const bookedEvents = bookings.map(booking => ({
@@ -53,13 +58,18 @@ export default function BookingCalendar({
   };
 
   const loadAvailability = async () => {
-    const { data: slots } = await supabase
-      .from('availability_slots')
+    const { data: schedules, error } = await supabase
+      .from('schedules')
       .select('*')
-      .eq('active', true);
+      .eq('service_id', serviceId);
 
-    if (slots) {
-      setAvailableSlots(slots);
+    if (error) {
+      console.error('Error loading schedules:', error);
+      return;
+    }
+
+    if (schedules) {
+      setAvailableSlots(schedules);
     }
   };
 
