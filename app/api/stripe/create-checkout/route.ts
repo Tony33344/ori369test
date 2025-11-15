@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { createClient } from '@/lib/supabase';
-import { getCurrentUser } from '@/lib/auth';
+import { cookies } from 'next/headers';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+
+export const runtime = 'nodejs';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-12-18.acacia',
@@ -9,8 +11,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    
+    const supabase = createRouteHandlerClient({ cookies });
+    const { data: { user } } = await supabase.auth.getUser();
+
     if (!user) {
       return NextResponse.json(
         { error: 'Unauthorized' },
@@ -27,8 +30,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const supabase = createClient();
-
     const { data: service, error: serviceError } = await supabase
       .from('services')
       .select('*')
@@ -44,29 +45,34 @@ export async function POST(req: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: service.name,
-              description: service.description || '',
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = service.stripe_price_id
+      ? [
+          { price: service.stripe_price_id, quantity: 1 },
+        ]
+      : [
+          {
+            price_data: {
+              currency: 'eur',
+              product_data: {
+                name: service.name,
+                description: service.description || '',
+              },
+              unit_amount: Math.round(Number(service.price) * 100),
             },
-            unit_amount: Math.round(service.price * 100),
+            quantity: 1,
           },
-          quantity: 1,
-        },
-      ],
+        ];
+
+    const session = await stripe.checkout.sessions.create({
       mode: 'payment',
+      line_items: lineItems,
       success_url: `${baseUrl}/dashboard?payment=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/terapije/${service.slug}?payment=cancelled`,
-      customer_email: user.email,
+      customer_email: user.email || undefined,
       metadata: {
-        userId: user.id,
-        serviceId: service.id,
-        language,
+        userId: String(user.id),
+        serviceId: String(service.id),
+        language: String(language),
       },
     });
 

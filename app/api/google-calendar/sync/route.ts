@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { google } from 'googleapis';
 
+export const runtime = 'nodejs';
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -13,14 +15,11 @@ export async function POST(request: NextRequest) {
       process.env.GOOGLE_REDIRECT_URI
     );
 
-    // Note: In production, you'd need to implement proper OAuth flow
-    // For now, this assumes you have a refresh token stored
-    // You can get this by implementing the OAuth flow first
-    
-    // Set credentials (you'll need to get these through OAuth flow)
-    // oauth2Client.setCredentials({
-    //   refresh_token: process.env.GOOGLE_REFRESH_TOKEN
-    // });
+    const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
+    if (!refreshToken) {
+      return NextResponse.json({ error: 'Missing GOOGLE_REFRESH_TOKEN' }, { status: 500 });
+    }
+    oauth2Client.setCredentials({ refresh_token: refreshToken });
 
     const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
 
