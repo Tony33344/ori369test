@@ -7,6 +7,7 @@ import { getCurrentUser, getUserProfile } from '@/lib/auth';
 import { useLanguage, languageNames } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
 import { ArrowLeft, Plus, Edit2, Trash2, ChevronUp, ChevronDown, Eye, EyeOff, Save } from 'lucide-react';
+import BlockEditor from '@/components/BlockEditor';
 
 const sectionTypes = [
   { value: 'hero', label: 'Hero' },
@@ -20,7 +21,7 @@ const sectionTypes = [
   { value: 'imageBanner', label: 'Image Banner' }
 ];
 
-export default function PageEditorPage({ params }: { params: { id: string } }) {
+export default function PageEditorPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter();
   const { language, t } = useLanguage();
   const [isAdmin, setIsAdmin] = useState(false);
@@ -31,17 +32,24 @@ export default function PageEditorPage({ params }: { params: { id: string } }) {
   const [showAddSection, setShowAddSection] = useState(false);
   const [newSectionType, setNewSectionType] = useState('hero');
   const [editingBlock, setEditingBlock] = useState<any>(null);
+  const [showBlockEditor, setShowBlockEditor] = useState(false);
   const [editLang, setEditLang] = useState('sl');
+  const [pageId, setPageId] = useState<string>('');
 
   useEffect(() => {
     checkAdmin();
   }, []);
 
   useEffect(() => {
-    if (isAdmin) {
-      loadPageData();
-    }
-  }, [isAdmin, params.id]);
+    const initParams = async () => {
+      const { id } = await params;
+      setPageId(id);
+      if (isAdmin) {
+        loadPageData();
+      }
+    };
+    initParams();
+  }, [isAdmin, params]);
 
   const checkAdmin = async () => {
     const currentUser = await getCurrentUser();
@@ -61,12 +69,12 @@ export default function PageEditorPage({ params }: { params: { id: string } }) {
   };
 
   const loadPageData = async () => {
+    if (!pageId) return;
     setLoading(true);
-    const response = await fetch(`/api/cms/pages?slug=__id__${params.id}`);
-    if (!response.ok) {
+    try {
       const pagesResponse = await fetch('/api/cms/pages');
       const pagesData = await pagesResponse.json();
-      const foundPage = (pagesData.pages || []).find((p: any) => p.id === params.id);
+      const foundPage = (pagesData.pages || []).find((p: any) => p.id === pageId);
       
       if (foundPage) {
         setPage(foundPage);
@@ -75,6 +83,9 @@ export default function PageEditorPage({ params }: { params: { id: string } }) {
         setSections(data.sections || []);
         setBlocks(data.blocks || []);
       }
+    } catch (error) {
+      console.error('Error loading page data:', error);
+      toast.error('Failed to load page data');
     }
     setLoading(false);
   };
@@ -166,6 +177,65 @@ export default function PageEditorPage({ params }: { params: { id: string } }) {
     loadPageData();
   };
 
+  const getSectionBlocks = (sectionId: string) => {
+    return blocks.filter(b => b.section_id === sectionId).sort((a, b) => a.order_index - b.order_index);
+  };
+
+  const addBlock = async (sectionId: string) => {
+    const sectionBlocks = getSectionBlocks(sectionId);
+    const maxOrder = sectionBlocks.length > 0 ? Math.max(...sectionBlocks.map(b => b.order_index)) : -1;
+
+    const response = await fetch('/api/cms/blocks', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        section_id: sectionId,
+        type: 'text',
+        order_index: maxOrder + 1,
+        visible: true,
+        content: {},
+        translations: { sl: { title: '', content: '' } }
+      })
+    });
+
+    if (response.ok) {
+      toast.success('Block added');
+      loadPageData();
+    } else {
+      toast.error('Failed to add block');
+    }
+  };
+
+  const deleteBlock = async (blockId: string) => {
+    if (!confirm('Delete this block?')) return;
+    const response = await fetch(`/api/cms/blocks?id=${blockId}`, { method: 'DELETE' });
+    if (response.ok) {
+      toast.success('Block deleted');
+      loadPageData();
+    } else {
+      toast.error('Failed to delete block');
+    }
+  };
+
+  const saveBlock = async (block: any) => {
+    const response = await fetch('/api/cms/blocks', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(block)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to save block');
+    }
+    
+    loadPageData();
+  };
+
+  const openBlockEditor = (block: any) => {
+    setEditingBlock(block);
+    setShowBlockEditor(true);
+  };
+
   if (!isAdmin || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -212,52 +282,94 @@ export default function PageEditorPage({ params }: { params: { id: string } }) {
             {sections.length === 0 ? (
               <div className="p-12 text-center text-gray-500">No sections yet</div>
             ) : (
-              sections.map((section, index) => (
-                <div key={section.id} className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="flex flex-col space-y-1">
-                        <button
-                          onClick={() => moveSectionUp(section, index)}
-                          disabled={index === 0}
-                          className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
-                        >
-                          <ChevronUp size={16} />
-                        </button>
-                        <button
-                          onClick={() => moveSectionDown(section, index)}
-                          disabled={index === sections.length - 1}
-                          className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
-                        >
-                          <ChevronDown size={16} />
-                        </button>
+              sections.map((section, index) => {
+                const sectionBlocks = getSectionBlocks(section.id);
+                return (
+                  <div key={section.id} className="p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-4">
+                        <div className="flex flex-col space-y-1">
+                          <button
+                            onClick={() => moveSectionUp(section, index)}
+                            disabled={index === 0}
+                            className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
+                          >
+                            <ChevronUp size={16} />
+                          </button>
+                          <button
+                            onClick={() => moveSectionDown(section, index)}
+                            disabled={index === sections.length - 1}
+                            className="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30"
+                          >
+                            <ChevronDown size={16} />
+                          </button>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">{section.type}</h3>
+                          <p className="text-sm text-gray-500">Order: {section.order_index}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">{section.type}</h3>
-                        <p className="text-sm text-gray-500">Order: {section.order_index}</p>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          onClick={() => toggleSectionVisibility(section)}
+                          className={`p-2 rounded-lg transition-colors ${
+                            section.visible
+                              ? 'bg-green-100 text-green-600 hover:bg-green-200'
+                              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                          }`}
+                        >
+                          {section.visible ? <Eye size={18} /> : <EyeOff size={18} />}
+                        </button>
+                        <button
+                          onClick={() => deleteSection(section.id)}
+                          className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                        >
+                          <Trash2 size={18} />
+                        </button>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
+
+                    {/* Blocks within section */}
+                    <div className="ml-8 space-y-3 border-l-2 border-gray-200 pl-4">
+                      {sectionBlocks.length === 0 ? (
+                        <div className="py-4 text-sm text-gray-500">No blocks yet</div>
+                      ) : (
+                        sectionBlocks.map((block) => (
+                          <div key={block.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">{block.type}</p>
+                              <p className="text-xs text-gray-500">Order: {block.order_index}</p>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <button
+                                onClick={() => openBlockEditor(block)}
+                                className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                                title="Edit"
+                              >
+                                <Edit2 size={16} />
+                              </button>
+                              <button
+                                onClick={() => deleteBlock(block.id)}
+                                className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                                title="Delete"
+                              >
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        ))
+                      )}
                       <button
-                        onClick={() => toggleSectionVisibility(section)}
-                        className={`p-2 rounded-lg transition-colors ${
-                          section.visible
-                            ? 'bg-green-100 text-green-600 hover:bg-green-200'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                        }`}
+                        onClick={() => addBlock(section.id)}
+                        className="flex items-center space-x-2 w-full py-2 px-3 text-sm text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                       >
-                        {section.visible ? <Eye size={18} /> : <EyeOff size={18} />}
-                      </button>
-                      <button
-                        onClick={() => deleteSection(section.id)}
-                        className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-                      >
-                        <Trash2 size={18} />
+                        <Plus size={16} />
+                        <span>Add Block</span>
                       </button>
                     </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
@@ -297,6 +409,18 @@ export default function PageEditorPage({ params }: { params: { id: string } }) {
             </div>
           </div>
         </div>
+      )}
+
+      {showBlockEditor && editingBlock && (
+        <BlockEditor
+          block={editingBlock}
+          languages={['sl', 'en', 'de', 'hr', 'hu']}
+          onSave={saveBlock}
+          onClose={() => {
+            setShowBlockEditor(false);
+            setEditingBlock(null);
+          }}
+        />
       )}
     </div>
   );
