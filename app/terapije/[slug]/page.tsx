@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { ArrowLeft, Clock, Calendar } from 'lucide-react';
 import { getTherapyBySlug, getAllTherapySlugs } from '@/lib/therapyContent';
 import { createClient } from '@/lib/supabase';
+import { getDataForLanguage } from '@/lib/data-loader';
 import BuyButton from '@/components/BuyButton';
 
 // Map therapy slugs to their images
@@ -31,22 +32,27 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function TherapyDetailPage({ params }: { params: { slug: string } }) {
-  const therapy = getTherapyBySlug(params.slug);
-
-  if (!therapy) {
-    notFound();
-  }
-
+export default async function TherapyDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   const supabase = createClient();
+  
+  // Fetch therapy from Supabase (single source of truth)
   const { data: service } = await supabase
     .from('services')
-    .select('id, price')
-    .eq('slug', params.slug)
+    .select('id, name, slug, description, duration, price, active')
+    .eq('slug', slug)
     .eq('active', true)
     .single();
 
-  const therapyImage = therapyImages[params.slug] || '/images/therapies/IMG_5779-768x513.webp';
+  if (!service) {
+    notFound();
+  }
+
+  // Get content from JSON for full descriptions
+  const jsonData = getDataForLanguage('sl');
+  const jsonTherapy = jsonData.therapies.find((t: any) => t.id === slug);
+
+  const therapyImage = therapyImages[slug] || '/images/therapies/IMG_5779-768x513.webp';
 
   return (
     <div className="min-h-screen bg-white">
@@ -56,7 +62,7 @@ export default async function TherapyDetailPage({ params }: { params: { slug: st
         <div className="absolute inset-0 z-0">
           <Image
             src={therapyImage}
-            alt={therapy.name}
+            alt={service.name}
             fill
             className="object-cover opacity-30"
             priority
@@ -74,17 +80,17 @@ export default async function TherapyDetailPage({ params }: { params: { slug: st
           </Link>
           
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-6">
-            {therapy.name}
+            {service.name}
           </h1>
           
           <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mb-8">
-            {therapy.shortDescription}
+            {service.description}
           </p>
 
           <div className="flex flex-wrap gap-6">
             <div className="flex items-center space-x-2 bg-white px-4 py-3 rounded-lg shadow-sm">
               <Clock className="text-[#00B5AD]" size={20} />
-              <span className="text-gray-700"><strong>{therapy.duration} min</strong></span>
+              <span className="text-gray-700"><strong>{service.duration} min</strong></span>
             </div>
           </div>
         </div>
@@ -94,48 +100,52 @@ export default async function TherapyDetailPage({ params }: { params: { slug: st
       <div className="container mx-auto px-4 py-12 md:py-16">
         <div className="max-w-4xl mx-auto">
           {/* Introduction */}
-          <div className="mb-12">
-            <p className="text-lg text-gray-700 leading-relaxed">
-              {therapy.fullContent.introduction}
-            </p>
-          </div>
+          {jsonTherapy?.fullContent && (
+            <div className="mb-12">
+              <p className="text-lg text-gray-700 leading-relaxed">
+                {jsonTherapy.fullContent.introduction}
+              </p>
+            </div>
+          )}
 
           {/* Sections */}
-          <div className="space-y-12">
-            {therapy.fullContent.sections.map((section, index) => (
-              <div key={index} className="border-l-4 border-[#00B5AD] pl-6">
-                <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
-                  {section.title}
-                </h2>
-                <div className="prose prose-lg max-w-none">
-                  {section.content.split('\n\n').map((paragraph, pIndex) => {
-                    // Check if paragraph starts with a bullet point indicator
-                    if (paragraph.trim().startsWith('-')) {
-                      const items = paragraph.split('\n').filter(line => line.trim().startsWith('-'));
+          {jsonTherapy?.fullContent?.sections && (
+            <div className="space-y-12">
+              {jsonTherapy.fullContent.sections.map((section: any, index: number) => (
+                <div key={index} className="border-l-4 border-[#00B5AD] pl-6">
+                  <h2 className="text-2xl md:text-3xl font-bold text-black mb-4">
+                    {section.title}
+                  </h2>
+                  <div className="prose prose-lg max-w-none">
+                    {section.content.split('\n\n').map((paragraph: string, pIndex: number) => {
+                      // Check if paragraph starts with a bullet point indicator
+                      if (paragraph.trim().startsWith('-')) {
+                        const items = paragraph.split('\n').filter((line: string) => line.trim().startsWith('-'));
+                        return (
+                          <ul key={pIndex} className="list-disc list-inside space-y-2 text-gray-700 mb-4">
+                            {items.map((item: string, iIndex: number) => (
+                              <li key={iIndex} className="ml-4">
+                                {item.replace(/^-\s*/, '')}
+                              </li>
+                            ))}
+                          </ul>
+                        );
+                      }
+                      
+                      // Regular paragraph
                       return (
-                        <ul key={pIndex} className="list-disc list-inside space-y-2 text-gray-700 mb-4">
-                          {items.map((item, iIndex) => (
-                            <li key={iIndex} className="ml-4">
-                              {item.replace(/^-\s*/, '')}
-                            </li>
-                          ))}
-                        </ul>
+                        <p key={pIndex} className="text-gray-700 leading-relaxed mb-4">
+                          {paragraph.split('**').map((part: string, i: number) => 
+                            i % 2 === 0 ? part : <strong key={i} className="font-semibold text-black">{part}</strong>
+                          )}
+                        </p>
                       );
-                    }
-                    
-                    // Regular paragraph
-                    return (
-                      <p key={pIndex} className="text-gray-700 leading-relaxed mb-4">
-                        {paragraph.split('**').map((part, i) => 
-                          i % 2 === 0 ? part : <strong key={i} className="font-semibold text-black">{part}</strong>
-                        )}
-                      </p>
-                    );
-                  })}
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           {/* CTA Section */}
           <div className="mt-16 bg-gradient-to-br from-[#00B5AD] to-[#009891] rounded-2xl p-8 md:p-12 text-white">
@@ -150,7 +160,7 @@ export default async function TherapyDetailPage({ params }: { params: { slug: st
                 {service && (
                   <BuyButton
                     serviceId={service.id}
-                    serviceName={therapy.name}
+                    serviceName={service.name}
                     price={service.price}
                   />
                 )}

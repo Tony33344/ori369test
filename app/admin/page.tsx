@@ -243,6 +243,14 @@ export default function AdminPage() {
       `)
       .order('created_at', { ascending: false });
 
+    if (error) {
+      // Orders table may not exist yet; skip gracefully
+      console.warn('Orders table not available:', error.message);
+      setOrders([]);
+      setOrderStats({ totalRevenue: 0, totalOrders: 0, paidOrders: 0, pendingOrders: 0 });
+      return;
+    }
+
     if (data) {
       setOrders(data as any);
       
@@ -271,7 +279,8 @@ export default function AdminPage() {
         .eq('id', editingService.id);
 
       if (error) {
-        toast.error(t('toast.error'));
+        console.error('Error updating service:', error);
+        toast.error(`${t('toast.error')}: ${error.message}`);
       } else {
         toast.success(t('toast.serviceUpdated'));
         setShowServiceModal(false);
@@ -285,7 +294,8 @@ export default function AdminPage() {
         .insert(serviceData);
 
       if (error) {
-        toast.error(t('toast.error'));
+        console.error('Error creating service:', error);
+        toast.error(`${t('toast.error')}: ${error.message}`);
       } else {
         toast.success(t('toast.serviceAdded'));
         setShowServiceModal(false);
@@ -565,12 +575,12 @@ export default function AdminPage() {
                         <div className="text-sm text-gray-500">{booking.time_slot}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm font-medium text-gray-900">{booking.profiles.full_name}</div>
-                        <div className="text-sm text-gray-500">{booking.profiles.email}</div>
+                        <div className="text-sm font-medium text-gray-900">{booking.profiles?.full_name || 'Unknown'}</div>
+                        <div className="text-sm text-gray-500">{booking.profiles?.email || 'N/A'}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">{booking.services.name}</div>
-                        <div className="text-sm text-gray-500">{booking.services.duration} min</div>
+                        <div className="text-sm text-gray-900">{booking.services?.name || 'Unknown'}</div>
+                        <div className="text-sm text-gray-500">{booking.services?.duration || 0} min</div>
                       </td>
                       <td className="px-6 py-4">
                         <select
@@ -875,6 +885,20 @@ function ServiceModal({
     sessions: service?.sessions || 1,
     active: service?.active ?? true
   });
+
+  // Sync formData when service prop changes
+  useEffect(() => {
+    setFormData({
+      name: service?.name || '',
+      slug: service?.slug || '',
+      description: service?.description || '',
+      duration: service?.duration || 30,
+      price: service?.price || 0,
+      is_package: service?.is_package || false,
+      sessions: service?.sessions || 1,
+      active: service?.active ?? true
+    });
+  }, [service]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

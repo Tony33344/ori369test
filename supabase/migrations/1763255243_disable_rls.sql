@@ -1,0 +1,3 @@
+ALTER TABLE public.bookings DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.service_analytics DISABLE ROW LEVEL SECURITY;
+ALTER TABLE public.availability_slots DISABLE ROW LEVEL SECURITY;

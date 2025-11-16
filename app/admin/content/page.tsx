@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { getCurrentUser, getUserProfile } from '@/lib/auth';
 import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
-import { FileText, Plus, Edit2, Trash2, Eye, EyeOff } from 'lucide-react';
+import { FileText, Plus, Edit2, Trash2, Eye, EyeOff, Save, X, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function ContentManagementPage() {
   const router = useRouter();
@@ -17,6 +17,9 @@ export default function ContentManagementPage() {
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newPage, setNewPage] = useState({ slug: '', title: '', status: 'published' });
+  const [editingPageId, setEditingPageId] = useState<string | null>(null);
+  const [editingPage, setEditingPage] = useState<any>(null);
+  const [expandedPageId, setExpandedPageId] = useState<string | null>(null);
 
   useEffect(() => {
     checkAdmin();
@@ -104,6 +107,43 @@ export default function ContentManagementPage() {
     }
   };
 
+  const startEditingPage = (page: any) => {
+    setEditingPageId(page.id);
+    setEditingPage({ ...page });
+  };
+
+  const saveEditingPage = async () => {
+    if (!editingPage.slug || !editingPage.title) {
+      toast.error('Slug and title are required');
+      return;
+    }
+
+    const response = await fetch('/api/cms/pages', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id: editingPage.id,
+        slug: editingPage.slug,
+        title: editingPage.title,
+        status: editingPage.status
+      })
+    });
+
+    if (response.ok) {
+      toast.success('Page updated');
+      setEditingPageId(null);
+      setEditingPage(null);
+      loadPages();
+    } else {
+      toast.error('Failed to update page');
+    }
+  };
+
+  const cancelEditingPage = () => {
+    setEditingPageId(null);
+    setEditingPage(null);
+  };
+
   if (!isAdmin) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -154,52 +194,112 @@ export default function ContentManagementPage() {
                   </tr>
                 ) : (
                   pages.map((page) => (
-                    <tr key={page.id} className="hover:bg-gray-50">
+                    <tr key={page.id} className={`hover:bg-gray-50 ${editingPageId === page.id ? 'bg-blue-50' : ''}`}>
                       <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          <FileText size={18} className="text-gray-400" />
-                          <span className="text-sm font-medium text-gray-900">{page.title}</span>
-                        </div>
+                        {editingPageId === page.id ? (
+                          <input
+                            type="text"
+                            value={editingPage.title}
+                            onChange={(e) => setEditingPage({ ...editingPage, title: e.target.value })}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        ) : (
+                          <div className="flex items-center space-x-2">
+                            <FileText size={18} className="text-gray-400" />
+                            <span className="text-sm font-medium text-gray-900">{page.title}</span>
+                          </div>
+                        )}
                       </td>
                       <td className="px-6 py-4">
-                        <code className="text-sm text-gray-600">/{page.slug}</code>
+                        {editingPageId === page.id ? (
+                          <input
+                            type="text"
+                            value={editingPage.slug}
+                            onChange={(e) => setEditingPage({ ...editingPage, slug: e.target.value })}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        ) : (
+                          <code className="text-sm text-gray-600">/{page.slug}</code>
+                        )}
                       </td>
                       <td className="px-6 py-4">
-                        <button
-                          onClick={() => toggleStatus(page)}
-                          className={`text-xs px-3 py-1 rounded-full font-medium ${
-                            page.status === 'published'
-                              ? 'bg-green-100 text-green-800'
-                              : 'bg-yellow-100 text-yellow-800'
-                          }`}
-                        >
-                          {page.status}
-                        </button>
+                        {editingPageId === page.id ? (
+                          <select
+                            value={editingPage.status}
+                            onChange={(e) => setEditingPage({ ...editingPage, status: e.target.value })}
+                            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          >
+                            <option value="published">Published</option>
+                            <option value="draft">Draft</option>
+                          </select>
+                        ) : (
+                          <button
+                            onClick={() => toggleStatus(page)}
+                            className={`text-xs px-3 py-1 rounded-full font-medium ${
+                              page.status === 'published'
+                                ? 'bg-green-100 text-green-800'
+                                : 'bg-yellow-100 text-yellow-800'
+                            }`}
+                          >
+                            {page.status}
+                          </button>
+                        )}
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-600">
                         {new Date(page.created_at).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center space-x-2">
-                          <Link
-                            href={`/admin/content/${page.id}`}
-                            className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
-                          >
-                            <Edit2 size={18} />
-                          </Link>
-                          <Link
-                            href={`/cms/${page.slug}`}
-                            target="_blank"
-                            className="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
-                          >
-                            {page.status === 'published' ? <Eye size={18} /> : <EyeOff size={18} />}
-                          </Link>
-                          <button
-                            onClick={() => deletePage(page.id)}
-                            className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
-                          >
-                            <Trash2 size={18} />
-                          </button>
+                          {editingPageId === page.id ? (
+                            <>
+                              <button
+                                onClick={saveEditingPage}
+                                className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200 transition-colors"
+                                title="Save"
+                              >
+                                <Save size={18} />
+                              </button>
+                              <button
+                                onClick={cancelEditingPage}
+                                className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors"
+                                title="Cancel"
+                              >
+                                <X size={18} />
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => startEditingPage(page)}
+                                className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors"
+                                title="Edit"
+                              >
+                                <Edit2 size={18} />
+                              </button>
+                              <Link
+                                href={`/admin/content/${page.id}`}
+                                className="p-2 bg-indigo-100 text-indigo-600 rounded-lg hover:bg-indigo-200 transition-colors"
+                                title="Manage Sections"
+                              >
+                                <ChevronDown size={18} />
+                              </Link>
+                              <Link
+                                href={`/cms/${page.slug}`}
+                                target="_blank"
+                                className="p-2 bg-purple-100 text-purple-600 rounded-lg hover:bg-purple-200 transition-colors"
+                                title="Preview"
+                              >
+                                {page.status === 'published' ? <Eye size={18} /> : <EyeOff size={18} />}
+                              </Link>
+                              <button
+                                onClick={() => deletePage(page.id)}
+                                className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"
+                                title="Delete"
+                              >
+                                <Trash2 size={18} />
+                              </button>
+                            </>
+                          )}
                         </div>
                       </td>
                     </tr>
