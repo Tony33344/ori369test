@@ -38,7 +38,7 @@ export default function BookingCalendar({
       .from('bookings')
       .select('date, time_slot, status')
       .eq('service_id', serviceId)
-      .or('status.eq.pending,status.eq.confirmed');
+      .in('status', ['pending', 'confirmed']);
 
     if (error) {
       console.error('Error loading bookings:', error);

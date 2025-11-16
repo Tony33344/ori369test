@@ -16,15 +16,9 @@ const BookingCalendar = dynamic(() => import('@/components/BookingCalendar'), {
 });
 
 function BookingForm() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const packageId = searchParams.get('package');
-  
-  // Helper to get localized service name
-  const getServiceName = (service: any) => {
-    const langKey = `name_${language}` as keyof typeof service;
-    return service[langKey] || service.name_en || service.name_sl || 'Service';
-  };
   
   const [user, setUser] = useState<any>(null);
   const [services, setServices] = useState<any[]>([]);
@@ -63,8 +57,8 @@ function BookingForm() {
     const { data, error } = await supabase
       .from('services')
       .select('*')
-      .eq('status', 'published')
-      .order('created_at', { ascending: false });
+      .eq('active', true)
+      .order('name');
     
     if (data) setServices(data);
     if (error) console.error('Error loading services:', error);
@@ -207,7 +201,7 @@ function BookingForm() {
                     <optgroup label={t('nav.therapies')}>
                       {services.filter(s => !s.is_package).map(service => (
                         <option key={service.id} value={service.id}>
-                          {getServiceName(service)} - €{service.price} ({service.duration} min)
+                          {service.name} - €{service.price} ({service.duration} min)
                         </option>
                       ))}
                     </optgroup>
@@ -216,7 +210,7 @@ function BookingForm() {
                     <optgroup label={t('nav.packages')}>
                       {services.filter(s => s.is_package).map(service => (
                         <option key={service.id} value={service.id}>
-                          {getServiceName(service)} - €{service.price} ({service.sessions || service.duration} min)
+                          {service.name} - €{service.price} ({service.sessions} {t('admin.services.sessions')})
                         </option>
                       ))}
                     </optgroup>
