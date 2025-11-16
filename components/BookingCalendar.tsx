@@ -58,18 +58,18 @@ export default function BookingCalendar({
   };
 
   const loadAvailability = async () => {
-    const { data: schedules, error } = await supabase
-      .from('schedules')
+    const { data: slots, error } = await supabase
+      .from('availability_slots')
       .select('*')
-      .eq('service_id', serviceId);
+      .eq('active', true);
 
     if (error) {
-      console.error('Error loading schedules:', error);
+      console.error('Error loading availability:', error);
       return;
     }
 
-    if (schedules) {
-      setAvailableSlots(schedules);
+    if (slots) {
+      setAvailableSlots(slots);
     }
   };
 

@@ -69,19 +69,19 @@ function BookingForm() {
     
     const dayOfWeek = new Date(date).getDay();
     
-    // Get schedules for this service and day
-    const { data: schedules } = await supabase
-      .from('schedules')
+    // Get availability for this day
+    const { data: slots } = await supabase
+      .from('availability_slots')
       .select('*')
       .eq('day_of_week', dayOfWeek)
-      .eq('service_id', selectedService);
+      .eq('active', true);
 
-    if (!schedules || schedules.length === 0) {
+    if (!slots || slots.length === 0) {
       setAvailableSlots([]);
       return;
     }
 
-    // Get existing bookings for this date and service
+    // Get existing bookings for this date
     const { data: bookings } = await supabase
       .from('bookings')
       .select('time_slot')
@@ -90,13 +90,21 @@ function BookingForm() {
 
     const bookedTimes = bookings?.map(b => b.time_slot) || [];
 
-    // Extract available time slots from schedules
-    const allSlots: string[] = schedules
-      .map(schedule => schedule.time)
-      .filter(time => !bookedTimes.includes(time))
-      .sort();
+    // Generate time slots from start_time to end_time
+    const allSlots: string[] = [];
+    slots.forEach(slot => {
+      const start = parseInt(slot.start_time.split(':')[0]);
+      const end = parseInt(slot.end_time.split(':')[0]);
+      
+      for (let hour = start; hour < end; hour++) {
+        const timeSlot = `${hour.toString().padStart(2, '0')}:00`;
+        if (!bookedTimes.includes(timeSlot)) {
+          allSlots.push(timeSlot);
+        }
+      }
+    });
 
-    setAvailableSlots(allSlots);
+    setAvailableSlots(allSlots.sort());
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
