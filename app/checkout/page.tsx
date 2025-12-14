@@ -6,9 +6,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { CreditCard, Building2, Truck, Store, ArrowLeft, CheckCircle, Loader2, QrCode } from 'lucide-react';
 import { useCart } from '@/components/CartProvider';
-import { companyData, generateUPNReference, formatIBAN } from '@/lib/companyData';
+import { companyData, generateUPNReference, formatIBAN, generateUPNQRData } from '@/lib/companyData';
 import { supabase } from '@/lib/supabase';
 import toast from 'react-hot-toast';
+import QRCode from 'qrcode';
 
 type PaymentMethod = 'card' | 'upn' | 'cash_pickup' | 'cash_delivery';
 type ShippingMethod = 'pickup' | 'post' | 'delivery';
@@ -25,6 +26,13 @@ export default function CheckoutPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { cart, clearCart, total: cartTotal } = useCart();
+
+  const [authedUser, setAuthedUser] = useState<any>(null);
+  const [authMode, setAuthMode] = useState<'login' | 'register'>('login');
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authFullName, setAuthFullName] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
   
   // URL params for direct service checkout
   const serviceId = searchParams.get('service');
@@ -38,6 +46,8 @@ export default function CheckoutPage() {
   const [serviceDetails, setServiceDetails] = useState<ServiceDetails | null>(null);
   const [orderCreated, setOrderCreated] = useState(false);
   const [orderReference, setOrderReference] = useState('');
+  const [upnQrDataUrl, setUpnQrDataUrl] = useState<string>('');
+  const [createdOrderTotal, setCreatedOrderTotal] = useState<number>(0);
   
   // Customer info
   const [customerName, setCustomerName] = useState('');
@@ -47,6 +57,7 @@ export default function CheckoutPage() {
   const [customerCity, setCustomerCity] = useState('');
   const [customerPostal, setCustomerPostal] = useState('');
   const [notes, setNotes] = useState('');
+  const [saveDetailsToProfile, setSaveDetailsToProfile] = useState(true);
 
   // Determine if this is a service checkout or cart checkout
   const isServiceCheckout = !!serviceId;
@@ -65,6 +76,24 @@ export default function CheckoutPage() {
     loadUserInfo();
   }, []);
 
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('ori369_save_details_to_profile');
+      if (saved === '0') setSaveDetailsToProfile(false);
+      if (saved === '1') setSaveDetailsToProfile(true);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('ori369_save_details_to_profile', saveDetailsToProfile ? '1' : '0');
+    } catch {
+      // ignore
+    }
+  }, [saveDetailsToProfile]);
+
   async function loadServiceDetails(id: string) {
     const { data, error } = await supabase
       .from('services')
@@ -77,10 +106,49 @@ export default function CheckoutPage() {
     }
   }
 
+  async function handleAuthSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setAuthLoading(true);
+    try {
+      if (authMode === 'login') {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: authEmail,
+          password: authPassword,
+        });
+        if (error) throw error;
+        setAuthedUser(data.user);
+        toast.success('Prijava uspešna.');
+        await loadUserInfo();
+        return;
+      }
+
+      const { data, error } = await supabase.auth.signUp({
+        email: authEmail,
+        password: authPassword,
+        options: {
+          data: {
+            full_name: authFullName || null,
+          },
+        },
+      });
+      if (error) throw error;
+      setAuthedUser(data.user);
+      toast.success('Registracija uspešna. Preverite e-pošto in potrdite naslov.');
+      await loadUserInfo();
+    } catch (err: any) {
+      console.error('Auth error:', err);
+      toast.error(err?.message || 'Napaka pri prijavi/registraciji.');
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
   async function loadUserInfo() {
     const { data: { user } } = await supabase.auth.getUser();
+    setAuthedUser(user || null);
     if (user) {
       setCustomerEmail(user.email || '');
+      setAuthEmail(user.email || '');
       
       const { data: profile } = await supabase
         .from('profiles')
@@ -91,7 +159,30 @@ export default function CheckoutPage() {
       if (profile) {
         setCustomerName(profile.full_name || '');
         setCustomerPhone(profile.phone || '');
+        setCustomerAddress((profile as any).address || '');
+        setCustomerCity((profile as any).city || '');
+        setCustomerPostal((profile as any).postal || '');
       }
+    }
+  }
+
+  async function persistProfileFromCheckout() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const payload: any = {
+      full_name: customerName || null,
+      phone: customerPhone || null,
+      address: customerAddress || null,
+      city: customerCity || null,
+      postal: customerPostal || null,
+      updated_at: new Date().toISOString(),
+    };
+
+    const { error } = await supabase.from('profiles').update(payload).eq('id', user.id);
+    if (error) {
+      console.error('Failed to persist profile from checkout:', error);
+      toast.error('Podatkov ni bilo mogoče shraniti v profil. Preverite prijavo in pravila dostopa.');
     }
   }
 
@@ -119,8 +210,56 @@ export default function CheckoutPage() {
     }
   }, [paymentMethod]);
 
+  useEffect(() => {
+    async function buildUpnQr() {
+      if (!orderCreated || paymentMethod !== 'upn' || !orderReference) {
+        setUpnQrDataUrl('');
+        return;
+      }
+
+      const addrParts = companyData.businessAddress.split(',').map((p) => p.trim());
+      const recipientAddress = addrParts[0] || companyData.businessAddress;
+      const recipientCity = addrParts.slice(1).join(', ') || '';
+
+      const upnPayload = generateUPNQRData({
+        iban: companyData.bank.iban,
+        amount: createdOrderTotal,
+        reference: generateUPNReference(orderReference),
+        purpose: `Naročilo ${orderReference}`,
+        recipientName: companyData.legalName,
+        recipientAddress,
+        recipientCity,
+      });
+
+      try {
+        const dataUrl = await QRCode.toDataURL(upnPayload, {
+          margin: 1,
+          width: 220,
+          errorCorrectionLevel: 'M',
+        });
+        setUpnQrDataUrl(dataUrl);
+      } catch (e) {
+        console.error('Failed to generate UPN QR code:', e);
+        setUpnQrDataUrl('');
+      }
+    }
+
+    buildUpnQr();
+  }, [orderCreated, paymentMethod, orderReference, createdOrderTotal]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast.error('Za naročilo se morate prijaviti ali registrirati.');
+      return;
+    }
+
+    if (!user.email_confirmed_at) {
+      toast.error('Prosimo, potrdite e-poštni naslov (email) pred oddajo naročila.');
+      return;
+    }
     
     if (!customerName || !customerEmail || !customerPhone) {
       toast.error('Prosimo, izpolnite vse obvezne podatke');
@@ -135,6 +274,10 @@ export default function CheckoutPage() {
     setLoading(true);
 
     try {
+      // Persist customer profile details for logged-in users so next checkout is pre-filled
+      if (saveDetailsToProfile) {
+        await persistProfileFromCheckout();
+      }
       if (paymentMethod === 'card') {
         // Stripe checkout
         await handleStripeCheckout();
@@ -301,6 +444,10 @@ export default function CheckoutPage() {
       await supabase.from('order_items').insert(orderItems);
     }
 
+    // Persist final totals before clearing cart (needed for success screen + UPN QR)
+    const finalTotal = total;
+    setCreatedOrderTotal(finalTotal);
+
     // Clear cart and show success
     clearCart();
     setOrderReference(reference);
@@ -327,6 +474,22 @@ export default function CheckoutPage() {
                   <QrCode className="text-[#00B5AD]" />
                   Podatki za UPN plačilo
                 </h2>
+
+                {upnQrDataUrl && (
+                  <div className="mb-5 flex items-center justify-center">
+                    <div className="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm">
+                      <img
+                        src={upnQrDataUrl}
+                        alt="UPN QR"
+                        className="w-[220px] h-[220px]"
+                      />
+                      <div className="mt-3 text-center text-xs text-gray-500">
+                        Skenirajte QR kodo v mobilni banki
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-3">
                   <div>
                     <span className="text-gray-500">Prejemnik:</span>
@@ -338,7 +501,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <span className="text-gray-500">Znesek:</span>
-                    <p className="font-semibold text-[#00B5AD] text-xl">€{total.toFixed(2)}</p>
+                    <p className="font-bold text-[#00B5AD] text-lg">€{createdOrderTotal.toFixed(2)}</p>
                   </div>
                   <div>
                     <span className="text-gray-500">Referenca:</span>
@@ -363,13 +526,19 @@ export default function CheckoutPage() {
                 <p className="text-gray-600">
                   {paymentMethod === 'cash_pickup' 
                     ? `Vaše naročilo bo pripravljeno za prevzem na naslovu: ${companyData.businessAddress}`
-                    : `Naročilo bo dostavljeno na vaš naslov. Plačilo: €${total.toFixed(2)}`
+                    : `Naročilo bo dostavljeno na vaš naslov. Plačilo: €${createdOrderTotal.toFixed(2)}`
                   }
                 </p>
               </div>
             )}
 
             <div className="flex gap-4 justify-center">
+              <Link
+                href="/dashboard#orders"
+                className="px-6 py-3 bg-[#00B5AD] text-white rounded-lg hover:bg-[#009891] transition-colors"
+              >
+                Poglej naročila
+              </Link>
               <Link
                 href="/"
                 className="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
@@ -378,7 +547,7 @@ export default function CheckoutPage() {
               </Link>
               <Link
                 href="/trgovina"
-                className="px-6 py-3 bg-[#00B5AD] text-white rounded-lg hover:bg-[#009891] transition-colors"
+                className="px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-black transition-colors"
               >
                 Nadaljuj z nakupovanjem
               </Link>
@@ -427,12 +596,94 @@ export default function CheckoutPage() {
           <h1 className="text-3xl font-bold text-gray-900">Blagajna</h1>
         </div>
 
+        {!authedUser && (
+          <div className="mb-8 bg-white rounded-xl shadow-sm p-6">
+            <h2 className="text-xl font-bold mb-2">Prijava / Registracija</h2>
+            <p className="text-sm text-gray-600 mb-4">Za naročilo potrebujemo prijavljen račun in potrjen e-poštni naslov.</p>
+
+            <div className="flex gap-2 mb-4">
+              <button
+                type="button"
+                onClick={() => setAuthMode('login')}
+                className={`px-4 py-2 rounded-lg text-sm font-semibold ${authMode === 'login' ? 'bg-[#00B5AD] text-white' : 'bg-gray-100 text-gray-800'}`}
+              >
+                Prijava
+              </button>
+              <button
+                type="button"
+                onClick={() => setAuthMode('register')}
+                className={`px-4 py-2 rounded-lg text-sm font-semibold ${authMode === 'register' ? 'bg-[#00B5AD] text-white' : 'bg-gray-100 text-gray-800'}`}
+              >
+                Registracija
+              </button>
+            </div>
+
+            <form onSubmit={handleAuthSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {authMode === 'register' && (
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Ime in priimek</label>
+                  <input
+                    type="text"
+                    value={authFullName}
+                    onChange={(e) => setAuthFullName(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00B5AD] focus:border-transparent"
+                  />
+                </div>
+              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">E-pošta</label>
+                <input
+                  type="email"
+                  value={authEmail}
+                  onChange={(e) => setAuthEmail(e.target.value)}
+                  required
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00B5AD] focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Geslo</label>
+                <input
+                  type="password"
+                  value={authPassword}
+                  onChange={(e) => setAuthPassword(e.target.value)}
+                  required
+                  minLength={6}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00B5AD] focus:border-transparent"
+                />
+              </div>
+              <div className="md:col-span-2 flex items-center justify-end">
+                <button
+                  type="submit"
+                  disabled={authLoading}
+                  className="px-6 py-2 rounded-lg bg-gray-900 text-white font-semibold hover:bg-black disabled:opacity-50"
+                >
+                  {authLoading ? 'Počakajte...' : authMode === 'login' ? 'Prijava' : 'Registracija'}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Customer Info & Payment */}
           <div className="lg:col-span-2 space-y-6">
             {/* Customer Information */}
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h2 className="text-xl font-bold mb-4">Kontaktni podatki</h2>
+              <div className="mb-4 rounded-lg border border-gray-200 bg-gray-50 p-4">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={saveDetailsToProfile}
+                    onChange={(e) => setSaveDetailsToProfile(e.target.checked)}
+                    className="mt-1 h-4 w-4"
+                  />
+                  <div>
+                    <div className="text-sm font-semibold text-gray-800">Shrani podatke v moj profil</div>
+                    <div className="text-xs text-gray-600">Če je omogočeno, bomo vaše kontaktne podatke in naslov shranili za naslednji nakup.</div>
+                  </div>
+                </label>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">

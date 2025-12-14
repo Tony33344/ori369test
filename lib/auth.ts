@@ -1,12 +1,22 @@
 import { supabase } from './supabase';
 
-export async function signUp(email: string, password: string, fullName: string) {
+export async function signUp(
+  email: string,
+  password: string,
+  fullName: string,
+  options?: { phone?: string; address?: string; city?: string; postal?: string; gdprConsentAt?: string }
+) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
         full_name: fullName,
+        phone: options?.phone || null,
+        address: options?.address || null,
+        city: options?.city || null,
+        postal: options?.postal || null,
+        gdpr_consent_at: options?.gdprConsentAt || null,
       },
     },
   });

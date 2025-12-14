@@ -181,6 +181,7 @@ export async function POST(req: NextRequest) {
       const orderItems = orderItemsData.map(item => ({
         order_id: order.id,
         service_id: item.type === 'service' ? item.itemId : null,
+        product_id: item.type === 'product' ? item.itemId : null,
         quantity: item.quantity,
         unit_price: item.unitPrice,
         total_price: item.totalPrice,

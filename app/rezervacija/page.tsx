@@ -66,6 +66,9 @@ function BookingForm() {
 
   const loadAvailableSlots = async (date: string) => {
     if (!selectedService) return;
+
+    const selectedServiceObj = services.find((s) => s.id === selectedService);
+    const serviceDurationMin = Number(selectedServiceObj?.duration || 60);
     
     const dayOfWeek = new Date(date).getDay();
     
@@ -90,6 +93,27 @@ function BookingForm() {
 
     const bookedTimes = (bookings as Array<{ time_slot: string }> | null)?.map((b) => b.time_slot) || [];
 
+    // Get busy events from Google Calendar for this date
+    let googleBusyRanges: Array<{ start: Date; end: Date }> = [];
+    try {
+      const dayStart = new Date(`${date}T00:00:00`);
+      const dayEnd = new Date(`${date}T23:59:59`);
+      const res = await fetch(`/api/google-calendar/busy?timeMin=${encodeURIComponent(dayStart.toISOString())}&timeMax=${encodeURIComponent(dayEnd.toISOString())}`);
+      if (res.ok) {
+        const json = await res.json();
+        googleBusyRanges = (json?.busy || [])
+          .map((e: any) => {
+            const s = e?.start?.dateTime || e?.start?.date;
+            const en = e?.end?.dateTime || e?.end?.date;
+            if (!s || !en) return null;
+            return { start: new Date(s), end: new Date(en) };
+          })
+          .filter(Boolean);
+      }
+    } catch (e) {
+      console.error('Failed to load Google busy events:', e);
+    }
+
     // Generate time slots from start_time to end_time
     const allSlots: string[] = [];
     (slots as Array<{ start_time: string; end_time: string }>).forEach((slot) => {
@@ -98,7 +122,14 @@ function BookingForm() {
       
       for (let hour = start; hour < end; hour++) {
         const timeSlot = `${hour.toString().padStart(2, '0')}:00`;
-        if (!bookedTimes.includes(timeSlot)) {
+        if (bookedTimes.includes(timeSlot)) continue;
+
+        const slotStart = new Date(`${date}T${timeSlot}:00`);
+        const slotEnd = new Date(slotStart);
+        slotEnd.setMinutes(slotEnd.getMinutes() + serviceDurationMin);
+
+        const overlapsGoogle = googleBusyRanges.some((r) => slotStart < r.end && slotEnd > r.start);
+        if (!overlapsGoogle) {
           allSlots.push(timeSlot);
         }
       }

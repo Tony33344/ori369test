@@ -44,6 +44,120 @@ interface Booking {
   };
 }
 
+function OrderModal({
+  order,
+  onClose,
+  onUpdateStatus,
+}: {
+  order: Order;
+  onClose: () => void;
+  onUpdateStatus: (orderId: string, newStatus: string) => Promise<void>;
+}) {
+  const [status, setStatus] = useState(order.status);
+
+  const customer = order.metadata?.customer || {};
+  const reference = order.metadata?.reference || order.metadata?.upn_reference || null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="p-6 border-b flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900">Order {order.id.substring(0, 8)}...</h2>
+            <p className="text-sm text-gray-500">{format(new Date(order.created_at), 'dd.MM.yyyy HH:mm')}</p>
+          </div>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+          >
+            Close
+          </button>
+        </div>
+
+        <div className="p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="rounded-lg border border-gray-200 p-4">
+              <div className="text-xs font-semibold text-gray-500 mb-1">Customer</div>
+              <div className="text-sm font-medium text-gray-900">{order.profiles?.full_name || customer?.name || 'Guest'}</div>
+              <div className="text-sm text-gray-600">{order.profiles?.email || customer?.email || 'N/A'}</div>
+              {customer?.phone && <div className="text-sm text-gray-600">{customer.phone}</div>}
+            </div>
+            <div className="rounded-lg border border-gray-200 p-4">
+              <div className="text-xs font-semibold text-gray-500 mb-1">Payment</div>
+              <div className="text-sm font-medium text-gray-900">{order.payment_method || order.metadata?.payment_method || 'N/A'}</div>
+              {order.stripe_payment_intent_id && (
+                <div className="text-xs text-gray-600 mt-1">PI: {order.stripe_payment_intent_id}</div>
+              )}
+              {order.stripe_session_id && (
+                <div className="text-xs text-gray-600">Session: {order.stripe_session_id}</div>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-gray-200 p-4">
+            <div className="text-xs font-semibold text-gray-500 mb-2">Shipping</div>
+            <div className="text-sm text-gray-900">Method: {order.shipping_method || order.metadata?.shipping_method || 'N/A'}</div>
+            {order.shipping_cost != null && (
+              <div className="text-sm text-gray-700">Cost: €{Number(order.shipping_cost).toFixed(2)}</div>
+            )}
+            {(customer?.address || customer?.city || customer?.postal) && (
+              <div className="text-sm text-gray-700 mt-2">
+                {customer.address || ''}{customer.address ? ', ' : ''}{customer.postal || ''} {customer.city || ''}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-lg border border-gray-200 p-4">
+            <div className="text-xs font-semibold text-gray-500 mb-2">Items</div>
+            <div className="space-y-1">
+              {(order.order_items || []).map((it: any) => {
+                const name = it?.services?.name || it?.shop_products?.name || 'Item';
+                return (
+                  <div key={it.id} className="flex items-center justify-between text-sm">
+                    <div className="text-gray-900">{name} x{it.quantity}</div>
+                    <div className="text-gray-700">€{Number(it.total_price).toFixed(2)}</div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-3 flex items-center justify-between text-sm font-semibold">
+              <div>Total</div>
+              <div>€{Number(order.total_amount).toFixed(2)}</div>
+            </div>
+            {reference && <div className="mt-2 text-xs text-gray-600">Reference: {reference}</div>}
+          </div>
+
+          <div className="rounded-lg border border-gray-200 p-4">
+            <div className="text-xs font-semibold text-gray-500 mb-2">Status</div>
+            <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg"
+              >
+                <option value="pending">pending</option>
+                <option value="pending_payment">pending_payment</option>
+                <option value="paid">paid</option>
+                <option value="cancelled">cancelled</option>
+                <option value="refunded">refunded</option>
+              </select>
+              <button
+                onClick={async () => {
+                  await onUpdateStatus(order.id, status);
+                  onClose();
+                }}
+                className="w-full sm:w-auto px-6 py-2 rounded-lg bg-[#00B5AD] text-white font-semibold hover:bg-[#009891]"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface Service {
   id: string;
   name: string;
@@ -59,18 +173,21 @@ interface Service {
 
 interface Order {
   id: string;
-  user_id: string;
-  stripe_session_id: string;
+  user_id: string | null;
+  stripe_session_id: string | null;
   stripe_payment_intent_id: string | null;
   total_amount: number;
   currency: string;
   status: string;
+  payment_method?: string;
+  shipping_method?: string;
+  shipping_cost?: number;
   metadata: any;
   created_at: string;
   profiles: {
     full_name: string;
     email: string;
-  };
+  } | null;
   order_items: {
     id: string;
     quantity: number;
@@ -78,7 +195,10 @@ interface Order {
     total_price: number;
     services: {
       name: string;
-    };
+    } | null;
+    shop_products?: {
+      name: string;
+    } | null;
   }[];
 }
 
@@ -101,6 +221,8 @@ export default function AdminPage() {
     completed: 0
   });
   const [orders, setOrders] = useState<Order[]>([]);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [showOrderModal, setShowOrderModal] = useState(false);
   const [orderStats, setOrderStats] = useState({
     totalRevenue: 0,
     totalOrders: 0,
@@ -195,6 +317,26 @@ export default function AdminPage() {
     }
   };
 
+  const openOrderModal = (order: Order) => {
+    setSelectedOrder(order);
+    setShowOrderModal(true);
+  };
+
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    const { error } = await supabase
+      .from('orders')
+      .update({ status: newStatus })
+      .eq('id', orderId);
+
+    if (error) {
+      toast.error(`${t('toast.error')}: ${error.message}`);
+      return;
+    }
+
+    toast.success(t('toast.statusUpdated'));
+    await loadOrders();
+  };
+
   const updateBookingStatus = async (bookingId: string, newStatus: string) => {
     const { error } = await supabase
       .from('bookings')
@@ -245,10 +387,12 @@ export default function AdminPage() {
         profiles (full_name, email),
         order_items (
           id,
+          product_id,
           quantity,
           unit_price,
           total_price,
-          services (name)
+          services (name),
+          shop_products:product_id (name)
         )
       `)
       .order('created_at', { ascending: false });
@@ -826,30 +970,72 @@ export default function AdminPage() {
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Shipping</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reference</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
                     {orders.map((order) => (
-                      <tr key={order.id} className="hover:bg-gray-50">
+                      <tr
+                        key={order.id}
+                        className="hover:bg-gray-50 cursor-pointer"
+                        onClick={() => openOrderModal(order)}
+                      >
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {order.id.substring(0, 8)}...
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">{order.profiles.full_name}</div>
-                          <div className="text-sm text-gray-500">{order.profiles.email}</div>
+                          <div className="text-sm font-medium text-gray-900">{order.profiles?.full_name || 'Guest'}</div>
+                          <div className="text-sm text-gray-500">{order.profiles?.email || order.metadata?.customer?.email || 'N/A'}</div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-6 py-4">
                           <div className="text-sm text-gray-900">
-                            {order.order_items.map(item => item.services.name).join(', ') || 
-                             (order.metadata?.serviceName || 'N/A')}
+                            {(() => {
+                              const itemNames = (order.order_items || [])
+                                .map((item: any) => {
+                                  const name = item?.services?.name || item?.shop_products?.name;
+                                  return name ? `${name} ×${item.quantity}` : null;
+                                })
+                                .filter(Boolean) as string[];
+
+                              if (itemNames.length > 0) {
+                                const preview = itemNames.slice(0, 2);
+                                const remaining = itemNames.length - preview.length;
+                                return (
+                                  <div className="space-y-1">
+                                    {preview.map((label) => (
+                                      <div key={label} className="text-gray-900">
+                                        {label}
+                                      </div>
+                                    ))}
+                                    {remaining > 0 && (
+                                      <div className="text-xs text-gray-500">+{remaining} more</div>
+                                    )}
+                                  </div>
+                                );
+                              }
+
+                              return <div className="text-gray-500">{order.metadata?.serviceName || 'N/A'}</div>;
+                            })()}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                           €{order.total_amount.toFixed(2)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                          {order.payment_method || order.metadata?.payment_method || 'N/A'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                          {order.shipping_method || order.metadata?.shipping_method || 'N/A'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                          {order.metadata?.reference || order.metadata?.upn_reference || order.stripe_session_id?.substring(0, 10) || 'N/A'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
@@ -863,6 +1049,18 @@ export default function AdminPage() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {format(new Date(order.created_at), 'dd.MM.yyyy HH:mm')}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openOrderModal(order);
+                            }}
+                            className="inline-flex items-center gap-2 px-3 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50"
+                          >
+                            <Edit2 size={16} />
+                            View/Edit
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -890,6 +1088,17 @@ export default function AdminPage() {
           <div className="bg-white rounded-lg shadow p-6">
             <CMSManager />
           </div>
+        )}
+
+        {showOrderModal && selectedOrder && (
+          <OrderModal
+            order={selectedOrder}
+            onClose={() => {
+              setShowOrderModal(false);
+              setSelectedOrder(null);
+            }}
+            onUpdateStatus={updateOrderStatus}
+          />
         )}
 
         {/* Service Modal */}

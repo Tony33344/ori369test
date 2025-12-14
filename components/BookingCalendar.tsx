@@ -25,6 +25,7 @@ export default function BookingCalendar({
   const { t } = useLanguage();
   const [events, setEvents] = useState<any[]>([]);
   const [availableSlots, setAvailableSlots] = useState<any[]>([]);
+  const [googleBusyEvents, setGoogleBusyEvents] = useState<any[]>([]);
 
   useEffect(() => {
     if (serviceId) {
@@ -32,6 +33,10 @@ export default function BookingCalendar({
       loadAvailability();
     }
   }, [serviceId]);
+
+  useEffect(() => {
+    setEvents([...googleBusyEvents]);
+  }, [googleBusyEvents]);
 
   const loadBookings = async () => {
     const { data: bookings, error } = await supabase
@@ -53,7 +58,33 @@ export default function BookingCalendar({
         borderColor: '#dc2626',
         display: 'background'
       }));
-      setEvents(bookedEvents);
+      setEvents([...googleBusyEvents, ...bookedEvents]);
+    }
+  };
+
+  const loadGoogleBusy = async (timeMin: string, timeMax: string) => {
+    try {
+      const res = await fetch(`/api/google-calendar/busy?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}`);
+      if (!res.ok) return;
+      const json = await res.json();
+
+      const busy = (json?.busy || []).map((e: any) => {
+        const start = e?.start?.dateTime || e?.start?.date;
+        const end = e?.end?.dateTime || e?.end?.date;
+        return {
+          id: e.id,
+          title: e.summary || 'Busy',
+          start,
+          end,
+          backgroundColor: '#f97316',
+          borderColor: '#ea580c',
+          display: 'background',
+        };
+      });
+
+      setGoogleBusyEvents(busy);
+    } catch (e) {
+      console.error('Failed to load Google Calendar busy events:', e);
     }
   };
 
@@ -129,6 +160,11 @@ export default function BookingCalendar({
           right: 'dayGridMonth,timeGridWeek'
         }}
         events={events}
+        datesSet={(arg: any) => {
+          const timeMin = arg.start?.toISOString?.() || new Date(arg.start).toISOString();
+          const timeMax = arg.end?.toISOString?.() || new Date(arg.end).toISOString();
+          loadGoogleBusy(timeMin, timeMax);
+        }}
         dateClick={handleDateClick}
         selectable={true}
         selectMirror={true}

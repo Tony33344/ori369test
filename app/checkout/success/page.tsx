@@ -34,26 +34,23 @@ export default function CheckoutSuccessPage() {
                 </div>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
                 <Link
-                  href="/dashboard"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#00B5AD] text-white rounded-xl font-semibold hover:bg-[#009891] transition-colors"
+                  href="/dashboard#orders"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#00B5AD] text-white font-semibold hover:bg-[#009891] transition"
                 >
-                  <ArrowRight size={18} />
-                  Pojdi na dashboard
+                  Poglej naročila
                 </Link>
                 <Link
                   href="/trgovina"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-gray-100 text-gray-800 font-semibold hover:bg-gray-200 transition"
                 >
-                  <ShoppingBag size={18} />
                   Nadaljuj z nakupovanjem
                 </Link>
                 <Link
                   href="/"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-900 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                  className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-gray-900 text-white font-semibold hover:bg-black transition"
                 >
-                  <Home size={18} />
                   Domov
                 </Link>
               </div>

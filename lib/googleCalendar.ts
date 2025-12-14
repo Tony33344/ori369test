@@ -244,3 +244,18 @@ export async function listUpcomingEvents(maxResults: number = 10) {
 
   return response.data.items || [];
 }
+
+export async function listEventsInRange(timeMin: string, timeMax: string) {
+  const calendar = await getCalendarClient();
+
+  const response = await calendar.events.list({
+    calendarId: CALENDAR_ID,
+    timeMin,
+    timeMax,
+    singleEvents: true,
+    orderBy: 'startTime',
+    maxResults: 2500,
+  });
+
+  return response.data.items || [];
+}

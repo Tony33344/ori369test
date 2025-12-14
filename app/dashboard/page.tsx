@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { getCurrentUser, getUserProfile, isAdmin } from '@/lib/auth';
 import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
-import { Calendar, Clock, Package, User, Settings } from 'lucide-react';
+import { Calendar, Clock, Package, User, Settings, ChevronDown, ChevronUp } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function DashboardPage() {
@@ -14,6 +14,8 @@ export default function DashboardPage() {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [bookings, setBookings] = useState<any[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
+  const [expandedOrderIds, setExpandedOrderIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
   const [adminAccess, setAdminAccess] = useState(false);
 
@@ -51,6 +53,27 @@ export default function DashboardPage() {
       setBookings(bookingsData);
     }
 
+    // Load user orders (shop + services)
+    const { data: ordersData } = await supabase
+      .from('orders')
+      .select(`
+        *,
+        order_items (
+          id,
+          quantity,
+          unit_price,
+          total_price,
+          services (name),
+          shop_products:product_id (name)
+        )
+      `)
+      .eq('user_id', currentUser.id)
+      .order('created_at', { ascending: false });
+
+    if (ordersData) {
+      setOrders(ordersData as any);
+    }
+
     setLoading(false);
   };
 
@@ -78,6 +101,31 @@ export default function DashboardPage() {
       case 'cancelled': return 'bg-red-100 text-red-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const getOrderStatusColor = (status: string) => {
+    switch (status) {
+      case 'paid':
+        return 'bg-green-100 text-green-800';
+      case 'pending':
+      case 'pending_payment':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
+      case 'refunded':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const toggleOrderExpanded = (orderId: string) => {
+    setExpandedOrderIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(orderId)) next.delete(orderId);
+      else next.add(orderId);
+      return next;
+    });
   };
 
   if (loading) {
@@ -221,6 +269,168 @@ export default function DashboardPage() {
                   </div>
                 </div>
               ))
+            )}
+          </div>
+        </div>
+
+        <div id="orders" className="bg-white rounded-lg shadow mt-8">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-bold text-gray-900">Moja naročila</h2>
+              <Link
+                href="/trgovina"
+                className="px-4 py-2 bg-[#00B5AD] text-white rounded-lg hover:bg-[#009891] transition-colors"
+              >
+                Nadaljuj z nakupovanjem
+              </Link>
+            </div>
+          </div>
+
+          <div className="divide-y divide-gray-200">
+            {orders.length === 0 ? (
+              <div className="p-12 text-center">
+                <Package className="mx-auto text-gray-400 mb-4" size={48} />
+                <p className="text-gray-600">Trenutno nimate naročil.</p>
+              </div>
+            ) : (
+              orders.map((order) => {
+                const items = (order.order_items || []) as any[];
+                const itemLabels = items
+                  .map((it: any) => {
+                    const name = it?.services?.name || it?.shop_products?.name;
+                    return name ? `${name} ×${it.quantity}` : null;
+                  })
+                  .filter(Boolean) as string[];
+
+                const itemTitle = (items
+                  .map((it: any) => it?.services?.name || it?.shop_products?.name)
+                  .filter(Boolean) as string[])
+                  .join(', ');
+
+                const reference = order?.metadata?.reference || order?.metadata?.order_reference || order?.metadata?.upn_reference;
+                const itemsCount = (order.order_items || []).reduce((sum: number, it: any) => sum + (it?.quantity || 0), 0);
+                const customer = order?.metadata?.customer || {};
+                const expanded = expandedOrderIds.has(order.id);
+
+                return (
+                  <div key={order.id} className="p-6 hover:bg-gray-50 transition-colors">
+                    <button
+                      type="button"
+                      onClick={() => toggleOrderExpanded(order.id)}
+                      className="w-full text-left"
+                    >
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900">
+                              {itemTitle || 'Naročilo'}
+                            </h3>
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${getOrderStatusColor(order.status)}`}>
+                              {order.status}
+                            </span>
+                          </div>
+
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-gray-600">
+                            <div className="flex items-center space-x-1">
+                              <Calendar size={16} />
+                              <span>{format(new Date(order.created_at), 'd. MMMM yyyy')}</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <Package size={16} />
+                              <span>{itemsCount} kos</span>
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              <span className="font-medium">Plačilo:</span>
+                              <span>{order.payment_method || order.metadata?.payment_method || 'N/A'}</span>
+                            </div>
+                            {order.shipping_method && (
+                              <div className="flex items-center space-x-1">
+                                <span className="font-medium">Dostava:</span>
+                                <span>{order.shipping_method}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {reference && (
+                            <p className="mt-2 text-sm text-gray-500 italic">Referenca: {reference}</p>
+                          )}
+                        </div>
+
+                        <div className="text-right shrink-0">
+                          <div className="text-lg font-bold text-gray-900">€{Number(order.total_amount).toFixed(2)}</div>
+                          {order.shipping_cost != null && Number(order.shipping_cost) > 0 && (
+                            <div className="text-xs text-gray-500">Dostava: €{Number(order.shipping_cost).toFixed(2)}</div>
+                          )}
+                          <div className="mt-2 inline-flex items-center gap-2 text-sm text-gray-600">
+                            <span className="font-medium">Podrobnosti</span>
+                            {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+
+                    {expanded && (
+                      <div className="mt-4 rounded-lg border border-gray-200 bg-white p-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <div className="text-xs font-semibold text-gray-500 mb-2">Izdelki / storitve</div>
+                            <div className="space-y-2">
+                              {items.length === 0 ? (
+                                <div className="text-sm text-gray-600">N/A</div>
+                              ) : (
+                                items.map((it: any) => {
+                                  const name = it?.services?.name || it?.shop_products?.name || 'Izdelek';
+                                  return (
+                                    <div key={it.id} className="flex items-start justify-between text-sm gap-3">
+                                      <div className="text-gray-900">
+                                        <div className="font-medium">{name}</div>
+                                        <div className="text-xs text-gray-500">
+                                          {it.quantity} × €{Number(it.unit_price).toFixed(2)}
+                                        </div>
+                                      </div>
+                                      <div className="text-gray-700 font-medium">€{Number(it.total_price).toFixed(2)}</div>
+                                    </div>
+                                  );
+                                })
+                              )}
+                            </div>
+                          </div>
+
+                          <div>
+                            <div className="text-xs font-semibold text-gray-500 mb-2">Povzetek naročila</div>
+                            <div className="space-y-2 text-sm">
+                              <div className="flex items-center justify-between">
+                                <span className="text-gray-600">Številka naročila</span>
+                                <span className="text-gray-900 font-medium">{order.id.substring(0, 8)}...</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-gray-600">Plačilo</span>
+                                <span className="text-gray-900 font-medium">{order.payment_method || order.metadata?.payment_method || 'N/A'}</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-gray-600">Dostava</span>
+                                <span className="text-gray-900 font-medium">{order.shipping_method || order.metadata?.shipping_method || 'N/A'}</span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-gray-600">Skupaj</span>
+                                <span className="text-gray-900 font-bold">€{Number(order.total_amount).toFixed(2)}</span>
+                              </div>
+                              {reference && (
+                                <div className="pt-2 text-xs text-gray-500">Referenca: {reference}</div>
+                              )}
+                              {(customer?.address || customer?.city || customer?.postal) && (
+                                <div className="pt-2 text-xs text-gray-500">
+                                  Dostava na: {customer.address || ''}{customer.address ? ', ' : ''}{customer.postal || ''} {customer.city || ''}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })
             )}
           </div>
         </div>

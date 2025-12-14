@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { signUp } from '@/lib/auth';
 import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
-import { Mail, Lock, User, UserPlus } from 'lucide-react';
+import { Mail, Lock, User, UserPlus, Phone, MapPin } from 'lucide-react';
 
 function RegisterForm() {
   const { t } = useLanguage();
@@ -16,13 +16,31 @@ function RegisterForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [addDetails, setAddDetails] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [address, setAddress] = useState('');
+  const [city, setCity] = useState('');
+  const [postal, setPostal] = useState('');
+  const [gdprConsent, setGdprConsent] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!gdprConsent) {
+      toast.error('Za registracijo morate potrditi soglasje (GDPR/pogoji).');
+      return;
+    }
+
     setLoading(true);
 
-    const { data, error } = await signUp(email, password, fullName);
+    const { data, error } = await signUp(email, password, fullName, {
+      phone: addDetails ? phone : undefined,
+      address: addDetails ? address : undefined,
+      city: addDetails ? city : undefined,
+      postal: addDetails ? postal : undefined,
+      gdprConsentAt: new Date().toISOString(),
+    });
 
     setLoading(false);
 
@@ -91,6 +109,83 @@ function RegisterForm() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="••••••••"
               />
+            </div>
+
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+              <label className="flex items-center justify-between cursor-pointer">
+                <span className="text-sm font-semibold text-gray-800">Dodaj kontaktne podatke (neobvezno)</span>
+                <input
+                  type="checkbox"
+                  checked={addDetails}
+                  onChange={(e) => setAddDetails(e.target.checked)}
+                  className="h-4 w-4"
+                />
+              </label>
+
+              {addDetails && (
+                <div className="mt-4 space-y-4">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                      <Phone size={18} />
+                      <span>Telefon</span>
+                    </label>
+                    <input
+                      type="tel"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="+386 XX XXX XXX"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2 flex items-center space-x-2">
+                      <MapPin size={18} />
+                      <span>Naslov (za dostavo) </span>
+                    </label>
+                    <input
+                      type="text"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Ulica in hišna številka"
+                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                      <input
+                        type="text"
+                        value={postal}
+                        onChange={(e) => setPostal(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Poštna številka"
+                      />
+                      <input
+                        type="text"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Mesto"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={gdprConsent}
+                  onChange={(e) => setGdprConsent(e.target.checked)}
+                  className="mt-1 h-4 w-4"
+                />
+                <div className="text-sm text-gray-800">
+                  <div className="font-semibold">Soglašam z obdelavo osebnih podatkov (GDPR) in pogoji uporabe</div>
+                  <div className="text-xs text-gray-600 mt-1">
+                    Z registracijo se strinjate, da ORI 369 obdeluje vaše podatke za izvedbo naročil/rezervacij.
+                  </div>
+                </div>
+              </label>
             </div>
 
             <button
