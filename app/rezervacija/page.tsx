@@ -26,6 +26,9 @@ function BookingForm() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
+  const [busySlots, setBusySlots] = useState<string[]>([]);
+  const [allSlots, setAllSlots] = useState<string[]>([]);
   const [notes, setNotes] = useState('');
   const [loading, setLoading] = useState(false);
   const [useCalendarView, setUseCalendarView] = useState(true);
@@ -114,28 +117,47 @@ function BookingForm() {
       console.error('Failed to load Google busy events:', e);
     }
 
-    // Generate time slots from start_time to end_time
-    const allSlots: string[] = [];
+    // Generate all possible time slots and categorize them
+    const generatedSlots: string[] = [];
+    const available: string[] = [];
+    const booked: string[] = [];
+    const busy: string[] = [];
+    
     (slots as Array<{ start_time: string; end_time: string }>).forEach((slot) => {
       const start = parseInt(slot.start_time.split(':')[0]);
       const end = parseInt(slot.end_time.split(':')[0]);
       
       for (let hour = start; hour < end; hour++) {
         const timeSlot = `${hour.toString().padStart(2, '0')}:00`;
-        if (bookedTimes.includes(timeSlot)) continue;
-
+        if (generatedSlots.includes(timeSlot)) continue;
+        generatedSlots.push(timeSlot);
+        
         const slotStart = new Date(`${date}T${timeSlot}:00`);
         const slotEnd = new Date(slotStart);
         slotEnd.setMinutes(slotEnd.getMinutes() + serviceDurationMin);
 
-        const overlapsGoogle = googleBusyRanges.some((r) => slotStart < r.end && slotEnd > r.start);
-        if (!overlapsGoogle) {
-          allSlots.push(timeSlot);
+        // Check if booked
+        if (bookedTimes.includes(timeSlot)) {
+          booked.push(timeSlot);
+          continue;
         }
+
+        // Check if blocked by Google Calendar
+        const overlapsGoogle = googleBusyRanges.some((r) => slotStart < r.end && slotEnd > r.start);
+        if (overlapsGoogle) {
+          busy.push(timeSlot);
+          continue;
+        }
+
+        // Otherwise available
+        available.push(timeSlot);
       }
     });
 
-    setAvailableSlots(allSlots.sort());
+    setAllSlots(generatedSlots.sort());
+    setAvailableSlots(available.sort());
+    setBookedSlots(booked.sort());
+    setBusySlots(busy.sort());
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -306,25 +328,70 @@ function BookingForm() {
                     <Clock size={18} />
                     <span>{t('booking.selectTime')} *</span>
                   </label>
-                  {availableSlots.length > 0 ? (
-                    <div className="grid grid-cols-4 gap-2">
-                      {availableSlots.map(slot => (
-                        <button
-                          key={slot}
-                          type="button"
-                          onClick={() => setSelectedTime(slot)}
-                          className={`px-4 py-2 border rounded-lg font-medium transition-all ${
-                            selectedTime === slot
-                              ? 'bg-blue-600 text-white border-blue-600'
-                              : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500'
-                          }`}
-                        >
-                          {slot}
-                        </button>
-                      ))}
+                  
+                  {/* Legend for time slots */}
+                  <div className="mb-3 p-3 bg-gray-50 rounded-lg">
+                    <div className="flex flex-wrap items-center gap-4 text-xs">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded bg-green-100 border-2 border-green-500"></div>
+                        <span className="text-gray-600">Na voljo</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded bg-red-100 border-2 border-red-400"></div>
+                        <span className="text-gray-600">Zasedeno (rezervacija)</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded bg-orange-100 border-2 border-orange-400"></div>
+                        <span className="text-gray-600">Zasedeno (koledar)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {allSlots.length > 0 ? (
+                    <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+                      {allSlots.map(slot => {
+                        const isBooked = bookedSlots.includes(slot);
+                        const isBusy = busySlots.includes(slot);
+                        const isAvailable = availableSlots.includes(slot);
+                        const isSelected = selectedTime === slot;
+                        
+                        let className = 'px-3 py-2 border-2 rounded-lg font-medium transition-all text-sm ';
+                        
+                        if (isSelected) {
+                          className += 'bg-blue-600 text-white border-blue-600 ring-2 ring-blue-300';
+                        } else if (isBooked) {
+                          className += 'bg-red-50 text-red-400 border-red-200 cursor-not-allowed line-through';
+                        } else if (isBusy) {
+                          className += 'bg-orange-50 text-orange-400 border-orange-200 cursor-not-allowed line-through';
+                        } else if (isAvailable) {
+                          className += 'bg-green-50 text-green-700 border-green-300 hover:bg-green-100 hover:border-green-500 cursor-pointer';
+                        }
+                        
+                        return (
+                          <button
+                            key={slot}
+                            type="button"
+                            onClick={() => isAvailable && setSelectedTime(slot)}
+                            disabled={!isAvailable}
+                            className={className}
+                            title={isBooked ? 'Zasedeno - rezervacija' : isBusy ? 'Zasedeno - koledar' : 'Na voljo'}
+                          >
+                            <span className="flex items-center justify-center gap-1">
+                              {isBooked && <span>🔒</span>}
+                              {isBusy && <span>📅</span>}
+                              {slot}
+                            </span>
+                          </button>
+                        );
+                      })}
                     </div>
                   ) : (
-                    <p className="text-gray-500 italic">{t('booking.noSlotsAvailable')}</p>
+                    <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                      <p className="text-yellow-700 flex items-center gap-2">
+                        <Clock size={18} />
+                        {t('booking.noSlotsAvailable')}
+                      </p>
+                    </div>
                   )}
                 </div>
               )}

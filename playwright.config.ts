@@ -27,11 +27,11 @@ export default defineConfig({
     ['junit', { outputFile: 'test-results/junit.xml' }]
   ],
   
-  // Global setup and teardown
-  globalSetup: './tests/e2e/global-setup.ts',
+  // Global setup and teardown (disabled - setup file needs refactoring)
+  // globalSetup: './tests/e2e/global-setup.ts',
   
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: process.env.BASE_URL || 'http://localhost:3000',
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -79,7 +79,7 @@ export default defineConfig({
   webServer: {
     command: 'npm run dev',
     url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: true,
     timeout: 120 * 1000,
   },
 
