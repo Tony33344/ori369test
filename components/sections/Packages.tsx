@@ -136,19 +136,9 @@ export default function Packages({ packages }: { packages: Package[] }) {
                 </div>
 
                 <div className="space-y-3">
-                  {pkg.price && serviceIds[pkg.id] && (
-                    <button
-                      onClick={() => handleBuyNow(pkg.id, pkg.name)}
-                      disabled={loadingStates[pkg.id]}
-                      className="flex items-center justify-center w-full py-3 bg-[#00B5AD] hover:bg-[#009891] text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <ShoppingCart size={18} className="mr-2" />
-                      {loadingStates[pkg.id] ? 'Preusmerjanje...' : t('packages.buyNow')}
-                    </button>
-                  )}
                   <Link
                     href={`/rezervacija?package=${pkg.id}`}
-                    className="block w-full py-3 bg-white border-2 border-[#00B5AD] text-[#00B5AD] hover:bg-[#00B5AD] hover:text-white font-semibold rounded-lg text-center transition-all duration-200"
+                    className="flex items-center justify-center w-full py-3 bg-[#00B5AD] hover:bg-[#009891] text-white font-semibold rounded-lg hover:shadow-lg transition-all duration-200"
                   >
                     {t('packages.bookPackage')}
                   </Link>

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
+import CartButton from '@/components/CartButton';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import { useLanguage } from '@/lib/i18n';
@@ -17,11 +18,11 @@ export default function Header() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user);
+    supabase.auth.getUser().then(({ data: { user: authUser } }: { data: { user: any } }) => {
+      setUser(authUser);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user ?? null);
     });
 
@@ -37,7 +38,10 @@ export default function Header() {
     { name: t('nav.about'), href: '/o-nas' },
     { name: t('nav.therapies'), href: '/terapije' },
     { name: t('nav.packages'), href: '/paketi' },
+    { name: 'MotioScan', href: '/motioscan' },
+    { name: 'Trgovina', href: '/trgovina' },
     { name: t('nav.booking'), href: '/rezervacija' },
+    { name: 'Mediji', href: '/mediji' },
     { name: t('nav.contact'), href: '/kontakt' },
   ];
 
@@ -74,6 +78,8 @@ export default function Header() {
                 {item.name}
               </Link>
             ))}
+            
+            <CartButton />
             
             {user ? (
               <div className="flex items-center space-x-4">

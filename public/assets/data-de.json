@@ -129,49 +129,122 @@
       "price": 30
     }
   ],
+  "pricing": {
+    "intro_session": {
+      "name": "Eingangsmessung + körperliche Analyse + persönliches Programm",
+      "price": 96,
+      "description": "6 am Ende - perfekte Übereinstimmung von Energieanalyse und Prozessöffnung"
+    },
+    "packages": [
+      {
+        "id": "paket-3",
+        "name": "Paket 3 Behandlungen",
+        "sessions": 3,
+        "total_price": 225,
+        "price_per_session": 75,
+        "vibration": 9,
+        "description": "2+2+5 = 9 → Vibration 9, beste für den Beginn",
+        "benefits": ["Tiefe Reinigung", "Energie-Harmonisierung", "Beginn des Transformationsprozesses"]
+      },
+      {
+        "id": "paket-6",
+        "name": "Paket 6 Behandlungen",
+        "sessions": 6,
+        "total_price": 444,
+        "price_per_session": 74,
+        "vibration": 3,
+        "description": "4+4+4 = 12 → 1+2 = 3 → Frequenz 3. Zahl 444 = Stabilität, Schutz, Unterstützung",
+        "benefits": ["Stabilität und Schutz", "Systemunterstützung", "Frequenz 3 für Balance"]
+      },
+      {
+        "id": "paket-9",
+        "name": "Paket 9 Behandlungen",
+        "sessions": 9,
+        "total_price": 585,
+        "price_per_session": 65,
+        "vibration": 9,
+        "description": "5+8+5 = 18 → 1+8 = 9 → reine Vibration 9. Transformativstes Paket",
+        "benefits": ["Reine Vibration 9", "Mächtigste Transformation", "Tiefe Energieerneuerung"]
+      }
+    ],
+    "explanation": {
+      "why_numbers_work": "Paket 3 → Endzahl 9, Preis pro Behandlung 75 (7+5=12 → 1+2=3). Paket 6 → 444 €, Vibration 3, übereinstimmend mit dem 6. Schritt des Prozesses. Paket 9 → 585 €, Vibration 9, mächtigste Transformationsenergie. Alle Pakete stimmen natürlich mit dem Namen ORI 369 überein.",
+      "why_ori369_works": "Bei ORI 369 kombinieren wir fortschrittliche Technologien, ganzheitliches Verständnis des Menschen und professionelle manuelle Techniken. Unser Ansatz übertrifft klassische Therapien erheblich und ermöglicht schnellere, tiefere und dauerhaftere Ergebnisse.",
+      "simple_comparison": "Der einfachste Vergleich: Schaufel oder Bagger? Mit einer Schaufel können wir ein Poolloch graben - langsam, mit viel Aufwand und begrenztem Effekt. Ein Bagger kann das gleiche Loch an einem Tag machen. Ähnlich bei Therapien: ohne Technologie ist der Fortschritt langsam, mit fortschrittlichen Geräten kann der Körper in einer Behandlung mehr erreichen als sonst in einer Woche. Deshalb verwendet ORI 369 Geräte, die einen echten Unterschied machen."
+    },
+    "technologies": {
+      "regeneration_and_biostimulation": [
+        "Tecar Therapie",
+        "Magnetische Induktion (MIS)",
+        "Elektrostimulation (EMS)",
+        "Lasertherapie",
+        "Ultraschall",
+        "Stoßwellentherapie"
+      ],
+      "spine_and_structure_support": [
+        "Wirbelsäulentraktion",
+        "Manuelle Therapie / Holos manuelle Behandlung",
+        "Akupunktur und Akudraining"
+      ],
+      "frequency_and_energy_harmonization": [
+        "Frequenztherapie",
+        "Skalarwellen",
+        "IteraCare",
+        "AO Scan (Biorezonanz-Analyse)"
+      ],
+      "neuroreset_relaxation_and_integration": [
+        "Licht- und Schalltherapie",
+        "Meditape",
+        "Somatik und korrektive Übungen",
+        "Geführte Atemtechniken",
+        "Eistherapien und Kälteexposition"
+      ]
+    },
+    "holistic_approach": {
+      "description": "Der therapeutische Prozess in unserer Klinik deckt nie nur Schmerzen oder Symptome ab. Wir schauen auf den größeren Kontext:",
+      "aspects": [
+        "wie sich die Person bewegt",
+        "was Haltung und Ausrichtung ist",
+        "wie sie atmet",
+        "was sie isst und trinkt",
+        "wie sie denkt",
+        "welche Beziehung sie zu sich selbst hat",
+        "welche Beziehung sie zu anderen hat",
+        "welche Beziehung sie zur Natur und Erde hat"
+      ],
+      "result": "Wenn sich alle diese Komponenten ausrichten, tritt der Körper in einen Zustand der Regeneration ein, der Geist erreicht Klarheit und Energie erreicht Balance. Deshalb erleben viele Menschen nach nur einer Behandlung bei uns größeren Fortschritt als anderswo nach mehreren aufeinanderfolgenden Therapien."
+    }
+  },
   "packages": [
     {
-      "id": "prebudi-telo",
-      "name": "Körper erwecken",
-      "description": "3x Elektrostimulation, 3x Tecar-Therapie, 3x Iteracare und Massage, 3x Manuelle - Storm-Therapie, 1x Abschlussbehandlung",
-      "benefits": ["Hormonelles Gleichgewicht", "Muskelaktivierung", "Verbesserung des Nervensystems", "Schmerzbeseitigung"],
-      "sessions": 13,
-      "regularPrice": 335,
-      "price": 196
+      "id": "paket-3",
+      "name": "Paket 3 Behandlungen",
+      "description": "Tiefe Reinigung und Energie-Harmonisierung mit Vibration 9",
+      "benefits": ["Tiefe Reinigung", "Energie-Harmonisierung", "Beginn des Transformationsprozesses"],
+      "sessions": 3,
+      "price": 225,
+      "regularPrice": null,
+      "price_per_session": 75
     },
     {
-      "id": "osvescanje-telesa",
-      "name": "Körperbewusstsein",
-      "description": "6x Elektrostimulation, 6x Iteracare und Massage, 6x Laser, 6x Tecar-Therapie, 6x Manuelle - Storm-Therapie, 1x Abschlussbehandlung",
-      "benefits": ["Energieerneuerung", "Psychische Stabilität", "Verbesserte Beweglichkeit", "Schmerzreduktion"],
-      "sessions": 31,
-      "regularPrice": 690,
-      "price": 396
+      "id": "paket-6",
+      "name": "Paket 6 Behandlungen",
+      "description": "Stabilität und Schutz mit Frequenz 3",
+      "benefits": ["Stabilität und Schutz", "Systemunterstützung", "Frequenz 3 für Balance"],
+      "sessions": 6,
+      "price": 444,
+      "regularPrice": null,
+      "price_per_session": 74
     },
     {
-      "id": "univerzum",
-      "name": "Universum",
-      "description": "9x Elektrostimulation, 9x Tecar-Therapie und Massage, 9x Traktionstisch, 9x Manuelle - Storm-Therapie, 9x MIS Magnetische Induktionsstimulation, 9x Skalarwellen - Chakrenausgleich, 3x AO Scan, 1x Moti-physio Scan",
-      "benefits": ["Tiefe Regeneration", "Optimierung der Körperfunktionen", "Langfristige Gesundheitsvorteile"],
-      "sessions": 58,
-      "regularPrice": 1835,
-      "price": 796
-    },
-    {
-      "id": "aktivacija",
-      "name": "Aktivierung",
-      "description": "MIS, geführte Atmung, Vibrationen, Skalarwellen, Eisbehandlungen. Fokus: zelluläre Aktivierung, hormonelle Optimierung, Verbesserung des Muskel-Skelett-Systems",
-      "benefits": ["Zelluläre Aktivierung", "Hormonelle Optimierung", "Verbesserung des Muskel-Skelett-Systems"],
-      "sessions": 0,
-      "price": null
-    },
-    {
-      "id": "ravnotezje",
-      "name": "Gleichgewicht",
-      "description": "Vibrationen, MIS, Iteracare, Trommel, Chakrenausgleich. Fokus: mentale und physische Stabilität, Entspannung des Nervensystems, hormonelles Gleichgewicht",
-      "benefits": ["Mentale und physische Stabilität", "Entspannung des Nervensystems", "Hormonelles Gleichgewicht", "Ganzheitliche Revitalisierung"],
-      "sessions": 0,
-      "price": null
+      "id": "paket-9",
+      "name": "Paket 9 Behandlungen",
+      "description": "Reine Vibration 9 - mächtigste Transformationsenergie",
+      "benefits": ["Reine Vibration 9", "Mächtigste Transformation", "Tiefe Energieerneuerung"],
+      "sessions": 9,
+      "price": 585,
+      "regularPrice": null,
+      "price_per_session": 65
     }
   ],
   "testimonials": [

@@ -129,49 +129,122 @@
       "price": 30
     }
   ],
+  "pricing": {
+    "intro_session": {
+      "name": "Uvodno mjerenje + fizička analiza + osobni program",
+      "price": 96,
+      "description": "6 na kraju - savršeno podudaranje energije analize i otvaranja procesa"
+    },
+    "packages": [
+      {
+        "id": "paket-3",
+        "name": "Paket 3 tretmana",
+        "sessions": 3,
+        "total_price": 225,
+        "price_per_session": 75,
+        "vibration": 9,
+        "description": "2+2+5 = 9 → vibracija 9, najbolja za početak",
+        "benefits": ["Duboko čišćenje", "Energijska harmonizacija", "Početak procesa transformacije"]
+      },
+      {
+        "id": "paket-6",
+        "name": "Paket 6 tretmana",
+        "sessions": 6,
+        "total_price": 444,
+        "price_per_session": 74,
+        "vibration": 3,
+        "description": "4+4+4 = 12 → 1+2 = 3 → frekvencija 3. Broj 444 = stabilnost, zaštita, podrška",
+        "benefits": ["Stabilnost i zaštita", "Podrška sustavu", "Frekvencija 3 za ravnotežu"]
+      },
+      {
+        "id": "paket-9",
+        "name": "Paket 9 tretmana",
+        "sessions": 9,
+        "total_price": 585,
+        "price_per_session": 65,
+        "vibration": 9,
+        "description": "5+8+5 = 18 → 1+8 = 9 → čista vibracija 9. Najtransformativniji paket",
+        "benefits": ["Čista vibracija 9", "Najmoćnija transformacija", "Duboka energetska obnova"]
+      }
+    ],
+    "explanation": {
+      "why_numbers_work": "Paket 3 → završni broj 9, cijena po tretmanu 75 (7+5=12 → 1+2=3). Paket 6 → 444 €, vibracija 3, u skladu s 6. korakom procesa. Paket 9 → 585 €, vibracija 9, najmoćnija transformacijska energija. Svi paketi se prirodno uklapaju s nazivom ORI 369.",
+      "why_ori369_works": "U ORI 369 kombiniramo napredne tehnologije, cjelovito razumijevanje čovjeka i stručne ručne tehnike. Način rada značajno nadmašuje klasične terapije jer omogućava brže, dublje i trajnije rezultate.",
+      "simple_comparison": "Najjednostavnija usporedba: Lopata ili bager? Lopatom možemo kopati rupu za bazen - sporo, s puno truda i ograničenim učinkom. Bager može napraviti istu rupu u jednom danu. Slično je s terapijama: bez tehnologije je napredak spor, s naprednim uređajima tijelo u jednom tretmanu može napraviti više nego inače u tjedan dana. Zato ORI 369 koristi opremu koja stvara stvarnu razliku."
+    },
+    "technologies": {
+      "regeneration_and_biostimulation": [
+        "Tecar terapija",
+        "Magnetska indukcija (MIS)",
+        "Elektrostimulacija (EMS)",
+        "Laserska terapija",
+        "Ultrazvuk",
+        "Udarna terapija"
+      ],
+      "spine_and_structure_support": [
+        "Trakcija kralježnice",
+        "Manualna terapija / Holos manualna obrada",
+        "Akupunktura i akudraining"
+      ],
+      "frequency_and_energy_harmonization": [
+        "Frekvencijska terapija",
+        "Skalarni valovi",
+        "IteraCare",
+        "AO Scan (bioresonancijska analiza)"
+      ],
+      "neuroreset_relaxation_and_integration": [
+        "Svjetlo i zvuk terapija",
+        "Meditape",
+        "Somatika i korektivne vježbe",
+        "Vođene dišne tehnike",
+        "Ledene terapije i hladna izloženost"
+      ]
+    },
+    "holistic_approach": {
+      "description": "Terapeutski proces u našoj klinici nikada ne pokriva samo bol ili simptome. Promatramo širi kontekst:",
+      "aspects": [
+        "kako se osoba kreće",
+        "kakav je stav i poravnanje",
+        "kako diše",
+        "što jede i pije",
+        "kako razmišlja",
+        "kakav odnos ima prema sebi",
+        "kakav odnos ima prema drugima",
+        "kakav odnos ima prema prirodi i zemlji"
+      ],
+      "result": "Kada se sve ove komponente usklade, tijelo ulazi u stanje regeneracije, um postiže jasnoću, a energija postiže ravnotežu. Zato mnogi ljudi kod nas osjećaju veći napredak nakon samo jednog tretmana nego drugdje nakon više uzastopnih terapija."
+    }
+  },
   "packages": [
     {
-      "id": "prebudi-telo",
-      "name": "Probudi tijelo",
-      "description": "3x Elektrostimulacija, 3x Tecar terapija, 3x Iteracare i masaža, 3x Manualna - Storm terapija, 1x Završna obrada",
-      "benefits": ["Hormonska ravnoteža", "Aktivacija mišića", "Poboljšanje živčanog sustava", "Uklanjanje bolova"],
-      "sessions": 13,
-      "regularPrice": 335,
-      "price": 196
+      "id": "paket-3",
+      "name": "Paket 3 tretmana",
+      "description": "Duboko čišćenje i energijska harmonizacija s vibracijom 9",
+      "benefits": ["Duboko čišćenje", "Energijska harmonizacija", "Početak procesa transformacije"],
+      "sessions": 3,
+      "price": 225,
+      "regularPrice": null,
+      "price_per_session": 75
     },
     {
-      "id": "osvescanje-telesa",
-      "name": "Osvještavanje tijela",
-      "description": "6x Elektrostimulacija, 6x Iteracare i masaža, 6x Laser, 6x Tecar terapija, 6x Manualna - Storm terapija, 1x Završna obrada",
-      "benefits": ["Energetska obnova", "Psihološka stabilnost", "Poboljšana pokretljivost", "Smanjenje bolova"],
-      "sessions": 31,
-      "regularPrice": 690,
-      "price": 396
+      "id": "paket-6",
+      "name": "Paket 6 tretmana",
+      "description": "Stabilnost i zaštita s frekvencijom 3",
+      "benefits": ["Stabilnost i zaštita", "Podrška sustavu", "Frekvencija 3 za ravnotežu"],
+      "sessions": 6,
+      "price": 444,
+      "regularPrice": null,
+      "price_per_session": 74
     },
     {
-      "id": "univerzum",
-      "name": "Univerzum",
-      "description": "9x Elektrostimulacija, 9x Tecar terapija i masaža, 9x Trakcijski stol, 9x Manualna - Storm terapija, 9x MIS Magnetna indukcijska stimulacija, 9x Skalarni valovi - uravnotežavanje čakri, 3x AO Scan, 1x Moti-physio Scan",
-      "benefits": ["Duboka regeneracija", "Optimizacija tjelesnih funkcija", "Dugoročne zdravstvene koristi"],
-      "sessions": 58,
-      "regularPrice": 1835,
-      "price": 796
-    },
-    {
-      "id": "aktivacija",
-      "name": "Aktivacija",
-      "description": "MIS, vođeno disanje, vibracije, skalarni valovi, ledeni tretmani. Fokus: stanična aktivacija, hormonska optimizacija, poboljšanje mišićno-koštanog sustava",
-      "benefits": ["Stanična aktivacija", "Hormonska optimizacija", "Poboljšanje mišićno-koštanog sustava"],
-      "sessions": 0,
-      "price": null
-    },
-    {
-      "id": "ravnotezje",
-      "name": "Ravnoteža",
-      "description": "Vibracije, MIS, iteracare, bubanj, uravnotežavanje čakri. Fokus: mentalna i fizička stabilnost, opuštanje živčanog sustava, hormonska ravnoteža",
-      "benefits": ["Mentalna i fizička stabilnost", "Opuštanje živčanog sustava", "Hormonska ravnoteža", "Cjelovita revitalizacija"],
-      "sessions": 0,
-      "price": null
+      "id": "paket-9",
+      "name": "Paket 9 tretmana",
+      "description": "Čista vibracija 9 - najmoćnija transformacijska energija",
+      "benefits": ["Čista vibracija 9", "Najmoćnija transformacija", "Duboka energetska obnova"],
+      "sessions": 9,
+      "price": 585,
+      "regularPrice": null,
+      "price_per_session": 65
     }
   ],
   "testimonials": [

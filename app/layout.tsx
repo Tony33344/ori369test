@@ -5,6 +5,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Toaster } from "react-hot-toast";
 import { LanguageProvider } from "@/lib/i18n";
+import { CartProvider } from "@/components/CartProvider";
+import CartDrawer from "@/components/CartDrawer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,10 +28,13 @@ export default function RootLayout({
     <html lang="sl">
       <body className={`${inter.variable} font-sans antialiased`}>
         <LanguageProvider>
-          <Toaster position="top-right" />
-          <Header />
-          <main className="pt-16">{children}</main>
-          <Footer />
+          <CartProvider>
+            <Toaster position="top-right" />
+            <Header />
+            <CartDrawer />
+            <main className="pt-16">{children}</main>
+            <Footer />
+          </CartProvider>
         </LanguageProvider>
       </body>
     </html>

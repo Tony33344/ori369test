@@ -1,8 +1,9 @@
 'use client';
 
-import { Mail, Phone, MapPin, Clock, Facebook, Instagram } from 'lucide-react';
+import { Mail, Phone, MapPin, Clock, Facebook, Instagram, Building2 } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n';
 import { getDataForLanguage } from '@/lib/data-loader';
+import { companyData, formatIBAN } from '@/lib/companyData';
 
 export default function ContactPage() {
   const { t, translations, language } = useLanguage();
@@ -99,7 +100,7 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('contact.location')}</h2>
               <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2756.0!2d15.6458!3d46.5547!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDbCsDMzJzE2LjkiTiAxNcKwMzgnNDQuOSJF!5e0!3m2!1sen!2ssi!4v1234567890"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2743.8!2d15.6478896!3d46.5598601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x476f770077b610ad%3A0x56dd118d4f3d3dca!2sOri%20369!5e0!3m2!1ssl!2ssi!4v1702500000000!5m2!1ssl!2ssi"
                   width="100%"
                   height="100%"
                   style={{ border: 0 }}
@@ -110,13 +111,28 @@ export default function ContactPage() {
               </div>
               <div className="mt-6">
                 <a
-                  href="https://www.google.com/maps/place/ORI+369+Only+right+information+therapy+center/@46.5598601,15.647895,793m/data=!3m2!1e3!4b1!4m6!3m5!1s0x476f770077b610ad:0x56dd118d4f3d3dca!8m2!3d46.5598564!4d15.6504699!16s%2Fg%2F11x3988330?entry=ttu&g_ep=EgoyMDI1MTAwOC4wIKXMDSoASAFQAw%3D%3D"
+                  href={companyData.googleMaps.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block w-full py-3 bg-blue-600 text-white text-center font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+                  className="inline-block w-full py-3 bg-[#00B5AD] text-white text-center font-semibold rounded-lg hover:bg-[#009891] transition-colors"
                 >
                   {t('contact.openInMaps')}
                 </a>
+              </div>
+
+              {/* Company & Bank Details */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <Building2 size={20} className="text-[#00B5AD]" />
+                  Podatki o podjetju
+                </h3>
+                <div className="space-y-2 text-sm text-gray-600">
+                  <p><strong>Podjetje:</strong> {companyData.legalName}</p>
+                  <p><strong>Davčna št.:</strong> {companyData.taxNumber}</p>
+                  <p><strong>Matična št.:</strong> {companyData.registrationNumber}</p>
+                  <p><strong>IBAN:</strong> <span className="font-mono">{formatIBAN(companyData.bank.iban)}</span></p>
+                  <p><strong>Banka:</strong> {companyData.bank.name}</p>
+                </div>
               </div>
             </div>
           </div>

@@ -165,7 +165,7 @@ export default async function TherapyDetailPage({ params }: { params: Promise<{ 
                   />
                 )}
                 <Link
-                  href="/rezervacija"
+                  href={`/rezervacija?service=${service.id}`}
                   className="inline-flex items-center justify-center px-8 py-4 bg-white text-[#00B5AD] font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
                 >
                   <Calendar size={20} className="mr-2" />

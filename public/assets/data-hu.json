@@ -1,4 +1,4 @@
-{
+ {
   "site": {
     "name": "ORI 369",
     "tagline": "Az Ön hídja a tudomány és az energia között",
@@ -129,49 +129,122 @@
       "price": 30
     }
   ],
+  "pricing": {
+    "intro_session": {
+      "name": "Kezdő mérés + fizikai elemzés + személyes program",
+      "price": 96,
+      "description": "6 a végén - tökéletes egyezés az energiaelemzés és a folyamat megnyitása között"
+    },
+    "packages": [
+      {
+        "id": "paket-3",
+        "name": "Csomag 3 kezelés",
+        "sessions": 3,
+        "total_price": 225,
+        "price_per_session": 75,
+        "vibration": 9,
+        "description": "2+2+5 = 9 → 9-es vibráció, legjobb kezdéshez",
+        "benefits": ["Mély tisztítás", "Energiaharmonizálás", "A transzformációs folyamat kezdete"]
+      },
+      {
+        "id": "paket-6",
+        "name": "Csomag 6 kezelés",
+        "sessions": 6,
+        "total_price": 444,
+        "price_per_session": 74,
+        "vibration": 3,
+        "description": "4+4+4 = 12 → 1+2 = 3 → 3-as frekvencia. A 444 szám = stabilitás, védelem, támogatás",
+        "benefits": ["Stabilitás és védelem", "Rendszer támogatás", "3-as frekvencia az egyensúlyhoz"]
+      },
+      {
+        "id": "paket-9",
+        "name": "Csomag 9 kezelés",
+        "sessions": 9,
+        "total_price": 585,
+        "price_per_session": 65,
+        "vibration": 9,
+        "description": "5+8+5 = 18 → 1+8 = 9 → tiszta 9-es vibráció. Legátalakítóbb csomag",
+        "benefits": ["Tiszta 9-es vibráció", "Leghatalmasabb transzformáció", "Mély energetikai megújulás"]
+      }
+    ],
+    "explanation": {
+      "why_numbers_work": "3-as csomag → végső szám 9, ár kezelésenként 75 (7+5=12 → 1+2=3). 6-os csomag → 444 €, 3-as vibráció, összhangban a folyamat 6. lépésével. 9-es csomag → 585 €, 9-es vibráció, legerőteljesebb transzformációs energia. Minden csomag természetesen illeszkedik az ORI 369 névhez.",
+      "why_ori369_works": "Az ORI 369-ben fejlett technológiákat, az ember holisztikus megértését és szakmai manuális technikákat kombinálunk. Munkamódszerünk jelentősen felülmúlja a klasszikus terápiákat, mivel gyorsabb, mélyebb és tartósabb eredményeket tesz lehetővé.",
+      "simple_comparison": "A legegyszerűbb összehasonlítás: Lapát vagy kotró? Lapáttalásszehehetünk egy medencet lyukat - lassan, sok erőfeszítéssel és korlátozott hatással. Egy kotró ugyanezt a lyukat egy nap alatt elkészítheti. Hasonlóan a terápiákkal: technológia nélkül a haladás lassú, fejlett eszközökkel a test egy kezelésben többet képes elvégezni, mint egyébként egy hét alatt. Ezért az ORI 369 olyan berendezéseket használ, amelyek valódi különbséget teremtenek."
+    },
+    "technologies": {
+      "regeneration_and_biostimulation": [
+        "Tecar terápia",
+        "Mágneses indukció (MIS)",
+        "Elektrostimuláció (EMS)",
+        "Lézerterápia",
+        "Ultrahang",
+        "Ütőhullám terápia"
+      ],
+      "spine_and_structure_support": [
+        "Gerinc trakció",
+        "Manuális terápia / Holos manuális kezelés",
+        "Akupunktúra és akudraining"
+      ],
+      "frequency_and_energy_harmonization": [
+        "Frekvencia terápia",
+        "Skaláris hullámok",
+        "IteraCare",
+        "AO Scan (biorezonancia elemzés)"
+      ],
+      "neuroreset_relaxation_and_integration": [
+        "Fény és hang terápia",
+        "Meditape",
+        "Szomatika és korrektív gyakorlatok",
+        "Irányított légzéstechnikák",
+        "Jégterápiák és hidegexpozíció"
+      ]
+    },
+    "holistic_approach": {
+      "description": "A terápiás folyamat klinikánkon sosem fed csak fájdalom vagy tüneteket. Szélesebb kontextusban tekintünk:",
+      "aspects": [
+        "hogyan mozog a személy",
+        "milyen a testtartás és az igazítás",
+        "hogyan lélegzik",
+        "mit eszik és iszik",
+        "hogyan gondolkodik",
+        "milyen kapcsolata van önmagával",
+        "milyen kapcsolata van másokkal",
+        "milyen kapcsolata van a természettel és a földdel"
+      ],
+      "result": "Ha ezek az összetevők összehangolódnak, a test regenerációs állapotba lép, az elme tisztaságot ér el, az energia pedig egyensúlyba kerül. Ezért sok ember nálunk nagyobb haladást érez már egyetlen kezelés után, mint máshol több egymást követő terápia után."
+    }
+  },
   "packages": [
     {
-      "id": "prebudi-telo",
-      "name": "Test ébresztése",
-      "description": "3x Elektrostimuláció, 3x Tecar terápia, 3x Iteracare és masszázs, 3x Manuális - Storm terápia, 1x Záró kezelés",
-      "benefits": ["Hormonális egyensúly", "Izomaktiváció", "Idegrendszer javítása", "Fájdalomcsillapítás"],
-      "sessions": 13,
-      "regularPrice": 335,
-      "price": 196
+      "id": "paket-3",
+      "name": "Csomag 3 kezelés",
+      "description": "Mély tisztítás és energiaharmonizálás 9-es vibrációval",
+      "benefits": ["Mély tisztítás", "Energiaharmonizálás", "A transzformációs folyamat kezdete"],
+      "sessions": 3,
+      "price": 225,
+      "regularPrice": null,
+      "price_per_session": 75
     },
     {
-      "id": "osvescanje-telesa",
-      "name": "Test tudatosítása",
-      "description": "6x Elektrostimuláció, 6x Iteracare és masszázs, 6x Lézer, 6x Tecar terápia, 6x Manuális - Storm terápia, 1x Záró kezelés",
-      "benefits": ["Energetikai megújulás", "Pszichológiai stabilitás", "Javított mozgékonyság", "Fájdalomcsökkentés"],
-      "sessions": 31,
-      "regularPrice": 690,
-      "price": 396
+      "id": "paket-6",
+      "name": "Csomag 6 kezelés",
+      "description": "Stabilitás és védelem 3-as frekvenciával",
+      "benefits": ["Stabilitás és védelem", "Rendszer támogatás", "3-as frekvencia az egyensúlyhoz"],
+      "sessions": 6,
+      "price": 444,
+      "regularPrice": null,
+      "price_per_session": 74
     },
     {
-      "id": "univerzum",
-      "name": "Univerzum",
-      "description": "9x Elektrostimuláció, 9x Tecar terápia és masszázs, 9x Trakciós asztal, 9x Manuális - Storm terápia, 9x MIS Mágneses indukciós stimuláció, 9x Skaláris hullámok - csakra kiegyensúlyozás, 3x AO Scan, 1x Moti-physio Scan",
-      "benefits": ["Mély regeneráció", "Testfunkciók optimalizálása", "Hosszú távú egészségügyi előnyök"],
-      "sessions": 58,
-      "regularPrice": 1835,
-      "price": 796
-    },
-    {
-      "id": "aktivacija",
-      "name": "Aktiválás",
-      "description": "MIS, irányított légzés, vibrációk, skaláris hullámok, jégkezelések. Fókusz: sejtes aktiválás, hormonális optimalizálás, izom-csontrendszer javítása",
-      "benefits": ["Sejtes aktiválás", "Hormonális optimalizálás", "Izom-csontrendszer javítása"],
-      "sessions": 0,
-      "price": null
-    },
-    {
-      "id": "ravnotezje",
-      "name": "Egyensúly",
-      "description": "Vibrációk, MIS, iteracare, dob, csakra kiegyensúlyozás. Fókusz: mentális és fizikai stabilitás, idegrendszer relaxációja, hormonális egyensúly",
-      "benefits": ["Mentális és fizikai stabilitás", "Idegrendszer relaxációja", "Hormonális egyensúly", "Holisztikus revitalizáció"],
-      "sessions": 0,
-      "price": null
+      "id": "paket-9",
+      "name": "Csomag 9 kezelés",
+      "description": "Tiszta 9-es vibráció - legerőteljesebb transzformációs energia",
+      "benefits": ["Tiszta 9-es vibráció", "Leghatalmasabb transzformáció", "Mély energetikai megújulás"],
+      "sessions": 9,
+      "price": 585,
+      "regularPrice": null,
+      "price_per_session": 65
     }
   ],
   "testimonials": [

@@ -36,10 +36,19 @@ function SectionRenderer({ section, blocks, lang }: any) {
     case 'richText':
       return (
         <div className="container mx-auto px-4 py-12">
-          <div className="prose prose-lg max-w-none">
-            {(bySection || []).map((b: any) => (
-              <div key={b.id} dangerouslySetInnerHTML={{ __html: tFor(b).html || tFor(b).text || '' }} />
-            ))}
+          <div className="max-w-4xl mx-auto text-base leading-relaxed space-y-4">
+            {(bySection || []).map((b: any) => {
+              const content = tFor(b);
+              const htmlContent = content.html || content.text || '';
+              
+              return (
+                <div 
+                  key={b.id} 
+                  className="cms-content"
+                  dangerouslySetInnerHTML={{ __html: htmlContent }} 
+                />
+              );
+            })}
           </div>
         </div>
       );
@@ -58,16 +67,25 @@ export default function CmsPage({ params }: { params: { slug: string } }) {
   const { language } = useLanguage();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const slug = params.slug;
 
   useEffect(() => {
-    fetch(`/api/cms/pages?slug=${params.slug}`)
+    fetch(`/api/cms/pages?slug=${slug}`)
       .then(r => r.json())
       .then(d => {
+        console.log('CMS Page loaded:', { slug, hasSections: !!d.sections, sectionCount: d.sections?.length, hasBlocks: !!d.blocks });
+        if (d.blocks?.[0]?.block_translations?.[0]?.content?.html) {
+          const html = d.blocks[0].block_translations[0].content.html;
+          console.log('HTML content length:', html.length, 'has figures:', html.includes('<figure'));
+        }
         setData(d);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
-  }, [params.slug]);
+      .catch(err => {
+        console.error('Error loading page:', err);
+        setLoading(false);
+      });
+  }, [slug]);
 
   if (loading) {
     return (
@@ -77,7 +95,7 @@ export default function CmsPage({ params }: { params: { slug: string } }) {
     );
   }
 
-  if (!data || !data.page) {
+  if (data === null || data.page === undefined) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">

@@ -11,8 +11,25 @@ interface BlockEditorProps {
   onClose: () => void;
 }
 
+function buildInitialBlock(block: any) {
+  const translations: Record<string, any> = {};
+
+  (block.block_translations || []).forEach((tr: any) => {
+    if (!tr?.lang) return;
+    translations[tr.lang] = tr.content || {};
+  });
+
+  return {
+    ...block,
+    translations: {
+      ...(block.translations || {}),
+      ...translations,
+    },
+  };
+}
+
 export default function BlockEditor({ block, languages, onSave, onClose }: BlockEditorProps) {
-  const [editingBlock, setEditingBlock] = useState(block);
+  const [editingBlock, setEditingBlock] = useState(buildInitialBlock(block));
   const [activeLanguage, setActiveLanguage] = useState('sl');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -51,7 +68,7 @@ export default function BlockEditor({ block, languages, onSave, onClose }: Block
         ...editingBlock,
         content: {
           ...editingBlock.content,
-          image: url
+          imageUrl: url
         }
       });
       toast.success('Image uploaded');
@@ -62,7 +79,7 @@ export default function BlockEditor({ block, languages, onSave, onClose }: Block
     }
   };
 
-  const updateTranslation = (field: string, value: string) => {
+  const updateTranslation = (field: string, value: any) => {
     setEditingBlock({
       ...editingBlock,
       translations: {
@@ -79,6 +96,39 @@ export default function BlockEditor({ block, languages, onSave, onClose }: Block
     const translation = editingBlock.translations?.[activeLanguage] || {};
 
     switch (editingBlock.type) {
+      case 'hero':
+        return (
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Title</label>
+              <input
+                type="text"
+                value={translation.title || ''}
+                onChange={(e) => updateTranslation('title', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Subtitle</label>
+              <textarea
+                value={translation.subtitle || ''}
+                onChange={(e) => updateTranslation('subtitle', e.target.value)}
+                rows={3}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Button label</label>
+              <input
+                type="text"
+                value={translation.buttonLabel || ''}
+                onChange={(e) => updateTranslation('buttonLabel', e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+        );
+
       case 'text':
         return (
           <div className="space-y-4">
@@ -94,8 +144,8 @@ export default function BlockEditor({ block, languages, onSave, onClose }: Block
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Content</label>
               <textarea
-                value={translation.content || ''}
-                onChange={(e) => updateTranslation('content', e.target.value)}
+                value={translation.html || translation.text || ''}
+                onChange={(e) => updateTranslation('html', e.target.value)}
                 rows={6}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -109,9 +159,9 @@ export default function BlockEditor({ block, languages, onSave, onClose }: Block
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Image</label>
               <div className="flex items-center space-x-4">
-                {editingBlock.content?.image && (
+                {editingBlock.content?.imageUrl && (
                   <img
-                    src={editingBlock.content.image}
+                    src={editingBlock.content.imageUrl}
                     alt="Preview"
                     className="w-32 h-32 object-cover rounded-lg"
                   />
@@ -172,42 +222,79 @@ export default function BlockEditor({ block, languages, onSave, onClose }: Block
         );
 
       case 'testimonial':
+        const items = (translation.items as any[]) || [];
+        const updateItem = (index: number, field: string, value: any) => {
+          const next = items.slice();
+          next[index] = { ...next[index], [field]: value };
+          updateTranslation('items', next);
+        };
+        const addItem = () => {
+          updateTranslation('items', [...items, { quote: '', author: '', rating: 5 }]);
+        };
+        const removeItem = (index: number) => {
+          const next = items.slice();
+          next.splice(index, 1);
+          updateTranslation('items', next);
+        };
+
         return (
           <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Quote</label>
-              <textarea
-                value={translation.quote || ''}
-                onChange={(e) => updateTranslation('quote', e.target.value)}
-                rows={4}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Author</label>
-              <input
-                type="text"
-                value={translation.author || ''}
-                onChange={(e) => updateTranslation('author', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Rating (1-5)</label>
-              <input
-                type="number"
-                min="1"
-                max="5"
-                value={editingBlock.content?.rating || 5}
-                onChange={(e) =>
-                  setEditingBlock({
-                    ...editingBlock,
-                    content: { ...editingBlock.content, rating: parseInt(e.target.value) }
-                  })
-                }
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+            {items.length === 0 && (
+              <p className="text-sm text-gray-500">No testimonials yet. Add one below.</p>
+            )}
+            {items.map((item, index) => (
+              <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-semibold text-gray-700">Testimonial #{index + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeItem(index)}
+                    className="p-1 text-red-500 hover:bg-red-50 rounded"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-1">Quote</label>
+                  <textarea
+                    value={item.quote || ''}
+                    onChange={(e) => updateItem(index, 'quote', e.target.value)}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Author</label>
+                    <input
+                      type="text"
+                      value={item.author || ''}
+                      onChange={(e) => updateItem(index, 'author', e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Rating (1-5)</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={5}
+                      value={item.rating ?? 5}
+                      onChange={(e) => updateItem(index, 'rating', parseInt(e.target.value, 10) || 5)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button
+              type="button"
+              onClick={addItem}
+              className="inline-flex items-center space-x-2 px-4 py-2 border border-dashed border-blue-400 text-blue-600 rounded-lg hover:bg-blue-50 text-sm"
+            >
+              <Plus size={16} />
+              <span>Add testimonial</span>
+            </button>
           </div>
         );
 

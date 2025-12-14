@@ -15,6 +15,16 @@ const AnalyticsDashboard = dynamic(() => import('@/components/AnalyticsDashboard
   loading: () => <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
 });
 
+const ProductsManager = dynamic(() => import('@/components/admin/ProductsManager'), {
+  ssr: false,
+  loading: () => <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
+});
+
+const CMSManager = dynamic(() => import('@/components/admin/CMSManagerWithImages'), {
+  ssr: false,
+  loading: () => <div className="flex items-center justify-center h-64"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div></div>
+});
+
 interface Booking {
   id: string;
   date: string;
@@ -76,7 +86,7 @@ export default function AdminPage() {
   const { t } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<'bookings' | 'services' | 'analytics' | 'content' | 'orders'>('bookings');
+  const [activeTab, setActiveTab] = useState<'bookings' | 'services' | 'analytics' | 'content' | 'orders' | 'products' | 'cms'>('bookings');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [filter, setFilter] = useState<string>('all');
@@ -455,6 +465,28 @@ export default function AdminPage() {
             >
               <DollarSign size={20} />
               <span>Orders</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('products')}
+              className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
+                activeTab === 'products'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Package size={20} />
+              <span>Products</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('cms')}
+              className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
+                activeTab === 'cms'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <FileText size={20} />
+              <span>CMS</span>
             </button>
           </div>
         </div>
@@ -846,6 +878,18 @@ export default function AdminPage() {
               )}
             </div>
           </>
+        )}
+
+        {activeTab === 'products' && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <ProductsManager />
+          </div>
+        )}
+
+        {activeTab === 'cms' && (
+          <div className="bg-white rounded-lg shadow p-6">
+            <CMSManager />
+          </div>
         )}
 
         {/* Service Modal */}

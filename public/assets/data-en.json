@@ -129,49 +129,122 @@
       "price": 30
     }
   ],
+  "pricing": {
+    "intro_session": {
+      "name": "Initial Measurement + Physical Analysis + Personal Program",
+      "price": 96,
+      "description": "6 at the end - perfect match of energy analysis and process opening"
+    },
+    "packages": [
+      {
+        "id": "paket-3",
+        "name": "Package 3 treatments",
+        "sessions": 3,
+        "total_price": 225,
+        "price_per_session": 75,
+        "vibration": 9,
+        "description": "2+2+5 = 9 → vibration 9, best for beginning",
+        "benefits": ["Deep cleansing", "Energy harmonization", "Start of transformation process"]
+      },
+      {
+        "id": "paket-6",
+        "name": "Package 6 treatments",
+        "sessions": 6,
+        "total_price": 444,
+        "price_per_session": 74,
+        "vibration": 3,
+        "description": "4+4+4 = 12 → 1+2 = 3 → frequency 3. Number 444 = stability, protection, support",
+        "benefits": ["Stability and protection", "System support", "Frequency 3 for balance"]
+      },
+      {
+        "id": "paket-9",
+        "name": "Package 9 treatments",
+        "sessions": 9,
+        "total_price": 585,
+        "price_per_session": 65,
+        "vibration": 9,
+        "description": "5+8+5 = 18 → 1+8 = 9 → pure vibration 9. Most transformative package",
+        "benefits": ["Pure vibration 9", "Most powerful transformation", "Deep energy renewal"]
+      }
+    ],
+    "explanation": {
+      "why_numbers_work": "Package 3 → final number 9, price per treatment 75 (7+5=12 → 1+2=3). Package 6 → 444 €, vibration 3, aligned with the 6th step of the process. Package 9 → 585 €, vibration 9, most powerful transformational energy. All packages naturally align with the name ORI 369.",
+      "why_ori369_works": "At ORI 369, we combine advanced technologies, holistic understanding of humans, and professional manual techniques. Our approach significantly exceeds classic therapies, allowing faster, deeper, and more lasting results.",
+      "simple_comparison": "The simplest comparison: Shovel or excavator? With a shovel, we can dig a pool hole - slowly, with a lot of effort and limited effect. An excavator can make the same hole in one day. Similarly with therapies: without technology, progress is slow, with advanced devices the body can do more in one treatment than otherwise in a week. That's why ORI 369 uses equipment that makes a real difference."
+    },
+    "technologies": {
+      "regeneration_and_biostimulation": [
+        "Tecar Therapy",
+        "Magnetic Induction (MIS)",
+        "Electrical Stimulation (EMS)",
+        "Laser Therapy",
+        "Ultrasound",
+        "Shockwave Therapy"
+      ],
+      "spine_and_structure_support": [
+        "Spinal Traction",
+        "Manual Therapy / Holos manual treatment",
+        "Acupuncture and Acudraining"
+      ],
+      "frequency_and_energy_harmonization": [
+        "Frequency therapy",
+        "Scalar waves",
+        "IteraCare",
+        "AO Scan (bioresonance analysis)"
+      ],
+      "neuroreset_relaxation_and_integration": [
+        "Light & Sound Therapy",
+        "Meditape",
+        "Somatics and corrective exercises",
+        "Guided breathing techniques",
+        "Ice therapies and cold exposure"
+      ]
+    },
+    "holistic_approach": {
+      "description": "The therapeutic process at our clinic never covers only pain or symptoms. We look at the broader context:",
+      "aspects": [
+        "how the person moves",
+        "what is posture and alignment",
+        "how they breathe",
+        "what they eat and drink",
+        "how they think",
+        "what relationship they have with themselves",
+        "what relationship they have with others",
+        "what relationship they have with nature and earth"
+      ],
+      "result": "When all these components align, the body enters a state of regeneration, the mind achieves clarity, and energy reaches balance. Therefore, many people experience greater progress after just one treatment at our clinic than elsewhere after multiple consecutive therapies."
+    }
+  },
   "packages": [
     {
-      "id": "prebudi-telo",
-      "name": "Awaken the Body",
-      "description": "3x Electrostimulation, 3x Tecar therapy, 3x Iteracare and massage, 3x Manual - Storm therapy, 1x Final treatment",
-      "benefits": ["Hormonal balance", "Muscle activation", "Nervous system improvement", "Pain elimination"],
-      "sessions": 13,
-      "regularPrice": 335,
-      "price": 196
+      "id": "paket-3",
+      "name": "Package 3 treatments",
+      "description": "Deep cleansing and energy harmonization with vibration 9",
+      "benefits": ["Deep cleansing", "Energy harmonization", "Start of transformation process"],
+      "sessions": 3,
+      "price": 225,
+      "regularPrice": null,
+      "price_per_session": 75
     },
     {
-      "id": "osvescanje-telesa",
-      "name": "Body Awareness",
-      "description": "6x Electrostimulation, 6x Iteracare and massage, 6x Laser, 6x Tecar therapy, 6x Manual - Storm therapy, 1x Final treatment",
-      "benefits": ["Energy renewal", "Psychological stability", "Improved mobility", "Pain reduction"],
-      "sessions": 31,
-      "regularPrice": 690,
-      "price": 396
+      "id": "paket-6",
+      "name": "Package 6 treatments",
+      "description": "Stability and protection with frequency 3",
+      "benefits": ["Stability and protection", "System support", "Frequency 3 for balance"],
+      "sessions": 6,
+      "price": 444,
+      "regularPrice": null,
+      "price_per_session": 74
     },
     {
-      "id": "univerzum",
-      "name": "Universe",
-      "description": "9x Electrostimulation, 9x Tecar therapy and massage, 9x Traction table, 9x Manual - Storm therapy, 9x MIS Magnetic induction stimulation, 9x Scalar waves - chakra balancing, 3x AO Scan, 1x Moti-physio Scan",
-      "benefits": ["Deep regeneration", "Body function optimization", "Long-term health benefits"],
-      "sessions": 58,
-      "regularPrice": 1835,
-      "price": 796
-    },
-    {
-      "id": "aktivacija",
-      "name": "Activation",
-      "description": "MIS, guided breathing, vibrations, scalar waves, ice treatments. Focus: cellular activation, hormonal optimization, musculoskeletal system improvement",
-      "benefits": ["Cellular activation", "Hormonal optimization", "Musculoskeletal system improvement"],
-      "sessions": 0,
-      "price": null
-    },
-    {
-      "id": "ravnotezje",
-      "name": "Balance",
-      "description": "Vibrations, MIS, iteracare, drum, chakra balancing. Focus: mental and physical stability, nervous system relaxation, hormonal balance",
-      "benefits": ["Mental and physical stability", "Nervous system relaxation", "Hormonal balance", "Holistic revitalization"],
-      "sessions": 0,
-      "price": null
+      "id": "paket-9",
+      "name": "Package 9 treatments",
+      "description": "Pure vibration 9 - most powerful transformational energy",
+      "benefits": ["Pure vibration 9", "Most powerful transformation", "Deep energy renewal"],
+      "sessions": 9,
+      "price": 585,
+      "regularPrice": null,
+      "price_per_session": 65
     }
   ],
   "testimonials": [

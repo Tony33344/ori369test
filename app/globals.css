@@ -65,3 +65,42 @@
     animation-delay: 4s;
   }
 }
+
+/* CMS Content Styling */
+.cms-content h1, .cms-content h2, .cms-content h3, .cms-content h4, .cms-content h5, .cms-content h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.cms-content h1 { font-size: 2rem; }
+.cms-content h2 { font-size: 1.5rem; }
+.cms-content h3 { font-size: 1.25rem; }
+.cms-content p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+.cms-content ul, .cms-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+.cms-content li {
+  margin-bottom: 0.5rem;
+}
+.cms-content figure {
+  margin: 2rem auto !important;
+  text-align: center;
+  display: block !important;
+}
+.cms-content figure img {
+  max-width: 100% !important;
+  height: auto !important;
+  border-radius: 0.5rem;
+  margin: 0 auto !important;
+  display: block !important;
+}
+.cms-content figcaption {
+  font-size: 0.875rem;
+  color: #666;
+  margin-top: 0.5rem;
+  text-align: center;
+}

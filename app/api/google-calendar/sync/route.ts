@@ -1,77 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { google } from 'googleapis';
+import { createCalendarEvent } from '@/lib/googleCalendar';
 
 export const runtime = 'nodejs';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { bookingId, date, time, serviceName, duration, clientName, clientEmail } = body;
+    const { bookingId, date, time, serviceName, duration, clientName, clientEmail, clientPhone, notes } = body;
 
-    // Initialize OAuth2 client
-    const oauth2Client = new google.auth.OAuth2(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
-      process.env.GOOGLE_REDIRECT_URI
-    );
-
-    const refreshToken = process.env.GOOGLE_REFRESH_TOKEN;
-    if (!refreshToken) {
-      return NextResponse.json({ error: 'Missing GOOGLE_REFRESH_TOKEN' }, { status: 500 });
+    // Validate required fields
+    if (!bookingId || !date || !time || !serviceName || !duration || !clientName || !clientEmail) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
     }
-    oauth2Client.setCredentials({ refresh_token: refreshToken });
 
-    const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
-
-    // Parse date and time
-    const [hours, minutes] = time.split(':');
-    const startDateTime = new Date(date);
-    startDateTime.setHours(parseInt(hours), parseInt(minutes), 0);
-    
-    const endDateTime = new Date(startDateTime);
-    endDateTime.setMinutes(endDateTime.getMinutes() + duration);
-
-    // Create calendar event
-    const event = {
-      summary: `ORI 369 - ${serviceName}`,
-      description: `Klient: ${clientName}\\nEmail: ${clientEmail}\\nID rezervacije: ${bookingId}`,
-      start: {
-        dateTime: startDateTime.toISOString(),
-        timeZone: 'Europe/Ljubljana',
-      },
-      end: {
-        dateTime: endDateTime.toISOString(),
-        timeZone: 'Europe/Ljubljana',
-      },
-      attendees: [
-        { email: clientEmail },
-      ],
-      reminders: {
-        useDefault: false,
-        overrides: [
-          { method: 'email', minutes: 24 * 60 },
-          { method: 'popup', minutes: 60 },
-        ],
-      },
-    };
-
-    // Insert event into calendar
-    const response = await calendar.events.insert({
-      calendarId: 'primary',
-      requestBody: event,
-      sendUpdates: 'all', // Send email notifications to attendees
+    // Create calendar event using service account
+    const result = await createCalendarEvent({
+      bookingId,
+      date,
+      time,
+      serviceName,
+      duration,
+      clientName,
+      clientEmail,
+      clientPhone,
+      notes,
     });
 
     return NextResponse.json({
       success: true,
-      eventId: response.data.id,
-      eventLink: response.data.htmlLink
+      eventId: result.eventId,
+      eventLink: result.eventLink
     });
 
   } catch (error) {
     console.error('Google Calendar sync error:', error);
     return NextResponse.json(
-      { error: 'Failed to sync with Google Calendar' },
+      { error: 'Failed to sync with Google Calendar', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

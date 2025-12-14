@@ -284,6 +284,97 @@
     "serviceUpdated": "Storitev posodobljena",
     "serviceDeleted": "Storitev izbrisana",
     "syncSuccess": "Sinhronizirano z Google Calendar",
-    "syncError": "Napaka pri sinhronizaciji"
+    "syncError": "Napaka pri sinhronizaciji",
+    "addedToCart": "Dodano v košarico",
+    "removedFromCart": "Odstranjeno iz košarice",
+    "cartCleared": "Košarica izpraznjena",
+    "orderCreated": "Naročilo uspešno ustvarjeno!"
+  },
+  "shop": {
+    "title": "Trgovina",
+    "subtitle": "Prehranska dopolnila, funkcionalne gobe, homeopatija, zeliščni pripravki in premium CBD",
+    "noProducts": "Ni izdelkov v tej kategoriji",
+    "noCategories": "Ni kategorij",
+    "addToCart": "Dodaj v košarico",
+    "buy": "Kupi",
+    "outOfStock": "Ni na zalogi",
+    "inStock": "Na zalogi",
+    "price": "Cena",
+    "quantity": "Količina"
+  },
+  "cart": {
+    "title": "Košarica",
+    "empty": "Vaša košarica je prazna",
+    "emptyMessage": "Dodajte izdelke ali storitve v košarico za nadaljevanje",
+    "subtotal": "Vmesni seštevek",
+    "shipping": "Dostava",
+    "total": "Skupaj",
+    "checkout": "Na blagajno",
+    "continueShopping": "Nadaljuj z nakupovanjem",
+    "remove": "Odstrani",
+    "clear": "Izprazni košarico"
+  },
+  "checkout": {
+    "title": "Blagajna",
+    "contactInfo": "Kontaktni podatki",
+    "name": "Ime in priimek",
+    "email": "E-pošta",
+    "phone": "Telefon",
+    "address": "Naslov",
+    "city": "Mesto",
+    "postalCode": "Poštna številka",
+    "notes": "Opombe",
+    "paymentMethod": "Način plačila",
+    "shippingMethod": "Način dostave",
+    "orderSummary": "Povzetek naročila",
+    "placeOrder": "Oddaj naročilo",
+    "processing": "Obdelovanje...",
+    "paymentMethods": {
+      "card": "Kreditna kartica",
+      "cardDesc": "Plačajte varno s kreditno ali debetno kartico",
+      "upn": "UPN bančno nakazilo",
+      "upnDesc": "Plačajte z bančnim nakazilom (UPN QR koda)",
+      "cashPickup": "Plačilo ob prevzemu",
+      "cashPickupDesc": "Plačajte z gotovino ob prevzemu v trgovini",
+      "cashDelivery": "Plačilo ob dostavi",
+      "cashDeliveryDesc": "Plačajte z gotovino ob dostavi"
+    },
+    "shippingMethods": {
+      "pickup": "Prevzem v trgovini",
+      "pickupDesc": "Brezplačen prevzem na naslovu",
+      "post": "Poštnina",
+      "postDesc": "Dostava po pošti",
+      "delivery": "Dostava na dom",
+      "deliveryDesc": "Dostava na vaš naslov"
+    },
+    "success": {
+      "title": "Hvala za naročilo!",
+      "reference": "Vaša referenca naročila",
+      "upnTitle": "Podatki za UPN plačilo",
+      "recipient": "Prejemnik",
+      "iban": "IBAN",
+      "amount": "Znesek",
+      "referenceNumber": "Referenca",
+      "purpose": "Namen",
+      "paymentNote": "Po prejemu plačila vas bomo obvestili po e-pošti",
+      "pickupTitle": "Prevzem v trgovini",
+      "pickupMessage": "Vaše naročilo bo pripravljeno za prevzem na naslovu",
+      "deliveryTitle": "Plačilo ob dostavi",
+      "deliveryMessage": "Naročilo bo dostavljeno na vaš naslov",
+      "backHome": "Na domačo stran",
+      "continueShopping": "Nadaljuj z nakupovanjem"
+    },
+    "errors": {
+      "fillRequired": "Prosimo, izpolnite vse obvezne podatke",
+      "enterAddress": "Prosimo, vnesite naslov za dostavo",
+      "generic": "Prišlo je do napake. Prosimo, poskusite znova."
+    }
+  },
+  "media": {
+    "title": "Mediji",
+    "subtitle": "Naša prisotnost v medijih in na družbenih omrežjih",
+    "socialMedia": "Družbena omrežja",
+    "pressReleases": "Novice in članki",
+    "followUs": "Sledite nam"
   }
 }

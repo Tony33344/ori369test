@@ -1,85 +1,109 @@
-import { Heart, Target, Sparkles, Users } from 'lucide-react';
+"use client";
 
-export default function AboutPage() {
-  return (
-    <div className="min-h-screen bg-white py-20">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-center text-gray-900 mb-6">
-            O nas
-          </h1>
-          <p className="text-xl text-center text-gray-600 mb-12">
-            Spoznajte ORI 369 - Vaš most med znanostjo in energijo
-          </p>
+import { useEffect, useState } from "react";
+import { useLanguage } from "@/lib/i18n";
+import Hero from "@/components/sections/Hero";
+import Services from "@/components/sections/Services";
+import Packages from "@/components/sections/Packages";
+import Testimonials from "@/components/sections/Testimonials";
+import TransformationJourney from "@/components/sections/TransformationJourney";
+import ServicesPreview from "@/components/sections/ServicesPreview";
+import PackagesPreview from "@/components/sections/PackagesPreview";
 
-          <div className="prose prose-lg max-w-none mb-12">
-            <p className="text-gray-700 leading-relaxed mb-6">
-              V ORI 369 združujemo vrhunske terapevtske pristope, najnovejše tehnologije in globoko razumevanje 
-              frekvenc 3-6-9, da vam pomagamo doseči ravnovesje telesa, uma in duha. Naš cilj je izboljšati 
-              kakovost vašega življenja skozi celostni pristop k zdravljenju.
-            </p>
+function SectionRenderer({ section, blocks, lang }: any) {
+  const bySection = (blocks || []).filter((b: any) => b?.section_id === section.id);
+  const tFor = (block: any) => {
+    if (!block) return {} as any;
+    const translations = (block as any).block_translations || [];
+    const tr =
+      translations.find((x: any) => x?.lang === lang) ||
+      translations.find((x: any) => x?.lang === "sl");
+    return (tr && tr.content) || block.content || {};
+  };
 
-            <p className="text-gray-700 leading-relaxed mb-6">
-              With compassion, expertise, and a focus on your unique needs, we're committed to helping you 
-              thrive—mind, body, and spirit.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="bg-gradient-to-br from-[#00B5AD]/10 to-[#00B5AD]/5 p-8 rounded-xl border border-[#00B5AD]/20">
-              <div className="flex items-center space-x-3 mb-4">
-                <Heart className="text-[#00B5AD]" size={32} />
-                <h3 className="text-2xl font-bold text-gray-900">Naša misija</h3>
-              </div>
-              <p className="text-gray-700">
-                Pomagati vam doseči optimalno zdravje in dobro počutje z uporabo najnovejših tehnologij 
-                in holistične terapevtske pristope.
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-br from-[#B8D52E]/10 to-[#B8D52E]/5 p-8 rounded-xl border border-[#B8D52E]/20">
-              <div className="flex items-center space-x-3 mb-4">
-                <Target className="text-[#B8D52E]" size={32} />
-                <h3 className="text-2xl font-bold text-gray-900">Naša vizija</h3>
-              </div>
-              <p className="text-gray-700">
-                Postati vodilni center za celostno zdravje in wellness v regiji, kjer znanost sreča 
-                duhovno rast.
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-br from-[#00B5AD]/10 to-[#B8D52E]/10 p-8 rounded-xl border border-[#00B5AD]/20">
-              <div className="flex items-center space-x-3 mb-4">
-                <Sparkles className="text-[#00B5AD]" size={32} />
-                <h3 className="text-2xl font-bold text-gray-900">Naše vrednote</h3>
-              </div>
-              <p className="text-gray-700">
-                Sočutje, strokovnost, integriteta in predanost vašemu osebnem razvoju in zdravju.
-              </p>
-            </div>
-
-            <div className="bg-gradient-to-br from-[#B8D52E]/10 to-[#00B5AD]/10 p-8 rounded-xl border border-[#B8D52E]/20">
-              <div className="flex items-center space-x-3 mb-4">
-                <Users className="text-[#B8D52E]" size={32} />
-                <h3 className="text-2xl font-bold text-gray-900">Naša ekipa</h3>
-              </div>
-              <p className="text-gray-700">
-                Tim certificiranih terapevtov z bogatimi izkušnjami na področju fizioterapije, 
-                energijske medicine in holistične zdravilstva.
-              </p>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-[#00B5AD] to-[#00B5AD]/80 text-white p-8 rounded-2xl text-center shadow-xl">
-            <h3 className="text-2xl font-bold mb-4">Frekvence 3-6-9</h3>
-            <p className="text-lg leading-relaxed">
-              Naše delo temelji na razumevanju univerzalnih frekvenc 3-6-9, ki jih je raziskoval Nikola Tesla. 
-              Te frekvence predstavljajo ključ do razumevanja vesolja in naše lastne energije. V naših terapijah 
-              jih uporabljamo za harmonizacijo telesa in uma.
-            </p>
+  switch (section.type) {
+    case "hero":
+      return <Hero {...(section.settings || {})} {...tFor(bySection[0])} />;
+    case "transformationJourney":
+      return <TransformationJourney />;
+    case "services":
+      return <Services services={(tFor(bySection[0]) as any)?.services || []} />;
+    case "servicesPreview":
+      return <ServicesPreview services={(tFor(bySection[0]) as any)?.services || []} />;
+    case "packages":
+      return <Packages packages={(tFor(bySection[0]) as any)?.packages || []} />;
+    case "packagesPreview":
+      return <PackagesPreview packages={(tFor(bySection[0]) as any)?.packages || []} />;
+    case "testimonials":
+      return <Testimonials testimonials={(tFor(bySection[0]) as any)?.items || []} />;
+    case "richText":
+      return (
+        <div className="container mx-auto px-4 py-12">
+          <div className="prose prose-lg max-w-none">
+            {(bySection || []).map((b: any) => (
+              <div
+                key={b.id}
+                dangerouslySetInnerHTML={{
+                  __html: (tFor(b) as any).html || (tFor(b) as any).text || "",
+                }}
+              />
+            ))}
           </div>
         </div>
+      );
+    default:
+      return null;
+  }
+}
+
+export default function AboutPage() {
+  const { language } = useLanguage();
+  const [data, setData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/cms/pages?slug=o-nas")
+      .then((r) => r.json())
+      .then((d) => {
+        setData(d);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
+    );
+  }
+
+  if (!data || !data.page) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Page not found</h1>
+          <p className="text-gray-600">The About page is not configured in the CMS.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { sections, blocks } = data;
+
+  return (
+    <div className="min-h-screen bg-white">
+      {(sections || [])
+        .filter((s: any) => s.visible)
+        .map((section: any) => (
+          <SectionRenderer
+            key={section.id}
+            section={section}
+            blocks={blocks || []}
+            lang={language}
+          />
+        ))}
     </div>
   );
 }

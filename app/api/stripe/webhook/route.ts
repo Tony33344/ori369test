@@ -4,9 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 
 export const runtime = 'nodejs';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
@@ -66,6 +64,25 @@ export async function POST(req: NextRequest) {
         if (updateError) {
           console.error('Error updating order:', updateError);
           break;
+        }
+
+        // If this Stripe session was created for a booking, update booking payment linkage
+        const bookingId = (session.metadata as any)?.bookingId;
+        if (bookingId) {
+          const { error: bookingUpdateError } = await supabase
+            .from('bookings')
+            .update({
+              stripe_session_id: session.id,
+              stripe_payment_intent_id: session.payment_intent as string,
+              payment_status: 'paid',
+              paid_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', bookingId);
+
+          if (bookingUpdateError) {
+            console.error('Error updating booking with Stripe payment info:', bookingUpdateError);
+          }
         }
 
         const metadata = order.metadata as any;

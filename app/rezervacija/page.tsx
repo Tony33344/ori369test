@@ -88,11 +88,11 @@ function BookingForm() {
       .eq('date', date)
       .eq('service_id', selectedService);
 
-    const bookedTimes = bookings?.map(b => b.time_slot) || [];
+    const bookedTimes = (bookings as Array<{ time_slot: string }> | null)?.map((b) => b.time_slot) || [];
 
     // Generate time slots from start_time to end_time
     const allSlots: string[] = [];
-    slots.forEach(slot => {
+    (slots as Array<{ start_time: string; end_time: string }>).forEach((slot) => {
       const start = parseInt(slot.start_time.split(':')[0]);
       const end = parseInt(slot.end_time.split(':')[0]);
       
@@ -153,11 +153,8 @@ function BookingForm() {
       console.error(error);
     } else {
       toast.success(t('booking.success'));
-      // Reset form
-      setSelectedService('');
-      setSelectedDate('');
-      setSelectedTime('');
-      setNotes('');
+      // Redirect to checkout page with booking details
+      window.location.href = `/checkout?service=${selectedService}&date=${selectedDate}&time=${selectedTime}&bookingId=${data.id}`;
     }
   };
 
