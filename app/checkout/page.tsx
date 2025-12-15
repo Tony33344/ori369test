@@ -400,17 +400,17 @@ export default function CheckoutPage() {
       });
 
       // Create booking for service
-      await supabase.from('bookings').insert({
-        user_id: user?.id || null,
-        service_id: serviceDetails.id,
-        booking_date: bookingDate,
-        booking_time: bookingTime,
-        status: 'pending',
-        notes: `Order: ${reference}`,
-        customer_name: customerName,
-        customer_email: customerEmail,
-        customer_phone: customerPhone,
-      });
+      if (bookingDate && bookingTime) {
+        const { error: bookingError } = await supabase.from('bookings').insert({
+          user_id: user?.id || null,
+          service_id: serviceDetails.id,
+          date: bookingDate,
+          time_slot: bookingTime,
+          status: 'pending',
+          notes: `Order: ${reference}`,
+        });
+        if (bookingError) throw bookingError;
+      }
     }
 
     for (const item of cart.items) {
@@ -426,22 +426,21 @@ export default function CheckoutPage() {
 
       // Create booking for services in cart
       if (item.type === 'service' && item.bookingDate) {
-        await supabase.from('bookings').insert({
+        const { error: bookingError } = await supabase.from('bookings').insert({
           user_id: user?.id || null,
           service_id: item.id,
-          booking_date: item.bookingDate,
-          booking_time: item.bookingTime,
+          date: item.bookingDate,
+          time_slot: item.bookingTime,
           status: 'pending',
           notes: `Order: ${reference}`,
-          customer_name: customerName,
-          customer_email: customerEmail,
-          customer_phone: customerPhone,
         });
+        if (bookingError) throw bookingError;
       }
     }
 
     if (orderItems.length > 0) {
-      await supabase.from('order_items').insert(orderItems);
+      const { error: orderItemsError } = await supabase.from('order_items').insert(orderItems);
+      if (orderItemsError) throw orderItemsError;
     }
 
     // Persist final totals before clearing cart (needed for success screen + UPN QR)
