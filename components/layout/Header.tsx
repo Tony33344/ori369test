@@ -14,6 +14,8 @@ import LanguageSelector from '@/components/LanguageSelector';
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [banner, setBanner] = useState<any>(null);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
   const pathname = usePathname();
   const { t } = useLanguage();
 
@@ -22,12 +24,43 @@ export default function Header() {
       setUser(authUser);
     });
 
+    supabase
+      .from('site_banner')
+      .select('enabled,message,link_url,updated_at')
+      .eq('id', 1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!data?.enabled || !data?.message) {
+          setBanner(null);
+          return;
+        }
+        setBanner(data);
+        try {
+          const key = `ori369_banner_dismissed_${data.updated_at || ''}_${data.message || ''}`;
+          const dismissed = localStorage.getItem(key) === '1';
+          setBannerDismissed(dismissed);
+        } catch {
+          setBannerDismissed(false);
+        }
+      });
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user ?? null);
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const dismissBanner = () => {
+    if (!banner) return;
+    try {
+      const key = `ori369_banner_dismissed_${banner.updated_at || ''}_${banner.message || ''}`;
+      localStorage.setItem(key, '1');
+    } catch {
+      // ignore
+    }
+    setBannerDismissed(true);
+  };
 
   const handleSignOut = async () => {
     await signOut();
@@ -47,6 +80,28 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm">
+      {banner?.enabled && banner?.message && !bannerDismissed && (
+        <div className="bg-[#00B5AD] text-white">
+          <div className="container mx-auto px-4 py-2 flex items-center justify-between gap-3">
+            <div className="text-sm font-medium">
+              {banner.link_url ? (
+                <Link href={banner.link_url} className="underline underline-offset-2">
+                  {banner.message}
+                </Link>
+              ) : (
+                <span>{banner.message}</span>
+              )}
+            </div>
+            <button
+              type="button"
+              onClick={dismissBanner}
+              className="text-white/90 hover:text-white text-sm font-semibold"
+            >
+              Zapri
+            </button>
+          </div>
+        </div>
+      )}
       <nav className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo - ORI 369 Brand Style */}

@@ -16,6 +16,15 @@ interface CheckoutItem {
   bookingTime?: string;
 }
 
+type DiscountAppliesTo = 'all' | 'products' | 'services';
+
+interface DiscountCode {
+  code: string;
+  percent_off: number;
+  applies_to: DiscountAppliesTo;
+  min_subtotal: number | null;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const supabase = createRouteHandlerClient({ cookies });
@@ -30,6 +39,7 @@ export async function POST(req: NextRequest) {
       customerName,
       shippingMethod,
       shippingCost = 0,
+      discountCode,
       metadata: customerMetadata,
       language = 'sl' 
     } = body;
@@ -46,7 +56,9 @@ export async function POST(req: NextRequest) {
 
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
     const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
-    let totalAmount = 0;
+    let itemsSubtotal = 0;
+    let servicesSubtotal = 0;
+    let productsSubtotal = 0;
     const orderItemsData: any[] = [];
 
     // Process each item
@@ -70,7 +82,9 @@ export async function POST(req: NextRequest) {
       }
 
       const itemTotal = Number(itemData.price) * item.quantity;
-      totalAmount += itemTotal;
+      itemsSubtotal += itemTotal;
+      if (isProduct) productsSubtotal += itemTotal;
+      else servicesSubtotal += itemTotal;
 
       lineItems.push({
         price_data: {
@@ -96,21 +110,45 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Add shipping cost if applicable
-    if (shippingCost > 0) {
-      totalAmount += shippingCost;
-      lineItems.push({
-        price_data: {
-          currency: 'eur',
-          product_data: {
-            name: 'Dostava',
-            description: shippingMethod === 'post' ? 'Poštnina' : 'Dostava na dom',
-          },
-          unit_amount: Math.round(shippingCost * 100),
-        },
-        quantity: 1,
-      });
+    let appliedDiscount: DiscountCode | null = null;
+    let discountAmount = 0;
+    let discountPercent: number | null = null;
+    let appliedDiscountCode: string | null = null;
+
+    if (discountCode && typeof discountCode === 'string') {
+      const code = discountCode.trim();
+      if (code) {
+        const { data: dcData, error: dcError } = await supabase
+          .from('discount_codes')
+          .select('code,percent_off,applies_to,min_subtotal')
+          .ilike('code', code)
+          .limit(1)
+          .maybeSingle();
+
+        if (!dcError && dcData) {
+          const dc = dcData as any as DiscountCode;
+          const min = dc.min_subtotal != null ? Number(dc.min_subtotal) : 0;
+          if (min <= 0 || itemsSubtotal >= min) {
+            appliedDiscount = dc;
+            appliedDiscountCode = dc.code;
+            discountPercent = Number(dc.percent_off) || null;
+            const eligibleSubtotal = dc.applies_to === 'products'
+              ? productsSubtotal
+              : dc.applies_to === 'services'
+                ? servicesSubtotal
+                : itemsSubtotal;
+            const pct = Number(dc.percent_off) || 0;
+            if (pct > 0 && eligibleSubtotal > 0) {
+              const raw = (eligibleSubtotal * pct) / 100;
+              discountAmount = Math.round(raw * 100) / 100;
+            }
+          }
+        }
+      }
     }
+
+    const subtotalAfterDiscount = Math.max(0, itemsSubtotal - discountAmount);
+    const totalAmount = subtotalAfterDiscount + (Number(shippingCost) || 0);
 
     if (lineItems.length === 0) {
       return NextResponse.json(
@@ -119,9 +157,39 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    let stripeDiscounts: Stripe.Checkout.SessionCreateParams.Discount[] | undefined;
+    if (discountAmount > 0) {
+      const amountOffCents = Math.max(1, Math.round(discountAmount * 100));
+      const coupon = await stripe.coupons.create({
+        amount_off: amountOffCents,
+        currency: 'eur',
+        duration: 'once',
+        name: appliedDiscountCode ? `ORI369 ${appliedDiscountCode}` : 'ORI369 Discount',
+      });
+      stripeDiscounts = [{ coupon: coupon.id }];
+    }
+
+    const shippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[] | undefined =
+      shippingCost > 0
+        ? [
+            {
+              shipping_rate_data: {
+                display_name: shippingMethod === 'post' ? 'Poštnina' : 'Dostava',
+                type: 'fixed_amount',
+                fixed_amount: {
+                  currency: 'eur',
+                  amount: Math.round(Number(shippingCost) * 100),
+                },
+              },
+            },
+          ]
+        : undefined;
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: lineItems,
+      discounts: stripeDiscounts,
+      shipping_options: shippingOptions,
       success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/checkout?cancelled=true`,
       customer_email: customerEmail || user?.email || undefined,
@@ -130,6 +198,9 @@ export async function POST(req: NextRequest) {
         bookingId: bookingId ? String(bookingId) : '',
         customerName: customerName || '',
         shippingMethod: shippingMethod || '',
+        shippingCost: String(shippingCost || 0),
+        discountCode: appliedDiscountCode || '',
+        discountAmount: String(discountAmount || 0),
         language: String(language),
         ...customerMetadata,
       },
@@ -157,6 +228,10 @@ export async function POST(req: NextRequest) {
       .insert({
         user_id: user?.id || null,
         stripe_session_id: session.id,
+        subtotal_amount: itemsSubtotal,
+        discount_code: appliedDiscountCode,
+        discount_percent: discountPercent,
+        discount_amount: discountAmount > 0 ? discountAmount : null,
         total_amount: totalAmount,
         currency: 'eur',
         status: 'pending',
@@ -166,6 +241,14 @@ export async function POST(req: NextRequest) {
         metadata: {
           items: orderItemsData,
           customer: customerMetadata,
+          discount: appliedDiscount
+            ? {
+                code: appliedDiscount.code,
+                percent_off: appliedDiscount.percent_off,
+                applies_to: appliedDiscount.applies_to,
+                discount_amount: discountAmount,
+              }
+            : null,
           language,
         },
       })

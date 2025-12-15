@@ -14,6 +14,21 @@ import QRCode from 'qrcode';
 type PaymentMethod = 'card' | 'upn' | 'cash_pickup' | 'cash_delivery';
 type ShippingMethod = 'pickup' | 'post' | 'delivery';
 
+type DiscountAppliesTo = 'all' | 'products' | 'services';
+
+interface DiscountCode {
+  id: string;
+  code: string;
+  percent_off: number;
+  applies_to: DiscountAppliesTo;
+  min_subtotal: number | null;
+  active: boolean;
+  starts_at: string | null;
+  expires_at: string | null;
+  max_uses: number | null;
+  uses_count: number | null;
+}
+
 interface ServiceDetails {
   id: string;
   name: string;
@@ -58,6 +73,10 @@ export default function CheckoutPage() {
   const [customerPostal, setCustomerPostal] = useState('');
   const [notes, setNotes] = useState('');
   const [saveDetailsToProfile, setSaveDetailsToProfile] = useState(true);
+
+  const [discountCodeInput, setDiscountCodeInput] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState<DiscountCode | null>(null);
+  const [discountLoading, setDiscountLoading] = useState(false);
 
   // Determine if this is a service checkout or cart checkout
   const isServiceCheckout = !!serviceId;
@@ -187,7 +206,10 @@ export default function CheckoutPage() {
   }
 
   // Calculate totals
-  const serviceTotal = serviceDetails?.price || 0;
+  const serviceDirectTotal = serviceDetails?.price || 0;
+  const servicesCartTotal = cart.items
+    .filter(item => item.type === 'service')
+    .reduce((sum, item) => sum + item.price * item.quantity, 0);
   const productsTotal = cart.items
     .filter(item => item.type === 'product')
     .reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -198,8 +220,68 @@ export default function CheckoutPage() {
     0
   ) : 0;
   
-  const subtotal = (isServiceCheckout ? serviceTotal : 0) + productsTotal;
-  const total = subtotal + shippingCost;
+  const servicesTotal = (isServiceCheckout ? serviceDirectTotal : 0) + servicesCartTotal;
+  const subtotal = servicesTotal + productsTotal;
+
+  const eligibleSubtotal = (() => {
+    if (!appliedDiscount) return 0;
+    if (appliedDiscount.applies_to === 'products') return productsTotal;
+    if (appliedDiscount.applies_to === 'services') return servicesTotal;
+    return subtotal;
+  })();
+
+  const discountAmount = (() => {
+    if (!appliedDiscount) return 0;
+    const pct = Number(appliedDiscount.percent_off) || 0;
+    if (pct <= 0) return 0;
+    const raw = (eligibleSubtotal * pct) / 100;
+    return Math.round(raw * 100) / 100;
+  })();
+
+  const discountedSubtotal = Math.max(0, subtotal - discountAmount);
+  const total = discountedSubtotal + shippingCost;
+
+  async function applyDiscountCode() {
+    const code = discountCodeInput.trim();
+    if (!code) {
+      setAppliedDiscount(null);
+      return;
+    }
+
+    setDiscountLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('discount_codes')
+        .select('*')
+        .ilike('code', code)
+        .limit(1)
+        .maybeSingle();
+
+      if (error) throw error;
+      if (!data) {
+        setAppliedDiscount(null);
+        toast.error('Neveljavna koda za popust.');
+        return;
+      }
+
+      const dc = data as any as DiscountCode;
+      const min = dc.min_subtotal != null ? Number(dc.min_subtotal) : 0;
+      if (min > 0 && subtotal < min) {
+        setAppliedDiscount(null);
+        toast.error(`Popust velja za naročila nad €${min.toFixed(2)}.`);
+        return;
+      }
+
+      setAppliedDiscount(dc);
+      toast.success('Koda za popust je uporabljena.');
+    } catch (e: any) {
+      console.error('Failed to apply discount code:', e);
+      setAppliedDiscount(null);
+      toast.error(e?.message || 'Napaka pri preverjanju kode za popust.');
+    } finally {
+      setDiscountLoading(false);
+    }
+  }
 
   // Validate shipping method based on payment
   useEffect(() => {
@@ -326,6 +408,7 @@ export default function CheckoutPage() {
         customerName,
         shippingMethod,
         shippingCost,
+        discountCode: appliedDiscount?.code || null,
         metadata: {
           phone: customerPhone,
           address: customerAddress,
@@ -357,6 +440,10 @@ export default function CheckoutPage() {
     // Create order in database
     const orderData = {
       user_id: user?.id || null,
+      subtotal_amount: subtotal,
+      discount_code: appliedDiscount?.code || null,
+      discount_percent: appliedDiscount?.percent_off || null,
+      discount_amount: appliedDiscount ? discountAmount : null,
       total_amount: total,
       currency: 'eur',
       status: paymentMethod === 'upn' ? 'pending_payment' : 'pending',
@@ -365,6 +452,14 @@ export default function CheckoutPage() {
       shipping_cost: shippingCost,
       metadata: {
         reference,
+        discount: appliedDiscount
+          ? {
+              code: appliedDiscount.code,
+              percent_off: appliedDiscount.percent_off,
+              applies_to: appliedDiscount.applies_to,
+              discount_amount: discountAmount,
+            }
+          : null,
         customer: {
           name: customerName,
           email: customerEmail,
@@ -943,6 +1038,7 @@ export default function CheckoutPage() {
                         src={item.image}
                         alt={item.name}
                         fill
+                        sizes="64px"
                         className="object-cover rounded-md"
                       />
                     </div>
@@ -960,12 +1056,45 @@ export default function CheckoutPage() {
                 </div>
               ))}
 
+              {/* Discount code */}
+              <div className="py-4 border-b">
+                <div className="text-sm font-semibold text-gray-900 mb-2">Koda za popust</div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={discountCodeInput}
+                    onChange={(e) => setDiscountCodeInput(e.target.value)}
+                    placeholder="Vnesite kodo"
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#00B5AD] focus:border-transparent"
+                  />
+                  <button
+                    type="button"
+                    onClick={applyDiscountCode}
+                    disabled={discountLoading}
+                    className="px-4 py-2 rounded-lg bg-gray-900 text-white font-semibold hover:bg-black disabled:opacity-50"
+                  >
+                    {discountLoading ? '...' : 'Uporabi'}
+                  </button>
+                </div>
+                {appliedDiscount && discountAmount > 0 && (
+                  <div className="mt-2 text-xs text-green-700">
+                    Uporabljena koda: <span className="font-semibold">{appliedDiscount.code}</span>
+                  </div>
+                )}
+              </div>
+
               {/* Totals */}
               <div className="space-y-2 py-4">
                 <div className="flex justify-between text-gray-600">
                   <span>Vmesni seštevek</span>
                   <span>€{subtotal.toFixed(2)}</span>
                 </div>
+                {appliedDiscount && discountAmount > 0 && (
+                  <div className="flex justify-between text-gray-600">
+                    <span>Popust ({appliedDiscount.percent_off}%)</span>
+                    <span>-€{discountAmount.toFixed(2)}</span>
+                  </div>
+                )}
                 {hasProducts && (
                   <div className="flex justify-between text-gray-600">
                     <span>Dostava</span>

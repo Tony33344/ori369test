@@ -6,7 +6,7 @@ import { supabase } from '@/lib/supabase';
 import { getCurrentUser, getUserProfile } from '@/lib/auth';
 import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
-import { Calendar as CalendarIcon, Users, Activity, CheckCircle, XCircle, Edit2, Trash2, ExternalLink, Package, DollarSign, Clock, Plus, BarChart3, FileText } from 'lucide-react';
+import { Calendar as CalendarIcon, Users, Activity, CheckCircle, XCircle, Edit2, Trash2, ExternalLink, Package, DollarSign, Clock, Plus, BarChart3, FileText, Tag, Megaphone } from 'lucide-react';
 import { format } from 'date-fns';
 import dynamic from 'next/dynamic';
 
@@ -42,6 +42,32 @@ interface Booking {
     name: string;
     duration: number;
   };
+}
+
+type DiscountAppliesTo = 'all' | 'products' | 'services';
+
+interface DiscountCodeRow {
+  id: string;
+  code: string;
+  percent_off: number;
+  applies_to: DiscountAppliesTo;
+  min_subtotal: number | null;
+  active: boolean;
+  starts_at: string | null;
+  expires_at: string | null;
+  max_uses: number | null;
+  uses_count: number | null;
+  created_at: string;
+}
+
+interface SiteBannerRow {
+  id: number;
+  enabled: boolean;
+  message: string | null;
+  link_url: string | null;
+  starts_at: string | null;
+  expires_at: string | null;
+  updated_at: string;
 }
 
 function OrderModal({
@@ -206,7 +232,7 @@ export default function AdminPage() {
   const { t } = useLanguage();
   const [user, setUser] = useState<any>(null);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [activeTab, setActiveTab] = useState<'bookings' | 'services' | 'analytics' | 'content' | 'orders' | 'products' | 'cms'>('bookings');
+  const [activeTab, setActiveTab] = useState<'bookings' | 'services' | 'analytics' | 'content' | 'orders' | 'products' | 'cms' | 'marketing'>('bookings');
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [filter, setFilter] = useState<string>('all');
@@ -230,6 +256,26 @@ export default function AdminPage() {
     pendingOrders: 0
   });
 
+  const [discountCodes, setDiscountCodes] = useState<DiscountCodeRow[]>([]);
+  const [banner, setBanner] = useState<SiteBannerRow | null>(null);
+  const [marketingLoading, setMarketingLoading] = useState(false);
+
+  const [discountForm, setDiscountForm] = useState({
+    id: '' as string,
+    code: '' as string,
+    percent_off: 10 as number,
+    applies_to: 'all' as DiscountAppliesTo,
+    min_subtotal: '' as string,
+    expires_at: '' as string,
+    active: true as boolean,
+  });
+
+  const [bannerForm, setBannerForm] = useState({
+    enabled: false,
+    message: '' as string,
+    link_url: '' as string,
+  });
+
   useEffect(() => {
     checkAdmin();
   }, []);
@@ -239,9 +285,125 @@ export default function AdminPage() {
       loadBookings();
       loadServices();
       loadOrders();
+      loadMarketing();
       subscribeToBookings();
     }
   }, [isAdmin]);
+
+  const loadMarketing = async () => {
+    setMarketingLoading(true);
+    try {
+      const { data: codesData, error: codesError } = await supabase
+        .from('discount_codes')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (codesError) throw codesError;
+      setDiscountCodes((codesData || []) as any);
+
+      const { data: bannerData, error: bannerError } = await supabase
+        .from('site_banner')
+        .select('*')
+        .eq('id', 1)
+        .maybeSingle();
+      if (bannerError) throw bannerError;
+
+      setBanner((bannerData as any) || null);
+      setBannerForm({
+        enabled: Boolean((bannerData as any)?.enabled),
+        message: (bannerData as any)?.message || '',
+        link_url: (bannerData as any)?.link_url || '',
+      });
+    } catch (e: any) {
+      console.error('Failed to load marketing:', e);
+      toast.error(e?.message || 'Napaka pri nalaganju marketing nastavitev.');
+    } finally {
+      setMarketingLoading(false);
+    }
+  };
+
+  const resetDiscountForm = () => {
+    setDiscountForm({
+      id: '',
+      code: '',
+      percent_off: 10,
+      applies_to: 'all',
+      min_subtotal: '',
+      expires_at: '',
+      active: true,
+    });
+  };
+
+  const upsertDiscountCode = async () => {
+    const code = discountForm.code.trim();
+    if (!code) {
+      toast.error('Koda je obvezna.');
+      return;
+    }
+    const pct = Number(discountForm.percent_off);
+    if (!Number.isFinite(pct) || pct <= 0 || pct > 100) {
+      toast.error('Percent off mora biti med 1 in 100.');
+      return;
+    }
+
+    const payload: any = {
+      code,
+      percent_off: pct,
+      applies_to: discountForm.applies_to,
+      min_subtotal: discountForm.min_subtotal ? Number(discountForm.min_subtotal) : 0,
+      expires_at: discountForm.expires_at ? new Date(discountForm.expires_at).toISOString() : null,
+      active: discountForm.active,
+      updated_at: new Date().toISOString(),
+    };
+
+    const { error } = discountForm.id
+      ? await supabase.from('discount_codes').update(payload).eq('id', discountForm.id)
+      : await supabase.from('discount_codes').insert(payload);
+
+    if (error) {
+      console.error('Failed to save discount code:', error);
+      toast.error(error.message);
+      return;
+    }
+
+    toast.success('Koda za popust shranjena.');
+    resetDiscountForm();
+    loadMarketing();
+  };
+
+  const deleteDiscountCode = async (id: string) => {
+    if (!confirm('Izbrišem kodo za popust?')) return;
+    const { error } = await supabase.from('discount_codes').delete().eq('id', id);
+    if (error) {
+      console.error('Failed to delete discount code:', error);
+      toast.error(error.message);
+      return;
+    }
+    toast.success('Koda izbrisana.');
+    loadMarketing();
+  };
+
+  const saveBanner = async () => {
+    const payload: any = {
+      id: 1,
+      enabled: Boolean(bannerForm.enabled),
+      message: bannerForm.message ? bannerForm.message.trim() : null,
+      link_url: bannerForm.link_url ? bannerForm.link_url.trim() : null,
+      updated_at: new Date().toISOString(),
+    };
+
+    const { error } = await supabase
+      .from('site_banner')
+      .upsert(payload, { onConflict: 'id' });
+
+    if (error) {
+      console.error('Failed to save banner:', error);
+      toast.error(error.message);
+      return;
+    }
+
+    toast.success('Banner shranjen.');
+    loadMarketing();
+  };
 
   useEffect(() => {
     filterBookings();
@@ -694,6 +856,17 @@ export default function AdminPage() {
             >
               <FileText size={20} />
               <span>CMS</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('marketing')}
+              className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors ${
+                activeTab === 'marketing'
+                  ? 'border-b-2 border-blue-600 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              <Tag size={20} />
+              <span>Marketing</span>
             </button>
           </div>
         </div>
@@ -1151,6 +1324,195 @@ export default function AdminPage() {
           <div className="bg-white rounded-lg shadow p-6">
             <CMSManager />
           </div>
+        )}
+
+        {activeTab === 'marketing' && (
+          <>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-2xl font-bold text-gray-900">Discount Codes</h2>
+                  <button
+                    type="button"
+                    onClick={resetDiscountForm}
+                    className="px-4 py-2 rounded-lg bg-gray-100 text-gray-800 hover:bg-gray-200"
+                  >
+                    New
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Code</label>
+                    <input
+                      type="text"
+                      value={discountForm.code}
+                      onChange={(e) => setDiscountForm((p) => ({ ...p, code: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Percent off</label>
+                    <input
+                      type="number"
+                      min={1}
+                      max={100}
+                      value={discountForm.percent_off}
+                      onChange={(e) => setDiscountForm((p) => ({ ...p, percent_off: Number(e.target.value) }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Applies to</label>
+                    <select
+                      value={discountForm.applies_to}
+                      onChange={(e) => setDiscountForm((p) => ({ ...p, applies_to: e.target.value as any }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    >
+                      <option value="all">Products + Services</option>
+                      <option value="products">Products only</option>
+                      <option value="services">Services only</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Min order (€)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={discountForm.min_subtotal}
+                      onChange={(e) => setDiscountForm((p) => ({ ...p, min_subtotal: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Expiry (optional)</label>
+                    <input
+                      type="datetime-local"
+                      value={discountForm.expires_at}
+                      onChange={(e) => setDiscountForm((p) => ({ ...p, expires_at: e.target.value }))}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <label className="flex items-center gap-2 text-sm text-gray-700">
+                      <input
+                        type="checkbox"
+                        checked={discountForm.active}
+                        onChange={(e) => setDiscountForm((p) => ({ ...p, active: e.target.checked }))}
+                      />
+                      Active
+                    </label>
+                  </div>
+                  <div className="md:col-span-2 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={upsertDiscountCode}
+                      className="px-6 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <div className="text-sm font-semibold text-gray-900 mb-2">Existing codes</div>
+                  {marketingLoading ? (
+                    <div className="text-sm text-gray-600">Loading...</div>
+                  ) : discountCodes.length === 0 ? (
+                    <div className="text-sm text-gray-600">No discount codes.</div>
+                  ) : (
+                    <div className="divide-y border rounded-lg">
+                      {discountCodes.map((dc) => (
+                        <div key={dc.id} className="p-3 flex items-center justify-between gap-3">
+                          <div>
+                            <div className="text-sm font-semibold text-gray-900">{dc.code} ({dc.percent_off}%)</div>
+                            <div className="text-xs text-gray-600">{dc.applies_to} • min €{Number(dc.min_subtotal || 0).toFixed(2)} • {dc.active ? 'active' : 'inactive'}</div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setDiscountForm({
+                                  id: dc.id,
+                                  code: dc.code,
+                                  percent_off: Number(dc.percent_off),
+                                  applies_to: dc.applies_to,
+                                  min_subtotal: dc.min_subtotal != null ? String(dc.min_subtotal) : '',
+                                  expires_at: dc.expires_at ? new Date(dc.expires_at).toISOString().slice(0, 16) : '',
+                                  active: Boolean(dc.active),
+                                })
+                              }
+                              className="px-3 py-2 text-sm rounded-lg border border-gray-300 hover:bg-gray-50"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => deleteDiscountCode(dc.id)}
+                              className="px-3 py-2 text-sm rounded-lg bg-red-600 text-white hover:bg-red-700"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-lg shadow p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Megaphone className="text-[#00B5AD]" />
+                  <h2 className="text-2xl font-bold text-gray-900">Global Banner</h2>
+                </div>
+
+                <label className="flex items-center gap-2 text-sm text-gray-700 mb-4">
+                  <input
+                    type="checkbox"
+                    checked={bannerForm.enabled}
+                    onChange={(e) => setBannerForm((p) => ({ ...p, enabled: e.target.checked }))}
+                  />
+                  Enabled
+                </label>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                  <textarea
+                    value={bannerForm.message}
+                    onChange={(e) => setBannerForm((p) => ({ ...p, message: e.target.value }))}
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    placeholder="E.g. Holiday promo: ORI10"
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Link (optional)</label>
+                  <input
+                    type="text"
+                    value={bannerForm.link_url}
+                    onChange={(e) => setBannerForm((p) => ({ ...p, link_url: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg"
+                    placeholder="/trgovina or https://..."
+                  />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="text-xs text-gray-500">
+                    {banner?.updated_at ? `Last update: ${format(new Date(banner.updated_at), 'dd.MM.yyyy HH:mm')}` : ''}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={saveBanner}
+                    className="px-6 py-2 rounded-lg bg-[#00B5AD] text-white font-semibold hover:bg-[#009891]"
+                  >
+                    Save banner
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
         )}
 
         {showOrderModal && selectedOrder && (
