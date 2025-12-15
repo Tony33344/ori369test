@@ -387,6 +387,7 @@ export default function AdminPage() {
         profiles (full_name, email),
         order_items (
           id,
+          service_id,
           product_id,
           quantity,
           unit_price,
@@ -406,18 +407,80 @@ export default function AdminPage() {
     }
 
     if (data) {
-      setOrders(data as any);
+      const rawOrders = data as any[];
+
+      const missingProductIds = new Set<string>();
+      const missingServiceIds = new Set<string>();
+
+      for (const o of rawOrders) {
+        for (const it of (o.order_items || []) as any[]) {
+          const hasName = Boolean(it?.services?.name || it?.shop_products?.name);
+          if (!hasName) {
+            if (it?.product_id) missingProductIds.add(it.product_id);
+            if (it?.service_id) missingServiceIds.add(it.service_id);
+          }
+        }
+      }
+
+      let productsById: Record<string, string> = {};
+      let servicesById: Record<string, string> = {};
+
+      if (missingProductIds.size > 0) {
+        const { data: productsData, error: productsError } = await supabase
+          .from('shop_products')
+          .select('id,name')
+          .in('id', Array.from(missingProductIds));
+        if (productsError) {
+          console.warn('Failed to fetch product names for admin orders:', productsError.message);
+        } else {
+          productsById = Object.fromEntries((productsData || []).map((p: any) => [p.id, p.name]));
+        }
+      }
+
+      if (missingServiceIds.size > 0) {
+        const { data: servicesData, error: servicesError } = await supabase
+          .from('services')
+          .select('id,name')
+          .in('id', Array.from(missingServiceIds));
+        if (servicesError) {
+          console.warn('Failed to fetch service names for admin orders:', servicesError.message);
+        } else {
+          servicesById = Object.fromEntries((servicesData || []).map((s: any) => [s.id, s.name]));
+        }
+      }
+
+      const enrichedOrders = rawOrders.map((o) => {
+        const enrichedItems = ((o.order_items || []) as any[]).map((it) => {
+          if (it?.services?.name || it?.shop_products?.name) return it;
+
+          const productName = it?.product_id ? productsById[it.product_id] : undefined;
+          const serviceName = it?.service_id ? servicesById[it.service_id] : undefined;
+
+          return {
+            ...it,
+            shop_products: productName ? { name: productName } : it.shop_products,
+            services: serviceName ? { name: serviceName } : it.services,
+          };
+        });
+
+        return {
+          ...o,
+          order_items: enrichedItems,
+        };
+      });
+
+      setOrders(enrichedOrders as any);
       
-      const totalRevenue = data.reduce((sum, order) => 
+      const totalRevenue = rawOrders.reduce((sum, order) => 
         order.status === 'paid' ? sum + parseFloat(order.total_amount.toString()) : sum, 
         0
       );
-      const paidOrders = data.filter(order => order.status === 'paid').length;
-      const pendingOrders = data.filter(order => order.status === 'pending').length;
+      const paidOrders = rawOrders.filter(order => order.status === 'paid').length;
+      const pendingOrders = rawOrders.filter(order => order.status === 'pending' || order.status === 'pending_payment').length;
       
       setOrderStats({
         totalRevenue,
-        totalOrders: data.length,
+        totalOrders: rawOrders.length,
         paidOrders,
         pendingOrders
       });
