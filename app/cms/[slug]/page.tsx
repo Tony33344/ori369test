@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useLanguage } from '@/lib/i18n';
 import Hero from '@/components/sections/Hero';
 import Services from '@/components/sections/Services';
@@ -63,11 +63,11 @@ function SectionRenderer({ section, blocks, lang }: any) {
   }
 }
 
-export default function CmsPage({ params }: { params: { slug: string } }) {
+export default function CmsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { language } = useLanguage();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const slug = params.slug;
+  const { slug } = use(params);
 
   useEffect(() => {
     fetch(`/api/cms/pages?slug=${slug}`)

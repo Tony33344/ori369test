@@ -54,7 +54,7 @@ export async function getPageBySlug(slug: string) {
     .eq('page_id', page.id)
     .order('order_index', { ascending: true });
 
-  const sectionIds = (sections || []).map(s => s.id);
+  const sectionIds = ((sections as Section[] | null | undefined) || []).map((s: Section) => s.id);
   const { data: blocks } = await supabase
     .from('blocks')
     .select('*, block_translations(*)')

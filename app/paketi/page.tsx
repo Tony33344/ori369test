@@ -26,7 +26,7 @@ export default async function PackagesPage() {
       benefits: jsonPackage?.benefits || [],
       sessions: service.sessions || 1,
       price: service.price,
-      regularPrice: jsonPackage?.regularPrice,
+      regularPrice: jsonPackage?.regularPrice ?? undefined,
     };
   });
   

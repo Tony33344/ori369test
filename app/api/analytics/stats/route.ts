@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser, getUserProfile } from '@/lib/auth';
 
+type BookingStatRow = {
+  status: string;
+  date: string;
+  service_id: string | null;
+  services?: { name?: string | null; price?: number | null } | null;
+};
+
 export async function GET(request: NextRequest) {
   try {
     // Check if user is admin
@@ -48,14 +55,17 @@ export async function GET(request: NextRequest) {
     const totalPageViews = pageViews?.length || 0;
 
     // Group bookings by date
-    const bookingsByDate = bookingStats?.reduce((acc: any, booking) => {
-      const date = booking.date;
+    const bookingsByDate = (bookingStats as BookingStatRow[] | null | undefined)?.reduce(
+      (acc: Record<string, number>, booking: BookingStatRow) => {
+        const date = booking.date;
       if (!acc[date]) {
         acc[date] = 0;
       }
       acc[date]++;
       return acc;
-    }, {});
+      },
+      {}
+    );
 
     // Top services
     const serviceBookings = bookingStats?.reduce((acc: any, booking: any) => {

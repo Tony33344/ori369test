@@ -11,6 +11,13 @@ import { signOut } from '@/lib/auth';
 import { useLanguage } from '@/lib/i18n';
 import LanguageSelector from '@/components/LanguageSelector';
 
+type SiteBannerRow = {
+  enabled: boolean | null;
+  message: string | null;
+  link_url: string | null;
+  updated_at: string | null;
+};
+
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -29,7 +36,7 @@ export default function Header() {
       .select('enabled,message,link_url,updated_at')
       .eq('id', 1)
       .maybeSingle()
-      .then(({ data }) => {
+      .then(({ data }: { data: SiteBannerRow | null }) => {
         if (!data?.enabled || !data?.message) {
           setBanner(null);
           return;

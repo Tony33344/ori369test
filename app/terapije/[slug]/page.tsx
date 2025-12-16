@@ -50,7 +50,7 @@ export default async function TherapyDetailPage({ params }: { params: Promise<{ 
 
   // Get content from JSON for full descriptions
   const jsonData = getDataForLanguage('sl');
-  const jsonTherapy = jsonData.therapies.find((t: any) => t.id === slug);
+  const jsonTherapy = jsonData.therapies.find((t: any) => t.id === slug) as any;
 
   const therapyImage = therapyImages[slug] || '/images/therapies/IMG_5779-768x513.webp';
 

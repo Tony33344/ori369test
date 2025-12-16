@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { getCurrentUser, getUserProfile } from '@/lib/auth';
 
+type SectionRow = { id: string };
+
 export async function GET(request: NextRequest) {
   const slug = request.nextUrl.searchParams.get('slug');
   
@@ -23,7 +25,7 @@ export async function GET(request: NextRequest) {
     const { data: blocks } = await supabase
       .from('blocks')
       .select('*, block_translations(*)')
-      .in('section_id', (sections || []).map(s => s.id))
+      .in('section_id', (sections as SectionRow[] | null | undefined || []).map((s: SectionRow) => s.id))
       .order('order_index', { ascending: true });
 
     return NextResponse.json({ page, sections, blocks });
