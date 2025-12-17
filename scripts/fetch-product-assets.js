@@ -9,6 +9,28 @@ function ensureDir(p) {
   fs.mkdirSync(p, { recursive: true });
 }
 
+async function tryFetchShopifyProductJson(url) {
+  try {
+    const u = new URL(url);
+    const m = u.pathname.match(/^\/products\/([^/]+)\/?$/);
+    if (!m) return null;
+    const handle = m[1];
+    const jsonUrl = `${u.origin}/products/${handle}.json`;
+    const res = await fetch(jsonUrl, {
+      redirect: 'follow',
+      headers: {
+        'user-agent': 'ori369-product-asset-fetcher/1.0',
+        accept: 'application/json',
+      },
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data && data.product ? data.product : null;
+  } catch {
+    return null;
+  }
+}
+
 function stripTags(html) {
   return String(html || '')
     .replace(/<script[\s\S]*?<\/script>/gi, '')
@@ -85,6 +107,8 @@ async function fetchOne(entry) {
   const url = entry.source_url;
   if (!url) return { changed: false };
 
+  const shopifyProduct = await tryFetchShopifyProductJson(url);
+
   const res = await fetch(url, {
     redirect: 'follow',
     headers: {
@@ -102,10 +126,21 @@ async function fetchOne(entry) {
   const jsonLd = extractJsonLd(html);
   const product = pickProductFromJsonLd(jsonLd);
 
-  const descriptionHtml = (product && (product.description || product?.offers?.description)) || ogDesc || null;
+  const descriptionHtml =
+    (shopifyProduct && shopifyProduct.body_html) ||
+    (product && (product.description || product?.offers?.description)) ||
+    ogDesc ||
+    null;
   const descriptionText = descriptionHtml ? stripTags(descriptionHtml) : null;
 
   let imageUrl = null;
+  if (shopifyProduct) {
+    if (Array.isArray(shopifyProduct.images) && shopifyProduct.images[0] && shopifyProduct.images[0].src) {
+      imageUrl = shopifyProduct.images[0].src;
+    } else if (shopifyProduct.image && shopifyProduct.image.src) {
+      imageUrl = shopifyProduct.image.src;
+    }
+  }
   if (product) {
     if (typeof product.image === 'string') imageUrl = product.image;
     else if (Array.isArray(product.image) && typeof product.image[0] === 'string') imageUrl = product.image[0];
@@ -134,6 +169,12 @@ async function fetchOne(entry) {
   entry.image_source_url = imageUrl;
   entry.image_filename = imageFilename;
   entry.last_fetched_at = now;
+
+  if (shopifyProduct) {
+    entry.vendor = shopifyProduct.vendor || entry.vendor || null;
+    entry.product_type = shopifyProduct.product_type || entry.product_type || null;
+    entry.tags = shopifyProduct.tags || entry.tags || null;
+  }
 
   return { changed };
 }
