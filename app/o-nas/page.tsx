@@ -26,6 +26,29 @@ const FALLBACK_ABOUT_HTML = `
   <p>Naše delo temelji na razumevanju univerzalnih frekvenc 3-6-9, ki jih je raziskoval Nikola Tesla. Te frekvence predstavljajo ključ do razumevanja vesolja in naše lastne energije. V naših terapijah jih uporabljamo za harmonizacijo telesa in uma.</p>
 `;
 
+function isNonEmptyString(v: unknown) {
+  return typeof v === "string" && v.replace(/<[^>]+>/g, " ").trim().length > 0;
+}
+
+function cmsHasMeaningfulRichText(data: any) {
+  const sections = Array.isArray(data?.sections) ? data.sections : [];
+  const blocks = Array.isArray(data?.blocks) ? data.blocks : [];
+  const visibleSectionIds = new Set(sections.filter((s: any) => s?.visible).map((s: any) => s.id));
+
+  for (const b of blocks) {
+    if (!b) continue;
+    if (b.section_id && visibleSectionIds.size > 0 && !visibleSectionIds.has(b.section_id)) continue;
+
+    const translations = (b as any).block_translations || [];
+    const candidates = [b?.content, ...translations.map((t: any) => t?.content)].filter(Boolean);
+    for (const c of candidates) {
+      if (isNonEmptyString((c as any)?.html) || isNonEmptyString((c as any)?.text)) return true;
+    }
+  }
+
+  return false;
+}
+
 function SectionRenderer({ section, blocks, lang }: any) {
   const bySection = (blocks || []).filter((b: any) => b?.section_id === section.id);
   const tFor = (block: any) => {
@@ -96,10 +119,11 @@ export default function AboutPage() {
   }
 
   const hasCms = !!data?.page && Array.isArray(data?.sections) && data.sections.length > 0;
-  const sections = hasCms ? data.sections : [{ id: 'fallback', type: 'richText', visible: true, settings: {} }];
-  const blocks = hasCms
-    ? data.blocks
-    : [{ id: 'fallback-block', section_id: 'fallback', block_translations: [{ lang: 'sl', content: { html: FALLBACK_ABOUT_HTML } }] }];
+  const useFallback = !hasCms || !cmsHasMeaningfulRichText(data);
+  const sections = useFallback ? [{ id: 'fallback', type: 'richText', visible: true, settings: {} }] : data.sections;
+  const blocks = useFallback
+    ? [{ id: 'fallback-block', section_id: 'fallback', block_translations: [{ lang: 'sl', content: { html: FALLBACK_ABOUT_HTML } }] }]
+    : data.blocks;
 
   return (
     <div className="min-h-screen bg-white">
