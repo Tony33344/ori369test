@@ -26,8 +26,9 @@ const FALLBACK_ABOUT_HTML = `
   <p>Naše delo temelji na razumevanju univerzalnih frekvenc 3-6-9, ki jih je raziskoval Nikola Tesla. Te frekvence predstavljajo ključ do razumevanja vesolja in naše lastne energije. V naših terapijah jih uporabljamo za harmonizacijo telesa in uma.</p>
 `;
 
-function isNonEmptyString(v: unknown) {
-  return typeof v === "string" && v.replace(/<[^>]+>/g, " ").trim().length > 0;
+function plainTextLen(v: unknown) {
+  if (typeof v !== "string") return 0;
+  return v.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().length;
 }
 
 function cmsHasMeaningfulRichText(data: any) {
@@ -42,7 +43,9 @@ function cmsHasMeaningfulRichText(data: any) {
     const translations = (b as any).block_translations || [];
     const candidates = [b?.content, ...translations.map((t: any) => t?.content)].filter(Boolean);
     for (const c of candidates) {
-      if (isNonEmptyString((c as any)?.html) || isNonEmptyString((c as any)?.text)) return true;
+      const htmlLen = plainTextLen((c as any)?.html);
+      const textLen = plainTextLen((c as any)?.text);
+      if (htmlLen >= 80 || textLen >= 80) return true;
     }
   }
 
