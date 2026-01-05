@@ -20,10 +20,11 @@ export async function GET(request: NextRequest) {
       .map((e) => ({
         id: e.id,
         summary: e.summary || 'Busy',
-        start: e.start,
-        end: e.end,
+        start: e.start?.dateTime || e.start?.date,
+        end: e.end?.dateTime || e.end?.date,
       }));
 
+    console.log(`Google Calendar: Found ${busy.length} events between ${timeMin} and ${timeMax}`);
     return NextResponse.json({ busy });
   } catch (error) {
     console.error('Google Calendar busy error:', error);

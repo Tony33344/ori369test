@@ -106,8 +106,8 @@ function BookingForm() {
         const json = await res.json();
         googleBusyRanges = (json?.busy || [])
           .map((e: any) => {
-            const s = e?.start?.dateTime || e?.start?.date;
-            const en = e?.end?.dateTime || e?.end?.date;
+            const s = e?.start;
+            const en = e?.end;
             if (!s || !en) return null;
             return { start: new Date(s), end: new Date(en) };
           })
@@ -180,7 +180,7 @@ function BookingForm() {
     }
     
     if (!selectedTime) {
-      toast.error(t('booking.selectDateFirst'));
+      toast.error(t('booking.selectTime'));
       return;
     }
 

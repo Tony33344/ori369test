@@ -70,9 +70,10 @@ export default function BookingCalendar({
       if (!res.ok) return;
       const json = await res.json();
       const busy = (json?.busy || []).map((e: any) => ({
-        start: e?.start?.dateTime || e?.start?.date,
-        end: e?.end?.dateTime || e?.end?.date,
+        start: e?.start,
+        end: e?.end,
       }));
+      console.log('Google Calendar busy events for calendar:', busy);
       setGoogleBusyEvents(busy);
     } catch (e) {
       console.error('Failed to load Google Calendar busy events:', e);
