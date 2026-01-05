@@ -91,7 +91,10 @@
     "today": "Danes",
     "month": "Mesec",
     "week": "Teden",
-    "day": "Dan"
+    "day": "Dan",
+    "legendBooked": "Zasedeno (rezervacija)",
+    "legendBusy": "Zasedeno (koledar)",
+    "legendToday": "Danes"
   },
   "dashboard": {
     "welcome": "Dobrodošli",

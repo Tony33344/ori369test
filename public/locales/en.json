@@ -91,7 +91,10 @@
     "today": "Today",
     "month": "Month",
     "week": "Week",
-    "day": "Day"
+    "day": "Day",
+    "legendBooked": "Booked (reservation)",
+    "legendBusy": "Busy (calendar)",
+    "legendToday": "Today"
   },
   "dashboard": {
     "welcome": "Welcome",
@@ -284,6 +287,97 @@
     "serviceUpdated": "Service updated",
     "serviceDeleted": "Service deleted",
     "syncSuccess": "Synced to Google Calendar",
-    "syncError": "Error syncing to Google Calendar"
+    "syncError": "Error syncing to Google Calendar",
+    "addedToCart": "Added to cart",
+    "removedFromCart": "Removed from cart",
+    "cartCleared": "Cart cleared",
+    "orderCreated": "Order created successfully!"
+  },
+  "shop": {
+    "title": "Shop",
+    "subtitle": "Nutritional supplements, functional mushrooms, homeopathy, herbal preparations and premium CBD",
+    "noProducts": "No products in this category",
+    "noCategories": "No categories",
+    "addToCart": "Add to cart",
+    "buy": "Buy",
+    "outOfStock": "Out of stock",
+    "inStock": "In stock",
+    "price": "Price",
+    "quantity": "Quantity"
+  },
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "emptyMessage": "Add products or services to your cart to continue",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "total": "Total",
+    "checkout": "Checkout",
+    "continueShopping": "Continue shopping",
+    "remove": "Remove",
+    "clear": "Clear cart"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "contactInfo": "Contact Information",
+    "name": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "notes": "Notes",
+    "paymentMethod": "Payment Method",
+    "shippingMethod": "Shipping Method",
+    "orderSummary": "Order Summary",
+    "placeOrder": "Place Order",
+    "processing": "Processing...",
+    "paymentMethods": {
+      "card": "Credit Card",
+      "cardDesc": "Pay securely with credit or debit card",
+      "upn": "UPN Bank Transfer",
+      "upnDesc": "Pay by bank transfer (UPN QR code)",
+      "cashPickup": "Cash on Pickup",
+      "cashPickupDesc": "Pay with cash on pickup in store",
+      "cashDelivery": "Cash on Delivery",
+      "cashDeliveryDesc": "Pay with cash on delivery"
+    },
+    "shippingMethods": {
+      "pickup": "Store Pickup",
+      "pickupDesc": "Free pickup at our address",
+      "post": "Postal Delivery",
+      "postDesc": "Delivery by post",
+      "delivery": "Home Delivery",
+      "deliveryDesc": "Delivery to your address"
+    },
+    "success": {
+      "title": "Thank you for your order!",
+      "reference": "Your order reference",
+      "upnTitle": "UPN Payment Details",
+      "recipient": "Recipient",
+      "iban": "IBAN",
+      "amount": "Amount",
+      "referenceNumber": "Reference",
+      "purpose": "Purpose",
+      "paymentNote": "We will notify you by email once payment is received",
+      "pickupTitle": "Store Pickup",
+      "pickupMessage": "Your order will be ready for pickup at our address",
+      "deliveryTitle": "Cash on Delivery",
+      "deliveryMessage": "Your order will be delivered to your address",
+      "backHome": "Back to Home",
+      "continueShopping": "Continue Shopping"
+    },
+    "errors": {
+      "fillRequired": "Please fill in all required fields",
+      "enterAddress": "Please enter a delivery address",
+      "generic": "An error occurred. Please try again."
+    }
+  },
+  "media": {
+    "title": "Media",
+    "subtitle": "Our presence in media and on social networks",
+    "socialMedia": "Social Media",
+    "pressReleases": "News & Articles",
+    "followUs": "Follow Us"
   }
 }

@@ -134,19 +134,19 @@ export default function BookingCalendar({
   return (
     <div className="booking-calendar">
       {/* Legend */}
-      <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-        <div className="flex flex-wrap items-center gap-4 text-sm">
+      <div className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
+        <div className="flex flex-wrap items-center gap-6 text-sm font-medium">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-red-500"></div>
-            <span className="text-gray-700">Zasedeno (rezervacija)</span>
+            <div className="w-4 h-4 rounded bg-red-500 shadow-sm"></div>
+            <span className="text-gray-700">{t('booking.legendBooked')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-orange-500"></div>
-            <span className="text-gray-700">Zasedeno (koledar)</span>
+            <div className="w-4 h-4 rounded bg-orange-500 shadow-sm"></div>
+            <span className="text-gray-700">{t('booking.legendBusy')}</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-blue-100 border border-blue-300"></div>
-            <span className="text-gray-700">Danes</span>
+            <div className="w-4 h-4 rounded bg-indigo-100 border-2 border-indigo-300 shadow-sm"></div>
+            <span className="text-gray-700">{t('booking.legendToday')}</span>
           </div>
         </div>
       </div>
@@ -154,69 +154,77 @@ export default function BookingCalendar({
       <style jsx global>{`
         .booking-calendar .fc {
           font-family: inherit;
-          border-radius: 12px;
+          border-radius: 16px;
           overflow: hidden;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
         }
         .booking-calendar .fc-toolbar {
-          padding: 12px 16px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          padding: 16px 20px;
+          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
         }
         .booking-calendar .fc-toolbar-title {
           color: white !important;
           font-weight: 600;
+          font-size: 1.25rem;
         }
         .booking-calendar .fc-button {
           background-color: rgba(255,255,255,0.2) !important;
           border-color: rgba(255,255,255,0.3) !important;
           text-transform: capitalize;
           font-weight: 500;
-          padding: 8px 16px !important;
-          border-radius: 8px !important;
+          padding: 10px 18px !important;
+          border-radius: 10px !important;
+          transition: all 0.2s ease;
         }
         .booking-calendar .fc-button:hover {
-          background-color: rgba(255,255,255,0.3) !important;
-          border-color: rgba(255,255,255,0.4) !important;
+          background-color: rgba(255,255,255,0.35) !important;
+          border-color: rgba(255,255,255,0.45) !important;
+          transform: translateY(-1px);
         }
         .booking-calendar .fc-button-active {
-          background-color: rgba(255,255,255,0.4) !important;
-          border-color: rgba(255,255,255,0.5) !important;
+          background-color: rgba(255,255,255,0.45) !important;
+          border-color: rgba(255,255,255,0.55) !important;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .booking-calendar .fc-day-today {
-          background-color: #dbeafe !important;
+          background-color: #e0e7ff !important;
+          box-shadow: inset 0 0 0 2px #6366f1;
         }
         .booking-calendar .fc-daygrid-day {
           transition: all 0.2s ease;
-        }
-        .booking-calendar .fc-daygrid-day:hover {
-          background-color: #f0f9ff;
           cursor: pointer;
-          transform: scale(1.02);
+        }
+        .booking-calendar .fc-daygrid-day:hover:not(.fc-day-today) {
+          background-color: #f0f9ff;
+          transform: scale(1.015);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
         .booking-calendar .fc-daygrid-day.fc-day-selected {
-          background-color: #bfdbfe !important;
+          background-color: #c7d2fe !important;
         }
         .booking-calendar .fc-event {
-          border-radius: 4px;
-          font-size: 11px;
-          font-weight: 500;
-          padding: 2px 4px;
+          border-radius: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          padding: 3px 6px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
         .booking-calendar .booked-event {
           animation: pulse 2s infinite;
         }
         .booking-calendar .google-busy-event {
-          opacity: 0.9;
+          opacity: 0.92;
         }
         .booking-calendar .fc-timegrid-slot {
-          height: 40px !important;
+          height: 44px !important;
+          border-color: #e5e7eb;
         }
         .booking-calendar .fc-timegrid-event {
-          border-radius: 6px;
+          border-radius: 8px;
         }
         @keyframes pulse {
           0%, 100% { opacity: 1; }
-          50% { opacity: 0.8; }
+          50% { opacity: 0.78; }
         }
       `}</style>
       
