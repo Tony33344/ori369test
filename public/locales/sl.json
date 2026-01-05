@@ -94,7 +94,9 @@
     "day": "Dan",
     "legendBooked": "Zasedeno (rezervacija)",
     "legendBusy": "Zasedeno (koledar)",
-    "legendToday": "Danes"
+    "legendToday": "Danes",
+    "selected": "Izbrano",
+    "unavailable": "Ni na voljo"
   },
   "dashboard": {
     "welcome": "Dobrodošli",

@@ -84,7 +84,16 @@
     "selectDateFirst": "Bitte wählen Sie zuerst ein Datum",
     "noSlotsAvailable": "Keine verfügbaren Zeitfenster für dieses Datum",
     "success": "Buchung erfolgreich erstellt!",
-    "error": "Fehler beim Erstellen der Buchung. Bitte versuchen Sie es erneut."
+    "error": "Fehler beim Erstellen der Buchung. Bitte versuchen Sie es erneut.",
+    "useCalendar": "Kalenderansicht",
+    "useDropdown": "Dropdown verwenden",
+    "booked": "Gebucht",
+    "today": "Heute",
+    "month": "Monat",
+    "week": "Woche",
+    "day": "Tag",
+    "selected": "Ausgewählt",
+    "unavailable": "Nicht verfügbar"
   },
   "dashboard": {
     "welcome": "Willkommen",
@@ -274,6 +283,57 @@
     "serviceUpdated": "Dienstleistung aktualisiert",
     "serviceDeleted": "Dienstleistung gelöscht",
     "syncSuccess": "Mit Google Calendar synchronisiert",
-    "syncError": "Fehler bei der Synchronisierung"
+    "syncError": "Fehler bei der Synchronisierung",
+    "addedToCart": "Zum Warenkorb hinzugefügt",
+    "removedFromCart": "Aus dem Warenkorb entfernt",
+    "cartCleared": "Warenkorb geleert",
+    "orderCreated": "Bestellung erfolgreich erstellt!"
+  },
+  "shop": {
+    "title": "Shop",
+    "subtitle": "Nahrungsergänzungsmittel, funktionelle Pilze, Homöopathie, Kräuterpräparate und Premium-CBD",
+    "noProducts": "Keine Produkte in dieser Kategorie",
+    "noCategories": "Keine Kategorien",
+    "addToCart": "In den Warenkorb",
+    "buy": "Kaufen",
+    "outOfStock": "Nicht vorrätig",
+    "inStock": "Auf Lager",
+    "price": "Preis",
+    "quantity": "Menge"
+  },
+  "cart": {
+    "title": "Warenkorb",
+    "empty": "Ihr Warenkorb ist leer",
+    "emptyMessage": "Fügen Sie Produkte oder Dienstleistungen hinzu, um fortzufahren",
+    "subtotal": "Zwischensumme",
+    "shipping": "Versand",
+    "total": "Gesamt",
+    "checkout": "Zur Kasse",
+    "continueShopping": "Weiter einkaufen",
+    "remove": "Entfernen",
+    "clear": "Warenkorb leeren"
+  },
+  "checkout": {
+    "title": "Kasse",
+    "contactInfo": "Kontaktinformationen",
+    "name": "Vollständiger Name",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "address": "Adresse",
+    "city": "Stadt",
+    "postalCode": "Postleitzahl",
+    "notes": "Anmerkungen",
+    "paymentMethod": "Zahlungsmethode",
+    "shippingMethod": "Versandmethode",
+    "orderSummary": "Bestellübersicht",
+    "placeOrder": "Bestellung aufgeben",
+    "processing": "Verarbeitung..."
+  },
+  "media": {
+    "title": "Medien",
+    "subtitle": "Unsere Präsenz in Medien und sozialen Netzwerken",
+    "socialMedia": "Soziale Medien",
+    "pressReleases": "Nachrichten & Artikel",
+    "followUs": "Folgen Sie uns"
   }
 }

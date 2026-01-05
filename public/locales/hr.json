@@ -84,7 +84,16 @@
     "selectDateFirst": "Molimo prvo odaberite datum",
     "noSlotsAvailable": "Nema dostupnih termina za ovaj datum",
     "success": "Rezervacija uspješno kreirana!",
-    "error": "Greška pri kreiranju rezervacije. Molimo pokušajte ponovo."
+    "error": "Greška pri kreiranju rezervacije. Molimo pokušajte ponovo.",
+    "useCalendar": "Koristi kalendar",
+    "useDropdown": "Koristi izbornik",
+    "booked": "Rezervirano",
+    "today": "Danas",
+    "month": "Mjesec",
+    "week": "Tjedan",
+    "day": "Dan",
+    "selected": "Odabrano",
+    "unavailable": "Nedostupno"
   },
   "dashboard": {
     "welcome": "Dobrodošli",
@@ -274,6 +283,57 @@
     "serviceUpdated": "Usluga ažurirana",
     "serviceDeleted": "Usluga obrisana",
     "syncSuccess": "Sinkronizirano s Google Calendrom",
-    "syncError": "Greška pri sinkronizaciji"
+    "syncError": "Greška pri sinkronizaciji",
+    "addedToCart": "Dodano u košaricu",
+    "removedFromCart": "Uklonjeno iz košarice",
+    "cartCleared": "Košarica ispražnjena",
+    "orderCreated": "Narudžba uspješno kreirana!"
+  },
+  "shop": {
+    "title": "Trgovina",
+    "subtitle": "Prehrambeni dodaci, funkcionalne gljive, homeopatija, biljni pripravci i premium CBD",
+    "noProducts": "Nema proizvoda u ovoj kategoriji",
+    "noCategories": "Nema kategorija",
+    "addToCart": "Dodaj u košaricu",
+    "buy": "Kupi",
+    "outOfStock": "Nema na zalihi",
+    "inStock": "Na zalihi",
+    "price": "Cijena",
+    "quantity": "Količina"
+  },
+  "cart": {
+    "title": "Košarica",
+    "empty": "Vaša košarica je prazna",
+    "emptyMessage": "Dodajte proizvode ili usluge za nastavak",
+    "subtotal": "Međuzbroj",
+    "shipping": "Dostava",
+    "total": "Ukupno",
+    "checkout": "Na blagajnu",
+    "continueShopping": "Nastavi kupovinu",
+    "remove": "Ukloni",
+    "clear": "Isprazni košaricu"
+  },
+  "checkout": {
+    "title": "Blagajna",
+    "contactInfo": "Kontakt podaci",
+    "name": "Puno ime",
+    "email": "E-pošta",
+    "phone": "Telefon",
+    "address": "Adresa",
+    "city": "Grad",
+    "postalCode": "Poštanski broj",
+    "notes": "Napomene",
+    "paymentMethod": "Način plaćanja",
+    "shippingMethod": "Način dostave",
+    "orderSummary": "Sažetak narudžbe",
+    "placeOrder": "Naruči",
+    "processing": "Obrada..."
+  },
+  "media": {
+    "title": "Mediji",
+    "subtitle": "Naša prisutnost u medijima i na društvenim mrežama",
+    "socialMedia": "Društvene mreže",
+    "pressReleases": "Vijesti i članci",
+    "followUs": "Pratite nas"
   }
 }

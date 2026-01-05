@@ -84,7 +84,16 @@
     "selectDateFirst": "Kérjük, először válasszon dátumot",
     "noSlotsAvailable": "Nincs elérhető időpont erre a dátumra",
     "success": "Foglálás sikeresen létrehozva!",
-    "error": "Hiba a foglálás létrehozásakor. Kérjük, próbálja újra."
+    "error": "Hiba a foglálás létrehozásakor. Kérjük, próbálja újra.",
+    "useCalendar": "Naptár nézet",
+    "useDropdown": "Legördülő menü",
+    "booked": "Foglalt",
+    "today": "Ma",
+    "month": "Hónap",
+    "week": "Hét",
+    "day": "Nap",
+    "selected": "Kiválasztott",
+    "unavailable": "Nem elérhető"
   },
   "dashboard": {
     "welcome": "Üdvözöljük",
@@ -274,6 +283,57 @@
     "serviceUpdated": "Szolgáltatás frissítve",
     "serviceDeleted": "Szolgáltatás törölve",
     "syncSuccess": "Szinkronizálva Google Naptárral",
-    "syncError": "Hiba a szinkronizálás során"
+    "syncError": "Hiba a szinkronizálás során",
+    "addedToCart": "Kosárba helyezve",
+    "removedFromCart": "Eltávolítva a kosárból",
+    "cartCleared": "Kosár kiürítve",
+    "orderCreated": "Rendelés sikeresen létrehozva!"
+  },
+  "shop": {
+    "title": "Bolt",
+    "subtitle": "Étrend-kiegészítők, funkcionális gombák, homeopátia, gyógynövény-készítmények és prémium CBD",
+    "noProducts": "Nincs termék ebben a kategóriában",
+    "noCategories": "Nincsenek kategóriák",
+    "addToCart": "Kosárba",
+    "buy": "Vásárlás",
+    "outOfStock": "Nincs raktáron",
+    "inStock": "Raktáron",
+    "price": "Ár",
+    "quantity": "Mennyiség"
+  },
+  "cart": {
+    "title": "Kosár",
+    "empty": "A kosara üres",
+    "emptyMessage": "Adjon hozzá termékeket vagy szolgáltatásokat a folytatáshoz",
+    "subtotal": "Részösszeg",
+    "shipping": "Szállítás",
+    "total": "Összesen",
+    "checkout": "Pénztár",
+    "continueShopping": "Vásárlás folytatása",
+    "remove": "Eltávolítás",
+    "clear": "Kosár ürítése"
+  },
+  "checkout": {
+    "title": "Pénztár",
+    "contactInfo": "Kapcsolattartási adatok",
+    "name": "Teljes név",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "address": "Cím",
+    "city": "Város",
+    "postalCode": "Irányítószám",
+    "notes": "Megjegyzések",
+    "paymentMethod": "Fizetési mód",
+    "shippingMethod": "Szállítási mód",
+    "orderSummary": "Rendelés összefoglalása",
+    "placeOrder": "Megrendelés",
+    "processing": "Feldolgozás..."
+  },
+  "media": {
+    "title": "Média",
+    "subtitle": "Jelenlétünk a médiában és a közösségi hálózatokon",
+    "socialMedia": "Közösségi média",
+    "pressReleases": "Hírek és cikkek",
+    "followUs": "Kövessen minket"
   }
 }

@@ -94,7 +94,9 @@
     "day": "Day",
     "legendBooked": "Booked (reservation)",
     "legendBusy": "Busy (calendar)",
-    "legendToday": "Today"
+    "legendToday": "Today",
+    "selected": "Selected",
+    "unavailable": "Unavailable"
   },
   "dashboard": {
     "welcome": "Welcome",

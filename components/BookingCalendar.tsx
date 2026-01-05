@@ -1,14 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
 import { supabase } from '@/lib/supabase';
 import { useLanguage } from '@/lib/i18n';
 import { toast } from 'react-hot-toast';
-import { Calendar, Clock, AlertCircle } from 'lucide-react';
+import { Clock, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface BookingCalendarProps {
   serviceId: string;
@@ -24,10 +20,11 @@ export default function BookingCalendar({
   selectedTime
 }: BookingCalendarProps) {
   const { t } = useLanguage();
-  const [events, setEvents] = useState<any[]>([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [availableSlots, setAvailableSlots] = useState<any[]>([]);
   const [googleBusyEvents, setGoogleBusyEvents] = useState<any[]>([]);
   const [bookedEvents, setBookedEvents] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (serviceId) {
@@ -37,9 +34,12 @@ export default function BookingCalendar({
   }, [serviceId]);
 
   useEffect(() => {
-    // Combine all events with proper display
-    setEvents([...googleBusyEvents, ...bookedEvents]);
-  }, [googleBusyEvents, bookedEvents]);
+    if (currentMonth) {
+      const start = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+      const end = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+      loadGoogleBusy(start.toISOString(), end.toISOString());
+    }
+  }, [currentMonth]);
 
   const loadBookings = async () => {
     const { data: bookings, error } = await supabase
@@ -49,27 +49,19 @@ export default function BookingCalendar({
 
     if (error) {
       console.error('Error loading bookings:', error);
+      setLoading(false);
       return;
     }
 
     if (bookings) {
-      const events = bookings.map((booking: any) => {
-        const duration = booking.services?.duration || 60;
-        const startTime = new Date(`${booking.date}T${booking.time_slot}`);
-        const endTime = new Date(startTime.getTime() + duration * 60000);
-        
-        return {
-          title: '🔒 Zasedeno',
-          start: startTime.toISOString(),
-          end: endTime.toISOString(),
-          backgroundColor: '#ef4444',
-          borderColor: '#dc2626',
-          textColor: '#ffffff',
-          classNames: ['booked-event'],
-        };
-      });
+      const events = bookings.map((booking: any) => ({
+        date: booking.date,
+        timeSlot: booking.time_slot,
+        duration: booking.services?.duration || 60,
+      }));
       setBookedEvents(events);
     }
+    setLoading(false);
   };
 
   const loadGoogleBusy = async (timeMin: string, timeMax: string) => {
@@ -77,22 +69,10 @@ export default function BookingCalendar({
       const res = await fetch(`/api/google-calendar/busy?timeMin=${encodeURIComponent(timeMin)}&timeMax=${encodeURIComponent(timeMax)}`);
       if (!res.ok) return;
       const json = await res.json();
-
-      const busy = (json?.busy || []).map((e: any) => {
-        const start = e?.start?.dateTime || e?.start?.date;
-        const end = e?.end?.dateTime || e?.end?.date;
-        return {
-          id: e.id,
-          title: '📅 ' + (e.summary || 'Zasedeno'),
-          start,
-          end,
-          backgroundColor: '#f97316',
-          borderColor: '#ea580c',
-          textColor: '#ffffff',
-          classNames: ['google-busy-event'],
-        };
-      });
-
+      const busy = (json?.busy || []).map((e: any) => ({
+        start: e?.start?.dateTime || e?.start?.date,
+        end: e?.end?.dateTime || e?.end?.date,
+      }));
       setGoogleBusyEvents(busy);
     } catch (e) {
       console.error('Failed to load Google Calendar busy events:', e);
@@ -115,161 +95,207 @@ export default function BookingCalendar({
     }
   };
 
-  const handleDateClick = (arg: any) => {
-    const clickedDate = arg.dateStr;
-    const dayOfWeek = new Date(clickedDate).getDay();
-    
-    // Check if there's availability for this day
+  const isSlotBusy = (dateStr: string, timeSlot: string) => {
+    const dateTime = new Date(`${dateStr}T${timeSlot}`);
+    for (const event of bookedEvents) {
+      if (event.date === dateStr && event.timeSlot === timeSlot) return true;
+    }
+    for (const event of googleBusyEvents) {
+      const start = new Date(event.start);
+      const end = new Date(event.end);
+      if (dateTime >= start && dateTime < end) return true;
+    }
+    return false;
+  };
+
+  const getAvailableTimeSlots = (date: Date) => {
+    const dayOfWeek = date.getDay();
     const daySlots = availableSlots.filter(slot => slot.day_of_week === dayOfWeek);
-    
+    if (daySlots.length === 0) return [];
+
+    const dateStr = date.toISOString().split('T')[0];
+    const slots: string[] = [];
+
+    for (const slot of daySlots) {
+      const [startHour, startMin] = slot.start_time.split(':').map(Number);
+      const [endHour, endMin] = slot.end_time.split(':').map(Number);
+      let current = new Date(date);
+      current.setHours(startHour, startMin, 0, 0);
+      const end = new Date(date);
+      end.setHours(endHour, endMin, 0, 0);
+
+      while (current < end) {
+        const timeStr = current.toTimeString().slice(0, 5);
+        if (!isSlotBusy(dateStr, timeStr)) {
+          slots.push(timeStr);
+        }
+        current.setMinutes(current.getMinutes() + 30);
+      }
+    }
+    return slots;
+  };
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const days: (Date | null)[] = [];
+
+    const startDayOfWeek = firstDay.getDay();
+    for (let i = 0; i < startDayOfWeek; i++) days.push(null);
+    for (let i = 1; i <= lastDay.getDate(); i++) days.push(new Date(year, month, i));
+    return days;
+  };
+
+  const prevMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1));
+  const nextMonth = () => setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1));
+
+  const handleDateClick = (date: Date) => {
+    const dateStr = date.toISOString().split('T')[0];
+    const dayOfWeek = date.getDay();
+    const daySlots = availableSlots.filter(slot => slot.day_of_week === dayOfWeek);
     if (daySlots.length === 0) {
       toast.error(t('booking.noSlotsAvailable'));
       return;
     }
-
-    // For now, just select the date - time selection will be in a separate UI
-    onDateSelect(clickedDate, '');
+    onDateSelect(dateStr, '');
   };
 
+  const handleTimeSlotClick = (timeSlot: string) => {
+    if (!selectedDate) return;
+    onDateSelect(selectedDate, timeSlot);
+  };
+
+  const selectedDateObj = selectedDate ? new Date(selectedDate) : null;
+  const availableTimeSlots = selectedDateObj ? getAvailableTimeSlots(selectedDateObj) : [];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  const days = getDaysInMonth(currentMonth);
+  const locale = t('common.locale');
+  const monthNames = locale === 'sl'
+    ? ['Januar', 'Februar', 'Marec', 'April', 'Maj', 'Junij', 'Julij', 'Avgust', 'September', 'Oktober', 'November', 'December']
+    : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const dayNames = locale === 'sl'
+    ? ['Ne', 'Po', 'To', 'Sr', 'Če', 'Pe', 'So']
+    : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   return (
-    <div className="booking-calendar">
-      {/* Legend */}
-      <div className="mb-6 p-4 bg-gray-50 rounded-xl border border-gray-200">
-        <div className="flex flex-wrap items-center gap-6 text-sm font-medium">
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-red-500 shadow-sm"></div>
-            <span className="text-gray-700">{t('booking.legendBooked')}</span>
+    <div className="space-y-4">
+      {/* Compact Month Calendar */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-indigo-500 to-purple-500">
+          <button onClick={prevMonth} className="p-1.5 rounded-lg hover:bg-white/20 transition-colors text-white">
+            <ChevronLeft size={18} />
+          </button>
+          <h2 className="text-base font-semibold text-white">
+            {monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}
+          </h2>
+          <button onClick={nextMonth} className="p-1.5 rounded-lg hover:bg-white/20 transition-colors text-white">
+            <ChevronRight size={18} />
+          </button>
+        </div>
+
+        <div className="p-3">
+          <div className="grid grid-cols-7 gap-1 mb-1">
+            {dayNames.map((day) => (
+              <div key={day} className="text-center text-xs font-medium text-gray-500 py-1">{day}</div>
+            ))}
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-orange-500 shadow-sm"></div>
-            <span className="text-gray-700">{t('booking.legendBusy')}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded bg-indigo-100 border-2 border-indigo-300 shadow-sm"></div>
-            <span className="text-gray-700">{t('booking.legendToday')}</span>
+          <div className="grid grid-cols-7 gap-1">
+            {days.map((date, index) => {
+              if (!date) return <div key={index} className="aspect-square"></div>;
+
+              const dateStr = date.toISOString().split('T')[0];
+              const isToday = date.getTime() === today.getTime();
+              const isPast = date < today;
+              const isSelected = selectedDate === dateStr;
+              const dayOfWeek = date.getDay();
+              const hasAvailability = availableSlots.some(slot => slot.day_of_week === dayOfWeek);
+
+              return (
+                <button
+                  key={dateStr}
+                  onClick={() => !isPast && hasAvailability && handleDateClick(date)}
+                  disabled={isPast || !hasAvailability}
+                  className={`
+                    aspect-square rounded-md flex items-center justify-center text-sm font-medium transition-all
+                    ${isPast || !hasAvailability ? 'text-gray-300 cursor-not-allowed' : 'hover:bg-indigo-50 cursor-pointer text-gray-700'}
+                    ${isToday && !isPast && hasAvailability ? 'bg-indigo-100 text-indigo-700 ring-1 ring-indigo-400' : ''}
+                    ${isSelected ? 'bg-indigo-600 text-white hover:bg-indigo-700' : ''}
+                  `}
+                >
+                  {date.getDate()}
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
 
-      <style jsx global>{`
-        .booking-calendar .fc {
-          font-family: inherit;
-          border-radius: 16px;
-          overflow: hidden;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .booking-calendar .fc-toolbar {
-          padding: 16px 20px;
-          background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-        }
-        .booking-calendar .fc-toolbar-title {
-          color: white !important;
-          font-weight: 600;
-          font-size: 1.25rem;
-        }
-        .booking-calendar .fc-button {
-          background-color: rgba(255,255,255,0.2) !important;
-          border-color: rgba(255,255,255,0.3) !important;
-          text-transform: capitalize;
-          font-weight: 500;
-          padding: 10px 18px !important;
-          border-radius: 10px !important;
-          transition: all 0.2s ease;
-        }
-        .booking-calendar .fc-button:hover {
-          background-color: rgba(255,255,255,0.35) !important;
-          border-color: rgba(255,255,255,0.45) !important;
-          transform: translateY(-1px);
-        }
-        .booking-calendar .fc-button-active {
-          background-color: rgba(255,255,255,0.45) !important;
-          border-color: rgba(255,255,255,0.55) !important;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .booking-calendar .fc-day-today {
-          background-color: #e0e7ff !important;
-          box-shadow: inset 0 0 0 2px #6366f1;
-        }
-        .booking-calendar .fc-daygrid-day {
-          transition: all 0.2s ease;
-          cursor: pointer;
-        }
-        .booking-calendar .fc-daygrid-day:hover:not(.fc-day-today) {
-          background-color: #f0f9ff;
-          transform: scale(1.015);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-        .booking-calendar .fc-daygrid-day.fc-day-selected {
-          background-color: #c7d2fe !important;
-        }
-        .booking-calendar .fc-event {
-          border-radius: 6px;
-          font-size: 12px;
-          font-weight: 600;
-          padding: 3px 6px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-        .booking-calendar .booked-event {
-          animation: pulse 2s infinite;
-        }
-        .booking-calendar .google-busy-event {
-          opacity: 0.92;
-        }
-        .booking-calendar .fc-timegrid-slot {
-          height: 44px !important;
-          border-color: #e5e7eb;
-        }
-        .booking-calendar .fc-timegrid-event {
-          border-radius: 8px;
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.78; }
-        }
-      `}</style>
-      
-      <FullCalendar
-        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-        initialView="timeGridWeek"
-        headerToolbar={{
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        }}
-        events={events}
-        datesSet={(arg: any) => {
-          const timeMin = arg.start?.toISOString?.() || new Date(arg.start).toISOString();
-          const timeMax = arg.end?.toISOString?.() || new Date(arg.end).toISOString();
-          loadGoogleBusy(timeMin, timeMax);
-          loadBookings();
-        }}
-        dateClick={handleDateClick}
-        selectable={true}
-        selectMirror={true}
-        dayMaxEvents={true}
-        weekends={true}
-        height="auto"
-        slotMinTime="08:00:00"
-        slotMaxTime="20:00:00"
-        allDaySlot={false}
-        nowIndicator={true}
-        locale={t('common.locale')}
-        buttonText={{
-          today: t('booking.today'),
-          month: t('booking.month'),
-          week: t('booking.week'),
-          day: t('booking.day')
-        }}
-        validRange={{
-          start: new Date().toISOString().split('T')[0],
-          end: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
-        }}
-        eventContent={(arg) => (
-          <div className="flex items-center gap-1 px-1 py-0.5 overflow-hidden">
-            <span className="truncate">{arg.event.title}</span>
+      {/* Time Slots */}
+      {selectedDate && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+            <h3 className="font-medium text-gray-900 flex items-center gap-2 text-sm">
+              <Clock size={16} className="text-indigo-600" />
+              {selectedDateObj?.toLocaleDateString(locale, { weekday: 'long', day: 'numeric', month: 'long' })}
+            </h3>
           </div>
-        )}
-      />
+          <div className="p-3">
+            {availableTimeSlots.length === 0 ? (
+              <div className="flex items-center gap-2 text-gray-500 py-3 text-sm">
+                <AlertCircle size={16} />
+                <span>{t('booking.noSlotsAvailable')}</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
+                {availableTimeSlots.map((timeSlot) => (
+                  <button
+                    key={timeSlot}
+                    onClick={() => handleTimeSlotClick(timeSlot)}
+                    className={`
+                      py-2 px-3 rounded-lg text-sm font-medium transition-all
+                      ${selectedTime === timeSlot
+                        ? 'bg-indigo-600 text-white shadow-sm'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }
+                    `}
+                  >
+                    {timeSlot}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Legend */}
+      <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded bg-indigo-600"></div>
+          <span>{t('booking.selected')}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded bg-indigo-100 ring-1 ring-indigo-400"></div>
+          <span>{t('booking.today')}</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <div className="w-3 h-3 rounded bg-gray-200"></div>
+          <span>{t('booking.unavailable')}</span>
+        </div>
+      </div>
     </div>
   );
 }
